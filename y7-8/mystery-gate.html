@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mystery Gate Worksheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D203B;--card:#16294A;--card2:#1C3157;--pink:#EE3181;--orange:#F79532;--blue:#1A97CD;--sky:#5AC8F5;--purple:#8C7AE6;--muted:#9FB0C6;--body:#D9E4EE;--green:#3DD68C}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--navy);color:#fff;font-family:"Nunito",-apple-system,"Segoe UI",sans-serif}
+body{background:radial-gradient(1200px 600px at 10% -10%,#15284a 0%,var(--navy) 55%),var(--navy)}
+h1,h2,h3{font-family:"Nunito Sans","Nunito",sans-serif;font-weight:800;margin:0;letter-spacing:-.01em}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+.logo{height:32px;display:block;margin-bottom:26px}
+.embedded .logo{display:none}.embedded .wrap{padding-top:12px}
+.eyebrow{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);background:rgba(238,49,129,.12);border:1px solid rgba(238,49,129,.35);padding:5px 12px;border-radius:999px;margin-bottom:12px}
+h1{font-size:clamp(2rem,5vw,3rem);margin-bottom:6px}
+.sub{color:var(--sky);font-style:italic;font-size:1.2rem;margin:0 0 26px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:28px}
+.step{background:var(--card);border:1px solid #243a60;border-radius:14px;padding:16px 18px}
+.step b{display:block;font-size:.72rem;letter-spacing:.14em;color:var(--blue);margin-bottom:6px}
+.step:nth-child(2) b{color:var(--orange)}.step:nth-child(3) b{color:var(--pink)}
+.step p{margin:0;color:var(--body);line-height:1.45}
+h2{font-size:1.3rem;margin:30px 0 12px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:8px;min-width:520px}
+th{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;padding:6px}
+th.dev{color:#fff;font-family:"Nunito Sans";font-size:1rem}
+td.row{background:var(--card);border-radius:12px;padding:12px 16px;font-weight:800;width:32%}
+td.row small{display:block;color:var(--muted);font-weight:600;font-size:.82rem;margin-top:2px}
+.cell{width:100%;height:64px;border-radius:12px;border:2px dashed #35507d;background:var(--card);color:var(--muted);font:800 2rem "Nunito Sans";cursor:pointer;transition:.12s}
+.cell:hover{border-color:var(--sky)}
+.cell:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.cell[data-v="0"]{border-style:solid;border-color:var(--sky);color:var(--sky);background:var(--card2)}
+.cell[data-v="1"]{border-style:solid;border-color:var(--orange);color:var(--orange);background:var(--card2)}
+.hint{color:var(--muted);font-size:.9rem;margin:4px 0 0}
+.dev3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.dcard{background:var(--card);border:1px solid #243a60;border-radius:14px;padding:16px 18px}
+.dcard h3{font-size:1.1rem;margin-bottom:8px}
+.dcard:nth-child(1) h3{color:var(--orange)}.dcard:nth-child(2) h3{color:var(--blue)}.dcard:nth-child(3) h3{color:var(--pink)}
+textarea{width:100%;min-height:96px;background:var(--navy);color:#fff;border:1px solid #35507d;border-radius:10px;padding:10px 12px;font:600 1rem "Nunito",sans-serif;resize:vertical}
+textarea:focus{outline:2px solid var(--sky)}
+.bonus{background:var(--card2);border-radius:14px;padding:18px 20px;margin-top:10px}
+.bonus h3{color:var(--orange);margin-bottom:6px}
+.bonus p{margin:0 0 12px;color:var(--body)}
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.pickrow{background:var(--card);border-radius:12px;padding:12px 14px}
+.pickrow label{font-weight:800;display:block;margin-bottom:8px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opt{border:2px solid #35507d;background:none;color:#fff;border-radius:999px;padding:7px 16px;font:800 .95rem "Nunito Sans";cursor:pointer}
+.opt[aria-pressed="true"]{background:var(--purple);border-color:var(--purple)}
+.opt:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.fb{margin-top:10px;font-size:.92rem;line-height:1.4;min-height:1.3em}
+.fb.ok{color:var(--green)}.fb.no{color:#ff8a8a}.fb.meh{color:var(--muted)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{background:var(--orange);color:var(--navy);border:0;border-radius:999px;padding:12px 24px;font:900 1rem "Nunito Sans";cursor:pointer}
+.btn.ghost{background:none;color:#fff;border:2px solid #35507d}
+.btn:hover{filter:brightness(1.1)}.btn:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.saved{color:var(--muted);font-size:.82rem;margin-top:14px}
+@media print{body{background:#fff;color:#000}.btns,.opts .opt:not([aria-pressed="true"]),.hint,.saved,.logo{display:none}
+.step,.dcard,td.row,.cell,.pickrow,.bonus{background:#fff!important;color:#000!important;border-color:#999!important}
+.cell{color:#000!important}h1,h2,h3,.sub,.step b,.dcard h3,.bonus h3{color:#000!important}textarea{background:#fff;color:#000;border-color:#999}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="../assets/mega-logo.png" alt="MEGA">
+  <span class="eyebrow">Semiconductors · Logic gates</span>
+  <h1>Mystery Gate</h1>
+  <p class="sub">Three devices. Same buttons. Are they the same?</p>
+
+  <div class="steps">
+    <div class="step"><b>STEP 1</b><p>Each device shows a number, 0 or 1. Press the buttons and watch what happens.</p></div>
+    <div class="step"><b>STEP 2</b><p>Fill in the table: what number does each device show? Tap a box to change it.</p></div>
+    <div class="step"><b>STEP 3</b><p>Work out how the devices are different from each other.</p></div>
+  </div>
+
+  <h2>What does each device show?</h2>
+  <div class="tablewrap">
+  <table id="tt">
+    <thead><tr><th></th><th class="dev">Device 1</th><th class="dev">Device 2</th><th class="dev">Device 3</th></tr></thead>
+    <tbody>
+      <tr><td class="row">Press nothing</td></tr>
+      <tr><td class="row">Press A only</td></tr>
+      <tr><td class="row">Press B only</td></tr>
+      <tr><td class="row">Press A and B together</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="hint">Tap a box once for 0, again for 1, again to clear it.</p>
+
+  <h2>In your own words, how does each device work?</h2>
+  <p class="hint" style="margin:-6px 0 12px">Hint: when does it show a 1? When does it show a 0?</p>
+  <div class="dev3">
+    <div class="dcard"><h3>Device 1</h3><textarea data-k="t1" aria-label="Device 1 description"></textarea></div>
+    <div class="dcard"><h3>Device 2</h3><textarea data-k="t2" aria-label="Device 2 description"></textarea></div>
+    <div class="dcard"><h3>Device 3</h3><textarea data-k="t3" aria-label="Device 3 description"></textarea></div>
+  </div>
+
+  <div class="bonus">
+    <h3>Bonus</h3>
+    <p>Could you describe each one using the words <b>AND</b>, <b>OR</b> or <b>NOT</b>? Pick a word, then check whether your table fits it.</p>
+    <div class="pick" id="pick"></div>
+  </div>
+
+  <div class="btns">
+    <button class="btn" onclick="window.print()">Print or save as PDF</button>
+    <button class="btn ghost" id="reset">Start again</button>
+  </div>
+  <p class="saved" id="saved">Your answers are saved on this device as you go.</p>
+</div>
+<script>
+if (window.self !== window.top) document.documentElement.classList.add('embedded');
+document.body.classList.toggle('embedded', window.self !== window.top);
+(function(){
+  var KEY='mega-mystery-gate-v1', ROWS=4, DEVS=3;
+  var state={cells:[],t1:'',t2:'',t3:'',pick:['','','']};
+  for(var i=0;i<ROWS;i++){state.cells.push(['','','']);}
+  var canSave=true;
+  try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.cells)state=s;}catch(e){canSave=false;}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){canSave=false;document.getElementById('saved').textContent='Tip: use Print or save as PDF to keep your work.';}}
+  var rows=document.querySelectorAll('#tt tbody tr');
+  var rowNames=['Press nothing','Press A only','Press B only','Press A and B together'];
+  function paint(btn,v){btn.dataset.v=v;btn.textContent=v===''?'?':v;btn.setAttribute('aria-label',btn.dataset.lbl+': '+(v===''?'not filled in':v));}
+  rows.forEach(function(tr,r){for(var d=0;d<DEVS;d++){
+    var td=document.createElement('td'),b=document.createElement('button');
+    b.className='cell';b.type='button';b.dataset.lbl='Device '+(d+1)+', '+rowNames[r];
+    paint(b,state.cells[r][d]);
+    (function(r,d,b){b.addEventListener('click',function(){
+      var cur=state.cells[r][d],nx=cur===''?'0':cur==='0'?'1':'';
+      state.cells[r][d]=nx;paint(b,nx);save();refresh();});})(r,d,b);
+    td.appendChild(b);tr.appendChild(td);}});
+  document.querySelectorAll('textarea').forEach(function(t){t.value=state[t.dataset.k]||'';
+    t.addEventListener('input',function(){state[t.dataset.k]=t.value;save();});});
+  var GATES={AND:['0','0','0','1'],OR:['0','1','1','1'],NOT:['1','0','1','0']};
+  var HOW={AND:'AND shows 1 only when A and B are both pressed.',OR:'OR shows 1 when A or B or both are pressed.',NOT:'NOT flips the answer: it shows 1 when A is not pressed and 0 when it is. B does nothing.'};
+  var pick=document.getElementById('pick');
+  var fbs=[];
+  for(var d=0;d<DEVS;d++){
+    var row=document.createElement('div');row.className='pickrow';
+    row.innerHTML='<label>Device '+(d+1)+' is...</label><div class="opts"></div><div class="fb meh"></div>';
+    var opts=row.querySelector('.opts');
+    ['AND','OR','NOT'].forEach(function(g){
+      var o=document.createElement('button');o.type='button';o.className='opt';o.textContent=g;
+      o.addEventListener('click',(function(d,g){return function(){state.pick[d]=state.pick[d]===g?'':g;save();refresh();};})(d,g));
+      opts.appendChild(o);});
+    pick.appendChild(row);fbs.push(row);
+  }
+  function col(d){return state.cells.map(function(r){return r[d];});}
+  function refresh(){
+    fbs.forEach(function(row,d){
+      var g=state.pick[d],fb=row.querySelector('.fb');
+      row.querySelectorAll('.opt').forEach(function(o){o.setAttribute('aria-pressed',o.textContent===g?'true':'false');});
+      var c=col(d),full=c.every(function(v){return v!=='';});
+      if(!g){fb.className='fb meh';fb.textContent='';return;}
+      if(!full){fb.className='fb meh';fb.textContent='Fill in all four boxes for this device first.';return;}
+      var match=c.join('')===GATES[g].join('');
+      if(match){fb.className='fb ok';fb.textContent='Yes, your table fits '+g+'. '+HOW[g];}
+      else{
+        var others=Object.keys(GATES).filter(function(k){return c.join('')===GATES[k].join('');});
+        fb.className='fb no';
+        fb.textContent='Not quite: your table does not fit '+g+'. Look at your pattern again'+(others.length?' (does it remind you of another word?).':', or re-test the buttons in case a box is wrong.');
+      }});
+  }
+  document.getElementById('reset').addEventListener('click',function(){
+    if(!confirm('Clear everything and start again?'))return;
+    state={cells:[['','',''],['','',''],['','',''],['','','']],t1:'',t2:'',t3:'',pick:['','','']};
+    save();location.reload();});
+  refresh();
+})();
+</script>
+</body>
+</html>
