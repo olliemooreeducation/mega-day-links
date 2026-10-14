@@ -27,22 +27,26 @@ Add a new `.block` to `index.html` with a card for the day's page and a card for
 
 ## Mystery Gate worksheet
 
-`mystery-gate.html` is the interactive Mystery Gate worksheet (Y7/8). It is a standalone page, so it can be linked or embedded in an iframe (`<iframe src="mystery-gate.html" style="width:100%;height:1500px;border:0">`); it hides the logo when embedded. Students' answers are saved in their own browser only, and the Print button gives a PDF copy.
+`y10/mystery-gate.html` is the interactive Mystery Gate worksheet (now used on the Y10 day). It is a standalone page, so it can be linked or embedded in an iframe (`<iframe src="mystery-gate.html" style="width:100%;height:1500px;border:0">`); it hides the logo when embedded. Students' answers are saved in their own browser only, and the Print button gives a PDF copy.
 
 ## Folder structure
 
 ```
-index.html            master page
+index.html            master page - one big button per day
 assets/               shared style.css and logo
-y7-8/                 Year 7 & 8 - Circuit & Signal
-  index.html          links page  (.../y7-8/)
+y7-8/                 Year 7 & 8 - Frontier Areas Day (link coming soon)
+  index.html          redirects home for now
+  mystery-gate.html   redirect to y10/ (delete once old guide/deck links are updated)
+  radio-mini-projects.html   redirect to y10/ (same)
+y10/                  Year 10 - Circuit & Signal
+  index.html          links page  (y10/index.html)
   mystery-gate.html
   radio-mini-projects.html
 y11/                  Year 11 - Qubit by Qubit
-  index.html          links page  (.../y11/)
+  index.html          links page  (y11/index.html)
   briefcase.html
   hackathon-landing.html
   Quirk-E-Teleportation-Guide.pdf
 ```
 
-To add a year group: copy an existing folder (e.g. `y11/`), rename it (`y9/`), edit its `index.html`, then add a block for it in the master `index.html`. Pages inside a folder reach shared files with `../assets/...`. Folders with an `index.html` work as clean URLs, e.g. `https://<org>.github.io/<repo>/y11/`.
+To add the Y7/8 day later: build `y7-8/index.html` from the y10 page, then in the root `index.html` change the "soon" div for Y7 & 8 into an `<a class="day-btn" href="y7-8/">` (copy the Y10 button).
