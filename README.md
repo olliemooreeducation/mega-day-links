@@ -34,7 +34,7 @@ Add a new `.block` to `index.html` with a card for the day's page and a card for
 ```
 index.html            master page - one big button per day
 assets/               shared style.css and logo
-y7-8/                 Year 7 & 8 - Frontier Areas Day (link coming soon)
+y7-8/                 Year 7 & 8 - Frontier Explorers (links page, Radio Challenge, extensions)
   index.html          redirects home for now
   mystery-gate.html   redirect to y10/ (delete once old guide/deck links are updated)
   radio-mini-projects.html   redirect to y10/ (same)
@@ -49,4 +49,3 @@ y11/                  Year 11 - Qubit by Qubit
   Quirk-E-Teleportation-Guide.pdf
 ```
 
-To add the Y7/8 day later: build `y7-8/index.html` from the y10 page, then in the root `index.html` change the "soon" div for Y7 & 8 into an `<a class="day-btn" href="y7-8/">` (copy the Y10 button).

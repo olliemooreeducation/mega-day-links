@@ -10,6 +10,8 @@
   --pink-rgb: 238,49,129;
   --orange-rgb: 247,149,50;
   --lightblue-rgb: 26,151,205;
+  --purple: #8C7AE6;
+  --purple-rgb: 140,122,230;
 }
 
 * { box-sizing: border-box; }

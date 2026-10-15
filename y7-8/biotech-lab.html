@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mega Biotech Lab — Mission Control</title>
+<!-- Option A: Cosmic Pop Fonts (Fredoka, Nunito, Space Mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg-deep: #0b0726;
+    --bg-nebula: #1b1145;
+    --bubble-pink: #ff5ebc;
+    --bubble-cyan: #00f2fe;
+    --bubble-lime: #5eff8a;
+    --bubble-gold: #ffd15c;
+    --bubble-purple: #b16cea;
+    --glass-bg: rgba(28, 20, 68, 0.84);
+    --glass-border: rgba(140, 220, 255, 0.38);
+    --text-light: #f4f8ff;
+    --text-soft: #b9c8f0;
+  }
+
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* Option A: Cosmic Pop Typography Rules */
+  h1, h2, h3, h4, .brand-title, .bubble-btn, .sector-tag, .stat-pill, .cutscene-topbar, .lightbulb-btn, .tab-btn, .visualizer-badge {
+    font-family: 'Fredoka', cursive, sans-serif;
+  }
+
+  .base-box, .slot-btn, .cosmic-mono, .stat-pill span.val, code {
+    font-family: 'Space Mono', monospace !important;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at 20% 20%, #2b1663 0%, #0d0829 60%, #050214 100%);
+    color: var(--text-light);
+  }
+
+  /* Full-Screen Background Space Bubble Canvas */
+  #bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Main App Container */
+  #app {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 20px;
+  }
+
+  /* Glassmorphism Bubbly Panels */
+  .bubble-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    border: 2px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.45),
+      inset 0 2px 10px rgba(255, 255, 255, 0.22);
+  }
+
+  /* Glossy 3D Bubble Buttons */
+  .bubble-btn {
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.4px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.16s, box-shadow 0.16s;
+    background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+    box-shadow: 
+      0 6px 16px rgba(0, 140, 255, 0.4),
+      inset 0 3px 6px rgba(255, 255, 255, 0.55);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .bubble-btn::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 14px;
+    right: 14px;
+    height: 35%;
+    border-radius: 50px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.45), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+
+  .bubble-btn:hover:not(:disabled) {
+    transform: scale(1.05) translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  .bubble-btn:active:not(:disabled) {
+    transform: scale(0.95) translateY(2px);
+  }
+
+  .bubble-btn:disabled {
+    background: rgba(90, 95, 130, 0.45);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: not-allowed;
+  }
+
+  .btn-pink {
+    background: linear-gradient(135deg, #ff6fd8 0%, #d82b9c 100%);
+    box-shadow: 0 6px 16px rgba(255, 94, 188, 0.45), inset 0 3px 6px rgba(255,255,255,0.55);
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, #42e695 0%, #1bbb70 100%);
+    box-shadow: 0 6px 16px rgba(66, 230, 149, 0.45), inset 0 3px 6px rgba(255,255,255,0.55);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #ffca4b 0%, #f78812 100%);
+    box-shadow: 0 6px 16px rgba(255, 190, 60, 0.45), inset 0 3px 6px rgba(255,255,255,0.55);
+    color: #231100;
+  }
+
+  .btn-purple {
+    background: linear-gradient(135deg, #b56cff 0%, #6c2cf5 100%);
+    box-shadow: 0 6px 16px rgba(145, 85, 255, 0.45), inset 0 3px 6px rgba(255,255,255,0.55);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ff5e62 0%, #d4145a 100%);
+    box-shadow: 0 6px 16px rgba(255, 65, 108, 0.45), inset 0 3px 6px rgba(255,255,255,0.55);
+  }
+
+  /* Top HUD Navigation Bar */
+  #topHud {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .brand-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00f2fe, #ff85e4, #ffe47a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stats-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: rgba(12, 8, 36, 0.78);
+    border: 2px solid rgba(0, 242, 254, 0.45);
+    border-radius: 30px;
+    padding: 6px 15px;
+    font-weight: 600;
+    font-size: 0.96rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stat-pill span.val {
+    color: var(--bubble-gold);
+    font-size: 1.05rem;
+  }
+
+  /* Main Two-Column Workspace */
+  #mainWorkspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 18px;
+    margin: 12px 0;
+    min-height: 0;
+  }
+
+  /* Left Column: Mission Box at TOP + 2D Visual Simulator Below */
+  #leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+  }
+
+  #missionBox {
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-color: rgba(0, 242, 254, 0.65);
+    box-shadow: 0 8px 28px rgba(0, 242, 254, 0.18), inset 0 2px 10px rgba(255, 255, 255, 0.22);
+  }
+
+  .sector-tag {
+    display: inline-block;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: rgba(255, 94, 188, 0.25);
+    border: 1.5px solid var(--bubble-pink);
+    color: #ffb8e6;
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  #puzzleTitle {
+    margin: 0;
+    font-size: 1.35rem;
+    color: #ffffff;
+  }
+
+  #puzzleStory {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.48;
+    color: #e4ecff;
+  }
+
+  /* Clickable Lightbulb Hide & Reveal Clue Button */
+  .clue-header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+  }
+
+  .lightbulb-btn {
+    background: linear-gradient(135deg, #ffd15c 0%, #f78812 100%);
+    color: #231100;
+    border: 2px solid #ffffff;
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 0 14px rgba(255, 209, 92, 0.6), inset 0 2px 5px rgba(255,255,255,0.6);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .lightbulb-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 20px rgba(255, 209, 92, 0.95);
+  }
+
+  .lightbulb-btn.active-clue {
+    background: linear-gradient(135deg, #00f2fe 0%, #0099ff 100%);
+    color: #04081f;
+    box-shadow: 0 0 18px rgba(0, 242, 254, 0.9);
+  }
+
+  #clueContentBox {
+    display: none;
+    margin-top: 6px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(0, 242, 254, 0.14);
+    border-left: 4px solid var(--bubble-cyan);
+    font-size: 0.94rem;
+    color: #d6f9ff;
+    line-height: 1.45;
+    animation: fadeSlide 0.22s ease-out;
+  }
+
+  #clueContentBox.open {
+    display: block;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 2D Live Visual Simulator Container */
+  #visualizerContainer {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+  }
+
+  #simCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .visualizer-badge {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    background: rgba(10, 6, 30, 0.85);
+    border: 1.5px solid var(--bubble-cyan);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--bubble-cyan);
+    pointer-events: none;
+  }
+
+  /* Right Column: Interactive Biotech Controls */
+  #rightCol {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  #controlsArea {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .control-group {
+    background: rgba(10, 6, 34, 0.62);
+    border: 1.5px solid rgba(180, 215, 255, 0.25);
+    border-radius: 20px;
+    padding: 13px 16px;
+  }
+
+  .control-label {
+    font-weight: 800;
+    font-size: 0.96rem;
+    color: #9be8ff;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Choice Grid & Bright Blue-Cyan Highlighting */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 10px;
+  }
+
+  .choice-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.24);
+    border-radius: 18px;
+    padding: 10px 12px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.16s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .choice-pill:hover {
+    background: rgba(0, 242, 254, 0.22);
+    border-color: var(--bubble-cyan);
+    transform: translateY(-2px);
+  }
+
+  /* Vivid Blue-Cyan Selected State */
+  .choice-pill.selected {
+    background: linear-gradient(135deg, #00f2fe 0%, #0099ff 100%) !important;
+    color: #04081f !important;
+    border: 2.5px solid #ffffff !important;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.9), inset 0 2px 6px rgba(255, 255, 255, 0.8) !important;
+    font-weight: 800 !important;
+    transform: scale(1.03);
+  }
+
+  /* Cosmic Range Sliders */
+  input[type="range"].cosmic-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 14px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #00d2ff, #ffd15c, #ff4b72);
+    outline: none;
+  }
+
+  input[type="range"].cosmic-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #00f2fe;
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 14px rgba(0, 242, 254, 1);
+    cursor: pointer;
+  }
+
+  /* DNA & RNA Base Builder Slots */
+  .dna-strip {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 6px 0;
+  }
+
+  .base-box {
+    width: 50px;
+    height: 54px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border: 2px solid rgba(255,255,255,0.45);
+    transition: all 0.15s ease;
+  }
+
+  .base-box small {
+    font-size: 0.6rem;
+    opacity: 0.88;
+  }
+
+  .base-A { background: linear-gradient(135deg, #ff5e7e, #d4145a); color: #fff; }
+  .base-T { background: linear-gradient(135deg, #00d2ff, #0072ff); color: #fff; }
+  .base-C { background: linear-gradient(135deg, #42e695, #1bbb70); color: #052612; }
+  .base-G { background: linear-gradient(135deg, #ffd15c, #f78812); color: #1b0c00; }
+  .base-U { background: linear-gradient(135deg, #c471f5, #7b2ff7); color: #fff; }
+
+  .slot-btn {
+    cursor: pointer;
+    border: 2.5px dashed rgba(255,255,255,0.75);
+  }
+
+  .slot-btn:hover {
+    transform: scale(1.08);
+    border-color: var(--bubble-cyan);
+  }
+
+  .slot-btn.active-slot {
+    border: 3px solid #00f2fe !important;
+    box-shadow: 0 0 18px #00f2fe !important;
+    transform: scale(1.08);
+  }
+
+  /* Action Footer & Feedback Banner */
+  #actionFooter {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  #feedbackBanner {
+    padding: 11px 15px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: none;
+    margin-top: 8px;
+  }
+
+  /* Modals */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 3, 20, 0.86);
+    backdrop-filter: blur(12px);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.active {
+    display: flex;
+  }
+
+  .modal-card {
+    width: min(940px, 96vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.84); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.06);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.45rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .close-x-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: linear-gradient(135deg, #ff5e62, #d4145a);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+  }
+
+  .close-x-btn:hover {
+    transform: scale(1.1) rotate(8deg);
+  }
+
+  .modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    line-height: 1.58;
+  }
+
+  /* Textbook Tabs & Tables */
+  .chapter-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .tab-btn {
+    padding: 9px 16px;
+    border-radius: 25px;
+    border: 1.5px solid var(--bubble-cyan);
+    background: rgba(0, 242, 254, 0.12);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, #00f2fe, #0072ff);
+    color: #030921;
+    border-color: #ffffff;
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.8);
+  }
+
+  .textbook-page {
+    display: none;
+    background: rgba(11, 7, 38, 0.75);
+    border: 1.5px solid rgba(255,255,255,0.16);
+    border-radius: 20px;
+    padding: 18px 22px;
+  }
+
+  .textbook-page.active {
+    display: block;
+  }
+
+  .bio-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.94rem;
+  }
+
+  .bio-table th, .bio-table td {
+    border: 1px solid rgba(160, 210, 255, 0.25);
+    padding: 9px 12px;
+    text-align: left;
+  }
+
+  .bio-table th {
+    background: rgba(0, 242, 254, 0.18);
+    color: var(--bubble-cyan);
+  }
+
+  .callout-card {
+    background: rgba(255, 209, 92, 0.12);
+    border-left: 4px solid var(--bubble-gold);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 12px 0;
+    font-size: 0.95rem;
+  }
+
+  /* 30-Mission Map Grid */
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .level-node {
+    padding: 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s;
+  }
+
+  .level-node:hover:not(.locked) {
+    transform: translateY(-3px);
+    border-color: var(--bubble-cyan);
+  }
+
+  .level-node.solved {
+    background: linear-gradient(135deg, rgba(66, 230, 149, 0.3), rgba(27, 187, 112, 0.22));
+    border-color: var(--bubble-lime);
+  }
+
+  .level-node.current {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.32), rgba(0, 114, 255, 0.32));
+    border-color: var(--bubble-cyan);
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.65);
+  }
+
+  .level-node.locked {
+    background: rgba(20, 18, 42, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .start-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+    text-align: left;
+  }
+
+  .start-feature-card {
+    background: rgba(0, 242, 254, 0.09);
+    border: 1.5px solid rgba(0, 242, 254, 0.35);
+    border-radius: 18px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  /* Cutscene Theatre & Well Done Pop-Up */
+  #cutsceneModal {
+    z-index: 90;
+    background: rgba(4, 2, 18, 0.92);
+  }
+
+  .cutscene-theatre {
+    width: min(860px, 95vw);
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid var(--bubble-cyan);
+    box-shadow: 0 0 50px rgba(0, 242, 254, 0.45);
+    background: #07041a;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cutscene-topbar {
+    padding: 12px 22px;
+    background: linear-gradient(90deg, rgba(0,242,254,0.2), rgba(255,94,188,0.2));
+    border-bottom: 1.5px solid rgba(0, 242, 254, 0.35);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    color: var(--bubble-cyan);
+  }
+
+  #cutsceneCanvas {
+    width: 100%;
+    height: 380px;
+    display: block;
+    background: radial-gradient(circle at 50% 45%, #1f1354 0%, #07031c 75%);
+  }
+
+  .cutscene-caption-bar {
+    padding: 14px 22px;
+    background: rgba(12, 8, 36, 0.95);
+    border-top: 1.5px solid rgba(255,255,255,0.15);
+    text-align: center;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #fff;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #wellDonePop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 4, 24, 0.74);
+    backdrop-filter: blur(6px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  #wellDonePop.show {
+    display: flex;
+  }
+
+  .well-done-card {
+    background: linear-gradient(145deg, rgba(28, 20, 74, 0.96), rgba(14, 10, 44, 0.96));
+    border: 3px solid var(--bubble-lime);
+    border-radius: 30px;
+    padding: 28px 36px;
+    max-width: 480px;
+    box-shadow: 0 0 40px rgba(94, 255, 138, 0.5), inset 0 2px 12px rgba(255,255,255,0.3);
+  }
+
+  .stats-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .summary-stat-box {
+    background: rgba(0, 242, 254, 0.1);
+    border: 2px solid rgba(0, 242, 254, 0.35);
+    border-radius: 20px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .summary-stat-box .big-num {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--bubble-gold);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 900px) {
+    #mainWorkspace {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+    }
+    #app {
+      overflow-y: auto;
+    }
+    #cutsceneCanvas {
+      height: 280px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Floating Space Bubbles Canvas -->
+<canvas id="bgCanvas"></canvas>
+
+<div id="app">
+  <!-- TOP HUD BAR -->
+  <header id="topHud" class="bubble-panel">
+    <div class="brand-title"><span>🫧🧬 MEGA BIOTECH LAB</span></div>
+
+    <div class="stats-row">
+      <div class="stat-pill">🧩 Mission: <span class="val" id="hudLevel">1 / 30</span></div>
+      <div class="stat-pill">⭐ Score: <span class="val" id="hudScore">0</span></div>
+      <div class="stat-pill">🔥 Streak: <span class="val" id="hudStreak">0x</span></div>
+      <div class="stat-pill">🔓 Unlocked: <span class="val" id="hudSolved">1 / 30</span></div>
+    </div>
+
+    <div class="stats-row">
+      <button class="bubble-btn btn-gold" onclick="openModal('guideModal')">📖 Bio-Textbook</button>
+      <button class="bubble-btn btn-purple" onclick="openModal('mapModal')">🪐 30 Missions</button>
+      <button class="bubble-btn" id="musicBtn" onclick="toggleMusic()">🎵 Music: ON</button>
+      <button class="bubble-btn btn-danger" onclick="openModal('exitModal')" title="Pause or Exit">✖ Menu</button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main id="mainWorkspace">
+    <!-- Left Column: MISSION BOX AT TOP + 2D LIVE VISUAL SIMULATOR BELOW -->
+    <section id="leftCol">
+      <div id="missionBox" class="bubble-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span class="sector-tag" id="sectorBadge">Sector 1: Mission Control Bioreactors</span>
+          <span class="cosmic-mono" style="font-size:0.84rem; color:#ffd15c; font-weight:700;" id="rewardBadge">First Solve: +150 pts | Wrong: -100 pts</span>
+        </div>
+        <h2 id="puzzleTitle">Loading Mission...</h2>
+        <p id="puzzleStory"></p>
+
+        <!-- Clickable Lightbulb Button (Hide & Reveal Clue Description) -->
+        <div>
+          <div class="clue-header-row">
+            <button class="lightbulb-btn" id="clueToggleBtn" onclick="toggleClueBox()" title="Click to show or hide the mission clue">
+              <span id="clueBulbIcon">💡</span>
+              <span id="clueBtnLabel">Clue</span>
+            </button>
+          </div>
+          <div id="clueContentBox">
+            💡 <strong>Clue Description:</strong> <span id="puzzleHint"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="visualizerContainer" class="bubble-panel">
+        <div class="visualizer-badge" id="simModeBadge">2D LIVE BIO-SCANNER</div>
+        <canvas id="simCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- Right Column: Interactive Controls -->
+    <section id="rightCol" class="bubble-panel">
+      <div id="controlsArea"></div>
+      <div id="feedbackBanner"></div>
+
+      <div id="actionFooter">
+        <div style="display:flex; gap:8px;">
+          <button class="bubble-btn btn-purple" id="prevBtn" onclick="prevLevel()">◀ Prev</button>
+          <button class="bubble-btn btn-purple" id="nextBtn" onclick="nextLevel()" disabled>🔒 Next ▶</button>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="bubble-btn btn-gold" onclick="openTextbookAtRelevantChapter()">📖 Open Textbook</button>
+          <button class="bubble-btn btn-green" id="runExpBtn" onclick="submitSolution()">🚀 Run Bio-Experiment</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MODAL 1: LAUNCH START MENU (ONLY "ENTER MEGA BIOTECH LAB" BUTTON) -->
+<div class="modal-backdrop active" id="titleModal">
+  <div class="modal-card bubble-panel" style="max-width:700px; text-align:center;">
+    <div class="modal-body" style="padding:36px 30px;">
+      <div style="font-size:3.5rem; margin-bottom:6px;">🫧🧬🚀</div>
+      <div style="font-size:0.9rem; font-weight:700; letter-spacing:2px; color:var(--bubble-cyan); text-transform:uppercase;">
+        Mission Control Biotechnology Challenge
+      </div>
+      <h1 style="margin:6px 0 12px; font-size:2.5rem; background:linear-gradient(90deg,#00f2fe,#ff85e4,#ffe47a); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+        MEGA BIOTECH LAB
+      </h1>
+      <p style="color:var(--text-soft); font-size:1.05rem; max-width:560px; margin:0 auto;">
+        Welcome to <strong>Mission Control</strong>, Chief Bio-Engineer! Complete <strong>30 sequential biotechnology missions</strong> using real genetic engineering tools. Each mission awards <strong>+150 points once</strong>, wrong answers cost <strong>-100 points</strong>, and every solved mission plays a live cutscene!
+      </p>
+
+      <div class="start-feature-grid">
+        <div class="start-feature-card"><strong style="color:var(--bubble-cyan);">🦠 1. Bioreactors</strong><br>Stock life support & rocket biofuel.</div>
+        <div class="start-feature-card"><strong style="color:var(--bubble-pink);">🧬 2. Plasmids</strong><br>Engineer frost-proof crops & shields.</div>
+        <div class="start-feature-card"><strong style="color:var(--bubble-gold);">🔥 3. PCR Copier</strong><br>Quarantine station airlocks & seeds.</div>
+        <div class="start-feature-card"><strong style="color:var(--bubble-lime);">⚡ 4. Gel & CRISPR</strong><br>Solve mysteries & repair crew DNA!</div>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin-top:24px;">
+        <button class="bubble-btn btn-green" style="font-size:1.2rem; padding:16px 42px;" onclick="startGameFromMenu()">🚀 Enter Mega Biotech Lab</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 2: MISSION CUTSCENE THEATRE + WELL DONE POP-UP -->
+<div class="modal-backdrop" id="cutsceneModal">
+  <div class="cutscene-theatre">
+    <div class="cutscene-topbar">
+      <span id="cutsceneHeaderTitle">🎬 MISSION CONTROL EXPERIMENT RUNNING...</span>
+      <span id="cutsceneMissionTag" class="cosmic-mono" style="color:var(--bubble-gold);">MISSION 1</span>
+    </div>
+    <canvas id="cutsceneCanvas" width="840" height="380"></canvas>
+    <div class="cutscene-caption-bar" id="cutsceneCaption">Initializing orbital bio-sequence...</div>
+
+    <div id="wellDonePop">
+      <div class="well-done-card">
+        <div style="font-size:3.2rem; margin-bottom:6px;">🎉🧬✨</div>
+        <h2 style="margin:0; font-size:2.2rem; color:var(--bubble-lime); letter-spacing:1px;">WELL DONE!</h2>
+        <p id="wellDoneSubtext" style="color:#e2eeff; font-size:1.02rem; margin:10px 0 14px;"></p>
+        <div id="wellDonePointsPill" class="cosmic-mono" style="display:inline-block; padding:8px 22px; border-radius:30px; background:rgba(255,209,92,0.2); border:2px solid var(--bubble-gold); color:var(--bubble-gold); font-weight:700; font-size:1.15rem; margin-bottom:18px;">
+          +150 POINTS!
+        </div>
+        <div>
+          <button class="bubble-btn btn-green" style="font-size:1.08rem; padding:12px 30px;" id="cutsceneContinueBtn" onclick="finishCutsceneAndAdvance()">Continue ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 3: CONGRATULATIONS ENDING MENU (MISSION CONTROL COMPLETE) -->
+<div class="modal-backdrop" id="congratsModal">
+  <div class="modal-card bubble-panel" style="max-width:680px; text-align:center;">
+    <div class="modal-header">
+      <h2>🏆 MISSION CONTROL: ALL 30 MISSIONS COMPLETE!</h2>
+      <button class="close-x-btn" onclick="closeModal('congratsModal')">✖</button>
+    </div>
+    <div class="modal-body" style="padding:28px 30px;">
+      <div style="font-size:3.5rem; margin-bottom:6px;">🚀🪐🌟</div>
+      <h2 style="margin:4px 0 8px; font-size:2rem; background:linear-gradient(90deg,#00f2fe,#5eff8a,#ffd15c); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+        MISSION ACCOMPLISHED, CHIEF BIO-ENGINEER!
+      </h2>
+      <p style="color:var(--text-soft); margin:0 auto 18px; max-width:540px;">
+        Incredible work! You completed all 30 cosmic biotechnology puzzles for <strong>Mission Control</strong>, mastering Bioreactors, Plasmid Gene Splicing, PCR Thermal Cycling, Gel Electrophoresis, and CRISPR-Cas9!
+      </p>
+
+      <div class="stats-summary-grid">
+        <div class="summary-stat-box">
+          <div style="font-size:0.88rem; color:var(--text-soft); font-weight:700;">FINAL SCORE</div>
+          <div class="big-num cosmic-mono" id="finalScoreVal">4500</div>
+        </div>
+        <div class="summary-stat-box">
+          <div style="font-size:0.88rem; color:var(--text-soft); font-weight:700;">LAB ACCURACY</div>
+          <div class="big-num cosmic-mono" id="finalAccuracyVal" style="color:var(--bubble-lime);">100%</div>
+        </div>
+        <div class="summary-stat-box">
+          <div style="font-size:0.88rem; color:var(--text-soft); font-weight:700;">BEST STREAK</div>
+          <div class="big-num cosmic-mono" id="finalStreakVal" style="color:var(--bubble-cyan);">30x</div>
+        </div>
+        <div class="summary-stat-box">
+          <div style="font-size:0.88rem; color:var(--text-soft); font-weight:700;">OFFICIAL RANK</div>
+          <div class="big-num" id="finalRankVal" style="color:var(--bubble-pink); font-size:1.25rem;">Mission Control Chief Geneticist 🌟</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:20px;">
+        <button class="bubble-btn btn-green" style="font-size:1.05rem; padding:12px 28px;" onclick="resetProgress(); closeModal('congratsModal');">🔄 Play Campaign Again</button>
+        <button class="bubble-btn btn-purple" style="font-size:1.05rem; padding:12px 24px;" onclick="closeModal('congratsModal'); openModal('mapModal');">🪐 Review All 30 Missions</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 4: SCIENCE TEXTBOOK GUIDE (5 DETAILED CHAPTERS) -->
+<div class="modal-backdrop" id="guideModal">
+  <div class="modal-card bubble-panel">
+    <div class="modal-header">
+      <h2>📘 Mission Control Bio-Textbook (Year 8 Field Guide)</h2>
+      <button class="close-x-btn" onclick="closeModal('guideModal')" title="Close Textbook">✖</button>
+    </div>
+    <div class="modal-body">
+      <div class="chapter-tabs">
+        <button class="tab-btn active" onclick="switchTab(0)">Ch 1: Cells & Temps</button>
+        <button class="tab-btn" onclick="switchTab(1)">Ch 2: DNA & Plasmids</button>
+        <button class="tab-btn" onclick="switchTab(2)">Ch 3: PCR Thermal Copier</button>
+        <button class="tab-btn" onclick="switchTab(3)">Ch 4: Gel Electrophoresis</button>
+        <button class="tab-btn" onclick="switchTab(4)">Ch 5: CRISPR Gene Editing</button>
+      </div>
+
+      <div class="textbook-page active" id="tab0">
+        <h3>🦠 Chapter 1: Cells, Ingredients & Bioreactor Temperatures</h3>
+        <p>In space biotechnology, we grow microscopic cells inside shiny tanks called <strong>Bioreactors</strong> to make medicines, oxygen, biofuel, and food. Every microbe has enzymes inside it. If the tank is too cold, reactions slow down. If it is too hot, the enzymes <strong>denature</strong> (lose their shape and stop working)!</p>
+        <table class="bio-table">
+          <thead>
+            <tr><th>Cell Type</th><th>Ideal Temp</th><th>Required Ingredients (Broth)</th><th>Oxygen / Light Rule</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>E. coli Bacteria</strong> (Prokaryote)</td><td><strong>37°C</strong> (Body temp)</td><td><strong>Glucose + Amino Acids</strong></td><td>Needs <strong>Aerobic (Oxygen ON)</strong> for fast growth & insulin making.</td></tr>
+            <tr><td><strong>Baker's / Brewer's Yeast</strong> (Fungus)</td><td><strong>30°C</strong> (Warm)</td><td><strong>Sucrose Sugar + Yeast Extract</strong></td><td><strong>Anaerobic (No Oxygen)</strong> for Ethanol Biofuel; <strong>Aerobic (Oxygen ON)</strong> for biomass!</td></tr>
+            <tr><td><strong>Spirulina Algae</strong> (Photosynthetic)</td><td><strong>25°C</strong> (Mild)</td><td><strong>CO2 + Mineral Nitrates</strong></td><td>Needs <strong>UV-Grow Light + CO2</strong> (Makes oxygen via photosynthesis!).</td></tr>
+            <tr><td><strong>Lactobacillus</strong> (Yogurt Bacteria)</td><td><strong>42°C</strong> (Cozy warm)</td><td><strong>Lactose Milk Sugar</strong></td><td><strong>Anaerobic (No Oxygen)</strong> to ferment milk sugar into lactic acid.</td></tr>
+            <tr><td><strong>Thermus aquaticus</strong> (Extremophile)</td><td><strong>72°C</strong> (Super hot!)</td><td><strong>Sulfur Minerals + Peptone</strong></td><td><strong>Aerobic (Oxygen ON)</strong>; survives boiling volcanic vents!</td></tr>
+            <tr><td><strong>Mammalian Stem Cells</strong></td><td><strong>37°C</strong> (Body temp)</td><td><strong>Growth Serum + Vitamins</strong></td><td><strong>Aerobic + 5% CO2 Buffer</strong> (Fragile—has no cell wall!).</td></tr>
+          </tbody>
+        </table>
+        <div class="callout-card">
+          <strong>🔬 Year 8 Cell Tip:</strong> Bacteria are <em>prokaryotes</em> (no nucleus; their DNA floats in circular rings called plasmids). Yeast, Algae, and Mammalian cells are <em>eukaryotes</em> (DNA is stored safely inside a nucleus).
+        </div>
+      </div>
+
+      <div class="textbook-page" id="tab1">
+        <h3>🧬 Chapter 2: DNA Structure, Base Pairing & Gene Splicing</h3>
+        <p>DNA is shaped like a twisted ladder called a <strong>double helix</strong>. The rungs of the ladder are made of four chemical bases that always pair up following strict rules:</p>
+        <ul>
+          <li>🔴 <strong>Adenine (A)</strong> ALWAYS pairs with 🔵 <strong>Thymine (T)</strong></li>
+          <li>🟢 <strong>Cytosine (C)</strong> ALWAYS pairs with 🟡 <strong>Guanine (G)</strong></li>
+        </ul>
+        <p>To give bacteria a new superpower, genetic engineers cut open a bacterial DNA ring (a <strong>Plasmid</strong>) and paste in a new gene:</p>
+        <table class="bio-table">
+          <thead>
+            <tr><th>Molecular Tool</th><th>What It Does in the Lab</th><th>When to Choose It</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>EcoRI Enzyme</strong></td><td>Molecular scissors that cut cleanly at <code>GAATTC</code> sequences.</td><td>Used for <strong>Human Insulin</strong> & <strong>Hormone</strong> genes.</td></tr>
+            <tr><td><strong>BamHI Enzyme</strong></td><td>Molecular scissors that cut at <code>GGATCC</code> sequences.</td><td>Used for <strong>Bioluminescent (Glow) GFP</strong> & <strong>Radiation-Shield</strong> genes.</td></tr>
+            <tr><td><strong>HindIII Enzyme</strong></td><td>Molecular scissors that cut at <code>AAGCTT</code> sequences.</td><td>Used for <strong>Crop Frost/Drought Resistance</strong> & <strong>Plastic-Eating</strong> genes.</td></tr>
+            <tr><td><strong>DNA Ligase</strong></td><td><strong>Molecular Glue!</strong> Seals the sticky ends of DNA back together.</td><td>Required in <strong>every</strong> plasmid splicing mission to finish the ring.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="textbook-page" id="tab2">
+        <h3>🔥 Chapter 3: PCR (Polymerase Chain Reaction) – The DNA Photocopier</h3>
+        <p>When astronauts find a tiny drop of DNA on a meteorite or airlock, they use a <strong>PCR Thermal Cycler</strong> to make millions of copies. It works in <strong>3 repeating temperature steps</strong>:</p>
+        <table class="bio-table">
+          <thead>
+            <tr><th>PCR Step</th><th>Exact Temperature</th><th>What Happens to the DNA?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Step 1: Denaturation</strong></td><td><strong>95°C</strong></td><td>Intense heat breaks the hydrogen bonds and <strong>unzips</strong> the double-stranded DNA into two single strands.</td></tr>
+            <tr><td><strong>Step 2: Annealing</strong></td><td><strong>55°C</strong></td><td>The tube cools so short <strong>RNA/DNA Primers</strong> can lock onto the start of the target gene.</td></tr>
+            <tr><td><strong>Step 3: Extension</strong></td><td><strong>72°C</strong></td><td><strong>Taq Polymerase</strong> (the heat-proof enzyme from hot-spring bacteria) builds the new DNA strand!</td></tr>
+          </tbody>
+        </table>
+        <div class="callout-card">
+          <strong>🧮 Doubling Math Rule:</strong> Every 1 cycle of PCR <strong>doubles</strong> the number of DNA copies!
+          <br>• Start with 1 copy → 1 cycle = 2 → 2 cycles = 4 → 3 cycles = 8 → 4 cycles = 16 → 5 cycles = 32 copies!
+        </div>
+      </div>
+
+      <div class="textbook-page" id="tab3">
+        <h3>⚡ Chapter 4: Gel Electrophoresis – Sorting DNA by Size</h3>
+        <p>How do we see DNA fragments to solve a mystery or check a strain? We push DNA through a spongy jelly slab called an <strong>Agarose Gel</strong> using electricity!</p>
+        <ul>
+          <li>🔋 <strong>Charge Rule:</strong> DNA has a natural <strong>NEGATIVE (-) charge</strong>. Because opposites attract, DNA always swims away from the <strong>Negative (-) Electrode</strong> at the top wells and races toward the <strong>Positive (+) Electrode</strong> at the bottom!</li>
+          <li>🏃 <strong>Speed & Size Rule:</strong> Smaller, shorter DNA pieces (fewer base pairs, like <code>100 bp</code>) wiggle through the gel pores <strong>much faster</strong> and travel <strong>farther down</strong> than heavy, long pieces (like <code>900 bp</code>).</li>
+        </ul>
+        <div class="callout-card">
+          <strong>🔎 Forensic Matching Tip:</strong> To match a mystery sample or culprit, look for the Lane whose glowing bands line up at the <strong>exact same horizontal heights (bp sizes)</strong> as the Evidence lane!
+        </div>
+      </div>
+
+      <div class="textbook-page" id="tab4">
+        <h3>✂️ Chapter 5: CRISPR-Cas9 – Precision Gene Editing</h3>
+        <p><strong>CRISPR-Cas9</strong> is like a GPS-guided pair of scissors that can fix a spelling mistake (mutation) inside a living cell's DNA.</p>
+        <ul>
+          <li>🧭 <strong>Guide RNA (gRNA):</strong> Cas9 needs a matching piece of <strong>RNA</strong> to find the target DNA. RNA uses the same pairing rules as DNA, EXCEPT there is <strong>NO Thymine (T) in RNA</strong>! Instead, RNA uses <strong>Uracil (U)</strong>:
+            <br>• DNA <strong>A</strong> pairs with RNA <strong>U</strong> &nbsp;|&nbsp; DNA <strong>T</strong> pairs with RNA <strong>A</strong> &nbsp;|&nbsp; DNA <strong>C</strong> pairs with RNA <strong>G</strong> &nbsp;|&nbsp; DNA <strong>G</strong> pairs with RNA <strong>C</strong>
+          </li>
+          <li>🎯 <strong>PAM Site (NGG):</strong> Cas9 will only cut next to a 3-letter safety tag called a <strong>PAM sequence</strong> (ending in <code>GG</code>, such as <code>AGG</code>, <code>TGG</code>, or <code>CGG</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 5: 30-MISSION MAP -->
+<div class="modal-backdrop" id="mapModal">
+  <div class="modal-card bubble-panel">
+    <div class="modal-header">
+      <h2>🪐 Mission Control Campaign Map (Complete in Order)</h2>
+      <button class="close-x-btn" onclick="closeModal('mapModal')">✖</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; color:var(--text-soft);">You must complete each biotechnology mission in order to unlock the next Mission Control sector:</p>
+      <div class="level-grid" id="levelGridContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 6: PAUSE / MENU MODAL -->
+<div class="modal-backdrop" id="exitModal">
+  <div class="modal-card bubble-panel" style="max-width:520px; text-align:center;">
+    <div class="modal-header">
+      <h2>🛸 Mission Control Command</h2>
+      <button class="close-x-btn" onclick="closeModal('exitModal')">✖</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:1.05rem;">Lab simulation paused. What would you like to do, Chief Bio-Engineer?</p>
+      <div style="margin:18px 0; padding:14px; border-radius:18px; background:rgba(0,0,0,0.35);">
+        <div>🏆 Current Score: <strong id="exitScoreVal" class="cosmic-mono" style="color:var(--bubble-gold);">0</strong></div>
+        <div style="margin-top:6px;">🧬 Missions Solved: <strong id="exitSolvedVal" class="cosmic-mono" style="color:var(--bubble-lime);">0 / 30</strong></div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="bubble-btn btn-green" onclick="closeModal('exitModal')">▶ Resume Lab</button>
+        <button class="bubble-btn btn-pink" onclick="resetProgress()">🔄 Restart Campaign</button>
+        <button class="bubble-btn btn-danger" onclick="enterStandbyScreen()">🏠 Main Start Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   1. UPBEAT COSMIC WEB AUDIO SYNTHESIZER (120-BPM GROOVE + BUBBLY SFX)
+   ============================================================================ */
+let audioCtx = null;
+let musicEnabled = true;
+let musicInterval = null;
+let musicStep = 0;
+
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContextClass();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playBubblePop(freq = 520) {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    const now = audioCtx.currentTime;
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(freq * 2.1, now + 0.11);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.12);
+  } catch (e) {}
+}
+
+function playSuccessFanfare() {
+  try {
+    initAudio();
+    [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((n, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      const start = audioCtx.currentTime + idx * 0.085;
+      osc.frequency.setValueAtTime(n, start);
+      gain.gain.setValueAtTime(0.18, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + 0.31);
+    });
+  } catch (e) {}
+}
+
+function playErrorBuzz() {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    const now = audioCtx.currentTime;
+    osc.frequency.setValueAtTime(165, now);
+    osc.frequency.linearRampToValueAtTime(110, now + 0.28);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.31);
+  } catch (e) {}
+}
+
+function startUpbeatSpaceMusic() {
+  if (musicInterval) return;
+  const melodySeq = [
+    523.25, 659.25, 783.99, 987.77, 783.99, 659.25, 1046.50, 783.99,
+    440.00, 523.25, 659.25, 880.00, 659.25, 523.25, 783.99, 659.25,
+    349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 880.00, 698.46,
+    392.00, 493.88, 587.33, 783.99, 659.25, 783.99, 987.77, 1046.50
+  ];
+  const bassSeq = [130.81, 130.81, 110.00, 110.00, 87.31, 87.31, 98.00, 98.00];
+
+  musicInterval = setInterval(() => {
+    if (!musicEnabled || !audioCtx || audioCtx.state !== 'running') return;
+    const now = audioCtx.currentTime;
+
+    const leadOsc = audioCtx.createOscillator();
+    const leadGain = audioCtx.createGain();
+    leadOsc.type = 'sine';
+    leadOsc.frequency.setValueAtTime(melodySeq[musicStep % melodySeq.length], now);
+    leadGain.gain.setValueAtTime(0.001, now);
+    leadGain.gain.linearRampToValueAtTime(0.042, now + 0.02);
+    leadGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.21);
+    leadOsc.connect(leadGain);
+    leadGain.connect(audioCtx.destination);
+    leadOsc.start(now);
+    leadOsc.stop(now + 0.22);
+
+    if (musicStep % 2 === 0) {
+      const bassOsc = audioCtx.createOscillator();
+      const bassGain = audioCtx.createGain();
+      bassOsc.type = 'triangle';
+      bassOsc.frequency.setValueAtTime(bassSeq[Math.floor(musicStep / 4) % bassSeq.length], now);
+      bassGain.gain.setValueAtTime(0.001, now);
+      bassGain.gain.linearRampToValueAtTime(0.05, now + 0.03);
+      bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+      bassOsc.connect(bassGain);
+      bassGain.connect(audioCtx.destination);
+      bassOsc.start(now);
+      bassOsc.stop(now + 0.38);
+    }
+
+    if (musicStep % 2 === 1) {
+      const tickOsc = audioCtx.createOscillator();
+      const tickGain = audioCtx.createGain();
+      tickOsc.type = 'sine';
+      tickOsc.frequency.setValueAtTime(2400, now);
+      tickGain.gain.setValueAtTime(0.008, now);
+      tickGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.04);
+      tickOsc.connect(tickGain);
+      tickGain.connect(audioCtx.destination);
+      tickOsc.start(now);
+      tickOsc.stop(now + 0.045);
+    }
+    musicStep++;
+  }, 240);
+}
+
+function toggleMusic() {
+  initAudio();
+  musicEnabled = !musicEnabled;
+  document.getElementById('musicBtn').textContent = musicEnabled ? '🎵 Music: ON' : '🔇 Music: OFF';
+  playBubblePop(440);
+  if (musicEnabled) startUpbeatSpaceMusic();
+}
+
+/* ============================================================================
+   2. ALL 30 EDUCATIONAL BIOTECH PUZZLES (MISSION CONTROL THEME)
+   ============================================================================ */
+const BIOREACTOR_CELLS = [
+  "E. coli Bacteria",
+  "Baker's / Brewer's Yeast",
+  "Spirulina Algae",
+  "Lactobacillus",
+  "Thermus aquaticus",
+  "Mammalian Stem Cells"
+];
+
+const BIOREACTOR_BROTHS = [
+  "Glucose + Amino Acids",
+  "Sucrose Sugar + Yeast Extract",
+  "CO2 + Mineral Nitrates",
+  "Lactose Milk Sugar",
+  "Sulfur Minerals + Peptone",
+  "Growth Serum + Vitamins"
+];
+
+const BIOREACTOR_MODES = [
+  "Aerobic (Oxygen ON)",
+  "Anaerobic (No Oxygen)",
+  "UV-Grow Light + CO2",
+  "Aerobic + 5% CO2 Buffer"
+];
+
+const SPLICE_ENZYMES = ["EcoRI Enzyme", "BamHI Enzyme", "HindIII Enzyme"];
+const SPLICE_GLUES = ["DNA Ligase", "RNA Primer Only", "No Sealant"];
+const GEL_POLARITIES = [
+  "Top: Negative (-) / Bottom: Positive (+)",
+  "Top: Positive (+) / Bottom: Negative (-)"
+];
+const GEL_SPEED_OPTS = [
+  "100 bp (Smallest travels farthest)",
+  "150 bp (Smallest travels farthest)",
+  "180 bp (Smallest travels farthest)",
+  "200 bp (Smallest travels farthest)",
+  "900 bp (Largest travels farthest)"
+];
+const CRISPR_PAMS = [
+  "AGG (Valid NGG PAM)",
+  "TGG (Valid NGG PAM)",
+  "CGG (Valid NGG PAM)",
+  "ATC (No GG Tag)"
+];
+
+const PUZZLES = [
+  { id: 1, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 1: Emergency Space Insulin',
+    story: 'Mission Control Life Support is online! Commander Patel needs human insulin for the medical bay. Set up the bioreactor tank with the correct cell, temperature, broth, and oxygen rule.',
+    hint: 'Check Chapter 1: Which prokaryote bacterium grows at human body temp and uses Glucose + Amino Acids with Oxygen ON?',
+    cutsceneCaption: 'E. coli rapidly brews pure Human Insulin Vials for Commander Patel!',
+    target: { cell: "E. coli Bacteria", temp: 37, broth: "Glucose + Amino Acids", mode: "Aerobic (Oxygen ON)" } },
+  { id: 2, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 2: Green Oxygen Scrubber',
+    story: 'Mission Control air filters need immediate oxygen generation! Cultivate a photosynthetic microbe that absorbs carbon dioxide and releases fresh oxygen bubbles under grow-lights.',
+    hint: 'Check Chapter 1: Which photosynthetic cell thrives in mild conditions and needs mineral nitrates plus UV-Grow Light?',
+    cutsceneCaption: 'Spirulina Algae photosynthesizes CO2 into fresh Oxygen bubbles for Mission Control!',
+    target: { cell: "Spirulina Algae", temp: 25, broth: "CO2 + Mineral Nitrates", mode: "UV-Grow Light + CO2" } },
+  { id: 3, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 3: Rocket Bio-Ethanol Fuel',
+    story: 'Mission Control shuttle thrusters need eco-friendly ethanol biofuel! Ferment sugar using a single-celled fungus without any oxygen so it produces clean ethanol.',
+    hint: 'Check Chapter 1: How does Baker\'s / Brewer\'s Yeast ferment Sucrose Sugar into ethanol biofuel?',
+    cutsceneCaption: 'Anaerobic Yeast fermentation fills the shuttle auxiliary fuel tanks for liftoff!',
+    target: { cell: "Baker's / Brewer's Yeast", temp: 30, broth: "Sucrose Sugar + Yeast Extract", mode: "Anaerobic (No Oxygen)" } },
+  { id: 4, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 4: Probiotic Space Yogurt',
+    story: 'Long spaceflights weaken astronaut digestion. Brew a batch of probiotic yogurt by fermenting milk sugar into tangy lactic acid!',
+    hint: 'Check Chapter 1: Look up Lactobacillus—what cozy temperature, sugar, and oxygen setting does it need?',
+    cutsceneCaption: 'Lactobacillus ferments lactose at 42°C into creamy Probiotic Space Yogurt!',
+    target: { cell: "Lactobacillus", temp: 42, broth: "Lactose Milk Sugar", mode: "Anaerobic (No Oxygen)" } },
+  { id: 5, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 5: Europa Volcano Enzyme Harvest',
+    story: 'We need heat-proof Taq enzymes for our Mission Control DNA copiers! Grow the volcanic extremophile microbe discovered in boiling deep-sea vents.',
+    hint: 'Check Chapter 1: Which extremophile loves super-hot temperatures and sulfur minerals?',
+    cutsceneCaption: 'Thermus aquaticus thrives at 72°C around volcanic vents, yielding golden Taq Enzymes!',
+    target: { cell: "Thermus aquaticus", temp: 72, broth: "Sulfur Minerals + Peptone", mode: "Aerobic (Oxygen ON)" } },
+  { id: 6, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 6: Zero-G Cartilage Tissue Repair',
+    story: 'A crew member sprained a knee during lunar training. Grow fragile human stem cells to repair cartilage tissue without bursting their membranes!',
+    hint: 'Check Chapter 1: What temperature, serum, and buffer do fragile Mammalian Stem Cells require?',
+    cutsceneCaption: 'Mammalian Stem Cells weave healthy new cartilage tissue across the knee joint!',
+    target: { cell: "Mammalian Stem Cells", temp: 37, broth: "Growth Serum + Vitamins", mode: "Aerobic + 5% CO2 Buffer" } },
+
+  { id: 7, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 7: Splicing the Human Insulin Gene',
+    story: 'Complete the complementary DNA strand for human insulin and choose the right restriction enzyme and glue to seal it into the plasmid!',
+    hint: 'Check Chapter 2: Pair A with T and C with G. Which restriction enzyme cuts Human Insulin genes?',
+    cutsceneCaption: 'EcoRI cuts the plasmid and DNA Ligase seals the TACGT Human Insulin gene into the ring!',
+    templateDNA: ['A','T','G','C','A'], targetDNA: ['T','A','C','G','T'], enzyme: 'EcoRI Enzyme', glue: 'DNA Ligase' },
+  { id: 8, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 8: Bioluminescent Space Moss (GFP)',
+    story: 'Engineer glowing moss to light up dark Martian caves without electricity! Build the complementary DNA strand and select the GFP restriction enzyme.',
+    hint: 'Check Chapter 2: Match each DNA base (A-T, C-G) and check which enzyme cuts Bioluminescent (GFP) genes.',
+    cutsceneCaption: 'Dark Martian caves and station bays illuminate with neon-green Bioluminescent Space Moss!',
+    templateDNA: ['G','G','A','T','C'], targetDNA: ['C','C','T','A','G'], enzyme: 'BamHI Enzyme', glue: 'DNA Ligase' },
+  { id: 9, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 9: Frost-Proof Martian Potatoes',
+    story: 'Martian nights are freezing! Splice an arctic fish anti-freeze gene into potato plant plasmids so our space crops survive frost.',
+    hint: 'Check Chapter 2: Which restriction enzyme is used for Crop Frost/Drought Resistance genes?',
+    cutsceneCaption: 'Potato crops glow with a warm anti-freeze shield against sub-zero blizzards!',
+    templateDNA: ['A','A','G','C','T'], targetDNA: ['T','T','C','G','A'], enzyme: 'HindIII Enzyme', glue: 'DNA Ligase' },
+  { id: 10, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 10: Cosmic Radiation Shield Protein',
+    story: 'Tardigrades have a special protein that shields DNA from cosmic radiation! Splice this shield gene into our orbital plasmid.',
+    hint: 'Check Chapter 2: Check the enzyme table for Radiation-Shield genes, and remember DNA Ligase seals the ring.',
+    cutsceneCaption: 'Tardigrade shield proteins project a golden barrier deflecting deep-space cosmic rays!',
+    templateDNA: ['C','G','T','A','G'], targetDNA: ['G','C','A','T','C'], enzyme: 'BamHI Enzyme', glue: 'DNA Ligase' },
+  { id: 11, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 11: Plastic-Recycling Super Bacteria',
+    story: 'Station waste plastic needs to be recycled into 3D-printer ink! Splice the PETase plastic-eating enzyme gene into a bacterial plasmid.',
+    hint: 'Check Chapter 2: Which molecular scissors cut Plastic-Eating genes?',
+    cutsceneCaption: 'Engineered bacteria chomp waste plastic and spin fresh 3D-Printer Filament!',
+    templateDNA: ['T','C','A','G','A'], targetDNA: ['A','G','T','C','T'], enzyme: 'HindIII Enzyme', glue: 'DNA Ligase' },
+  { id: 12, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 12: Bone-Growth Hormone Plasmid',
+    story: 'Zero gravity causes bones to lose calcium. Engineer a plasmid carrying the human growth hormone gene to protect crew bone density!',
+    hint: 'Check Chapter 2: Which enzyme cuts Human Insulin & Hormone genes?',
+    cutsceneCaption: 'Bone-Growth Hormone plasmids reinforce astronaut skeletal density in zero gravity!',
+    templateDNA: ['G','A','A','T','T'], targetDNA: ['C','T','T','A','A'], enzyme: 'EcoRI Enzyme', glue: 'DNA Ligase' },
+
+  { id: 13, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 13: Meteorite Microbe Amplification',
+    story: 'We found 1 single strand of fossil DNA inside a Martian meteorite! Set the 3 PCR temperatures and run enough cycles to produce 8 copies.',
+    hint: 'Check Chapter 3: Review the 3 PCR stage temperatures and use the Doubling Math Rule starting from 1 copy to reach 8 copies.',
+    cutsceneCaption: '3 PCR thermal cycles amplify the lone meteorite strand into 8 glowing DNA copies!',
+    startCopies: 1, targetCopies: 8, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+  { id: 14, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 14: Hydroponic Plant Virus Check',
+    story: 'Our space tomatoes have yellow spots! Starting with 1 viral DNA strand, run the PCR machine to amplify it into 16 copies for testing.',
+    hint: 'Check Chapter 3: How many doublings turn 1 copy into 16 copies?',
+    cutsceneCaption: '16 amplified viral DNA strands identify the tomato virus so the greenhouse cures the crop!',
+    startCopies: 1, targetCopies: 16, targetCycles: 4, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+  { id: 15, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 15: Airlock Contamination Trace',
+    story: 'We swabbed 1 bacterial DNA molecule from the airlock handle. Amplify it to 32 copies so the scanner can identify the species!',
+    hint: 'Check Chapter 3: Count the doublings from 1 → 2 → 4 → 8 → 16 → 32!',
+    cutsceneCaption: '32 amplified DNA strands trigger the Airlock UV Bio-Sanitizer beam—contaminant cleared!',
+    startCopies: 1, targetCopies: 32, targetCycles: 5, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+  { id: 16, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 16: Twin Sample Quick Doubling',
+    story: 'This tube already starts with 2 DNA templates! How many PCR cycles do we need to reach 16 copies while using the standard thermal profile?',
+    hint: 'Careful! You are starting with 2 copies this time: 1 cycle = 4, 2 cycles = 8, 3 cycles = 16!',
+    cutsceneCaption: 'Twin test tubes pulse through 3 thermal cycles to synchronize 16 gleaming DNA helices!',
+    startCopies: 2, targetCopies: 16, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+  { id: 17, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 17: Deep-Space Seed Bank Verification',
+    story: 'Starting with 3 DNA strands from heritage wheat seeds, run the PCR thermal cycler to reach 24 strands!',
+    hint: 'Double from 3 copies each cycle: 3 → 6 → 12 → 24!',
+    cutsceneCaption: '24 verified DNA strands unlock the Deep-Space Seed Vault as golden wheat sprouts!',
+    startCopies: 3, targetCopies: 24, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+  { id: 18, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 18: Sub-Surface Ice Core DNA',
+    story: 'We extracted 2 ancient DNA strands from Enceladus ice cores. Amplify them until you have 64 strands!',
+    hint: 'Start at 2 and double each cycle: 2 → 4 → 8 → 16 → 32 → 64.',
+    cutsceneCaption: 'Enceladus glacier core unlocks 64 ancient cryo-DNA strands across the hologram!',
+    startCopies: 2, targetCopies: 64, targetCycles: 5, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
+
+  { id: 19, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 19: Who Ate the Space Strawberries?',
+    story: 'Someone sneaked into the greenhouse and ate the prize strawberries! Set the correct electrode polarity, match the Evidence DNA bands (200 bp & 600 bp) to the culprit\'s Lane, and identify the fastest band.',
+    hint: 'Check Chapter 4: Remember DNA is negatively charged! Look at the 2D Gel Tank below to see which suspect lane matches the Evidence lane.',
+    cutsceneCaption: 'DNA Match Confirmed! Spotlight catches Dr. Nova red-handed with the prize Space Strawberries!',
+    evidenceBands: [200, 600],
+    lanes: [{ name: 'Lane 1 (Pilot Leo)', bands: [300, 800] }, { name: 'Lane 2 (Dr. Nova)', bands: [200, 600] }, { name: 'Lane 3 (Engineer Zac)', bands: [150, 450] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 2 (Dr. Nova)', fastestSize: '150 bp (Smallest travels farthest)' },
+  { id: 20, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 20: Pure Spirulina Strain Check',
+    story: 'We need the pure Spirulina strain that shows bands at 150 bp and 500 bp. Run the gel and select the matching batch!',
+    hint: 'Check Chapter 4: Which lane on the glowing agarose gel has bands at 150 bp and 500 bp?',
+    cutsceneCaption: 'Batch Alpha matches 150bp & 500bp—certified 100% Pure Spirulina Super-Culture!',
+    evidenceBands: [150, 500],
+    lanes: [{ name: 'Lane 1 (Batch Alpha)', bands: [150, 500] }, { name: 'Lane 2 (Batch Beta)', bands: [250, 700] }, { name: 'Lane 3 (Batch Gamma)', bands: [400, 900] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 1 (Batch Alpha)', fastestSize: '150 bp (Smallest travels farthest)' },
+  { id: 21, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 21: Plasmid Cut Confirmation',
+    story: 'If our EcoRI enzyme successfully cut the insulin plasmid, it should produce fragments at 300 bp and 750 bp. Find the successful tube!',
+    hint: 'Look closely at the 2D gel lanes: which lane lines up horizontally with the Evidence (300 bp & 750 bp)?',
+    cutsceneCaption: 'Tube C glows emerald green as 300bp and 750bp plasmid fragments confirm a clean cut!',
+    evidenceBands: [300, 750],
+    lanes: [{ name: 'Lane 1 (Tube A)', bands: [200, 900] }, { name: 'Lane 2 (Tube B)', bands: [350, 600] }, { name: 'Lane 3 (Tube C)', bands: [300, 750] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 3 (Tube C)', fastestSize: '200 bp (Smallest travels farthest)' },
+  { id: 22, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 22: Martian Soil Fungus ID',
+    story: 'We isolated a helpful soil fungus with signature DNA bands at 100 bp and 400 bp. Match it to the known catalogue species!',
+    hint: 'Compare the Evidence lane (100 bp & 400 bp) against Lanes 1, 2, and 3 on the scanner.',
+    cutsceneCaption: 'Species Y Soil Fungus confirmed! Friendly mycorrhizal mushrooms enrich the Martian soil!',
+    evidenceBands: [100, 400],
+    lanes: [{ name: 'Lane 1 (Species X)', bands: [250, 850] }, { name: 'Lane 2 (Species Y)', bands: [100, 400] }, { name: 'Lane 3 (Species Z)', bands: [300, 650] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 2 (Species Y)', fastestSize: '100 bp (Smallest travels farthest)' },
+  { id: 23, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 23: Water Recycler Bio-Filter Match',
+    story: 'Which bacterial colony carries the water-purifying gene profile (350 bp & 850 bp)? Verify the gel polarity and lane match.',
+    hint: 'Check Chapter 4 for polarity rules and find the lane matching 350 bp and 850 bp.',
+    cutsceneCaption: 'Colony Red Bio-Filter purifies murky station wastewater into sparkling crystal-clear water!',
+    evidenceBands: [350, 850],
+    lanes: [{ name: 'Lane 1 (Colony Red)', bands: [350, 850] }, { name: 'Lane 2 (Colony Blue)', bands: [200, 500] }, { name: 'Lane 3 (Colony Gold)', bands: [450, 900] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 1 (Colony Red)', fastestSize: '200 bp (Smallest travels farthest)' },
+  { id: 24, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 24: Space Wheat Hybrid Parentage',
+    story: 'Confirm which hybrid seedling inherited the drought-resistant bands at 250 bp and 550 bp!',
+    hint: 'Match the horizontal glowing bands on the 2D gel display and pick the smallest fragment as the fastest swimmer.',
+    cutsceneCaption: 'Seedling 3 confirmed! Golden drought-resistant Space Wheat flourishes under twin suns!',
+    evidenceBands: [250, 550],
+    lanes: [{ name: 'Lane 1 (Seedling 1)', bands: [180, 720] }, { name: 'Lane 2 (Seedling 2)', bands: [400, 800] }, { name: 'Lane 3 (Seedling 3)', bands: [250, 550] }],
+    correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 3 (Seedling 3)', fastestSize: '180 bp (Smallest travels farthest)' },
+
+  { id: 25, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 25: Fixing Sickle-Cell Hemoglobin',
+    story: 'Program Cas9 with a complementary Guide RNA (gRNA) sequence to locate the mutated hemoglobin DNA strand and lock onto a valid PAM site!',
+    hint: 'Check Chapter 5: In RNA, DNA "A" pairs with RNA "U"! (T→A, C→G, G→C). Also select the PAM sequence ending in GG.',
+    cutsceneCaption: 'CRISPR-Cas9 edits the hemoglobin gene—sickle cells transform into healthy round red blood cells!',
+    dnaTarget: ['T','A','C','G','A'], targetRNA: ['A','U','G','C','U'], pamSite: 'AGG (Valid NGG PAM)' },
+  { id: 26, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 26: Disabling Allergen Gene in Space Peanuts',
+    story: 'Edit out the allergy-causing protein in our orbital peanut crop so every astronaut can safely eat peanut butter!',
+    hint: 'Check Chapter 5: Translate the DNA target into complementary Guide RNA (remember U instead of T!).',
+    cutsceneCaption: 'Cas9 snips out the allergen sequence—100% Allergy-Free Space Peanut Butter is served!',
+    dnaTarget: ['A','A','G','C','T'], targetRNA: ['U','U','C','G','A'], pamSite: 'TGG (Valid NGG PAM)' },
+  { id: 27, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 27: Boosting Algae Chlorophyll Capture',
+    story: 'Use CRISPR-Cas9 to upgrade the photosynthesis promoter in our oxygen-making algae!',
+    hint: 'Match each DNA letter to its RNA partner (A→U, T→A, C→G, G→C).',
+    cutsceneCaption: 'Upgraded chloroplasts absorb 200% more starlight, turbo-charging station oxygen output!',
+    dnaTarget: ['G','C','A','T','C'], targetRNA: ['C','G','U','A','G'], pamSite: 'CGG (Valid NGG PAM)' },
+  { id: 28, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 28: Cystic Fibrosis Ion-Channel Repair',
+    story: 'Guide Cas9 to the faulty CFTR chloride channel gene and splice in the corrected repair sequence.',
+    hint: 'Carefully check your A→U and T→A pairings in the Guide RNA slots!',
+    cutsceneCaption: 'Repaired CFTR protein gates open smoothly, allowing glowing chloride ions to flow freely!',
+    dnaTarget: ['C','T','A','G','G'], targetRNA: ['G','A','U','C','C'], pamSite: 'AGG (Valid NGG PAM)' },
+  { id: 29, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 29: Blight-Proof Martian Tomatoes',
+    story: 'Fungal blight threatens the greenhouse! Program Cas9 to knock out the susceptibility receptor in tomato cells.',
+    hint: 'Remember: DNA Adenine (A) always pairs with RNA Uracil (U).',
+    cutsceneCaption: 'CRISPR shield activated! Plump red Martian tomatoes deflect incoming fungal blight spores!',
+    dnaTarget: ['T','T','A','C','G'], targetRNA: ['A','A','U','G','C'], pamSite: 'TGG (Valid NGG PAM)' },
+  { id: 30, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 30: Final Boss — Deep-Space Hibernation Gene',
+    story: 'For the 5-year voyage to Jupiter\'s moons, engineer the metabolic protection gene using precision CRISPR-Cas9 guide RNA for Mission Control!',
+    hint: 'Final Mission! Build the exact 5-base Guide RNA sequence and lock onto the NGG PAM site.',
+    cutsceneCaption: 'Hibernation Gene Active! All 5 Mission Control Bio-Domes ignite as the flagship warps toward Jupiter!',
+    dnaTarget: ['A','G','T','A','C'], targetRNA: ['U','C','A','U','G'], pamSite: 'CGG (Valid NGG PAM)' }
+];
+
+/* ============================================================================
+   3. STATE & LIGHTBULB CLUE TOGGLE LOGIC
+   ============================================================================ */
+let currentIdx = 0;
+let maxUnlockedIdx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let totalAttempts = 0;
+let totalMistakes = 0;
+let solvedSet = new Set();
+let currentInput = {};
+let activeSlotIdx = -1;
+let isExperimentRunning = false;
+let isClueOpen = false;
+
+let cutsceneActive = false;
+let cutsceneStartTime = 0;
+let cutsceneMissionId = 1;
+
+function startGameFromMenu() {
+  initAudio();
+  startUpbeatSpaceMusic();
+  closeModal('titleModal');
+  resizeCanvases();
+}
+
+function toggleClueBox() {
+  playBubblePop(560);
+  isClueOpen = !isClueOpen;
+  const box = document.getElementById('clueContentBox');
+  const btn = document.getElementById('clueToggleBtn');
+  const lbl = document.getElementById('clueBtnLabel');
+  if (isClueOpen) {
+    box.classList.add('open');
+    btn.classList.add('active-clue');
+    lbl.textContent = 'Hide Clue';
+  } else {
+    box.classList.remove('open');
+    btn.classList.remove('active-clue');
+    lbl.textContent = 'Clue';
+  }
+}
+
+function resetClueBox() {
+  isClueOpen = false;
+  document.getElementById('clueContentBox').classList.remove('open');
+  document.getElementById('clueToggleBtn').classList.remove('active-clue');
+  document.getElementById('clueBtnLabel').textContent = 'Clue';
+}
+
+function initLevelState() {
+  const p = PUZZLES[currentIdx];
+  activeSlotIdx = -1;
+  isExperimentRunning = false;
+  resetClueBox();
+  const runBtn = document.getElementById('runExpBtn');
+  if (runBtn) runBtn.disabled = false;
+
+  if (p.type === 'bioreactor') {
+    currentInput = { cell: BIOREACTOR_CELLS[0], temp: 35, broth: BIOREACTOR_BROTHS[0], mode: BIOREACTOR_MODES[0] };
+  } else if (p.type === 'dna_splice') {
+    currentInput = { bases: ['A','A','A','A','A'], enzyme: SPLICE_ENZYMES[0], glue: SPLICE_GLUES[0] };
+  } else if (p.type === 'pcr') {
+    currentInput = { denatureTemp: 90, annealTemp: 50, extendTemp: 70, cycles: 2 };
+  } else if (p.type === 'gel') {
+    currentInput = { polarity: GEL_POLARITIES[0], lane: p.lanes[0].name, fastest: GEL_SPEED_OPTS[0] };
+  } else if (p.type === 'crispr') {
+    currentInput = { rna: ['A','A','A','A','A'], pam: CRISPR_PAMS[0] };
+  }
+}
+
+/* ============================================================================
+   4. UI RENDERING & BLUE-CYAN SELECTION HIGHLIGHT
+   ============================================================================ */
+function updateNavigationButtons() {
+  const p = PUZZLES[currentIdx];
+  document.getElementById('prevBtn').disabled = (currentIdx === 0);
+  const nextBtn = document.getElementById('nextBtn');
+  const isCurrentSolved = solvedSet.has(p.id);
+  if (isCurrentSolved && currentIdx < PUZZLES.length - 1) {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = 'Next ▶';
+  } else if (currentIdx === PUZZLES.length - 1 && isCurrentSolved) {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = '🏆 View Finale';
+  } else {
+    nextBtn.disabled = true;
+    nextBtn.innerHTML = '🔒 Next ▶';
+  }
+}
+
+function loadPuzzle(idx) {
+  if (idx < 0 || idx > maxUnlockedIdx || idx >= PUZZLES.length) return;
+  currentIdx = idx;
+  initLevelState();
+  const p = PUZZLES[currentIdx];
+
+  document.getElementById('hudLevel').textContent = `${p.id} / 30`;
+  document.getElementById('hudScore').textContent = score;
+  document.getElementById('hudStreak').textContent = `${streak}x`;
+  document.getElementById('hudSolved').textContent = `${maxUnlockedIdx + 1} / 30`;
+
+  const alreadyDone = solvedSet.has(p.id);
+  document.getElementById('sectorBadge').textContent = p.sector;
+  document.getElementById('rewardBadge').textContent = alreadyDone
+    ? '✅ Solved (0 pts on replay) | Wrong: -100 pts'
+    : 'First Solve: +150 pts | Wrong: -100 pts';
+  document.getElementById('puzzleTitle').textContent = p.title + (alreadyDone ? ' ✅' : '');
+  document.getElementById('puzzleStory').textContent = p.story;
+  document.getElementById('puzzleHint').textContent = p.hint;
+  document.getElementById('feedbackBanner').style.display = 'none';
+
+  renderControls(p);
+  updateNavigationButtons();
+  renderLevelMap();
+}
+
+function renderChoiceGroup(groupKey, optionsArray) {
+  return optionsArray.map((item, idx) => {
+    const isSelected = currentInput[groupKey] === item;
+    return `<div class="choice-pill ${isSelected ? 'selected' : ''}" onclick="selectOptionByIndex('${groupKey}', ${idx})"><span>${isSelected ? '✓ ' : ''}${item}</span></div>`;
+  }).join('');
+}
+
+function selectOptionByIndex(groupKey, optionIdx) {
+  if (isExperimentRunning) return;
+  playBubblePop(540);
+  const p = PUZZLES[currentIdx];
+  let list = [];
+  if (groupKey === 'cell') list = BIOREACTOR_CELLS;
+  else if (groupKey === 'broth') list = BIOREACTOR_BROTHS;
+  else if (groupKey === 'mode') list = BIOREACTOR_MODES;
+  else if (groupKey === 'enzyme') list = SPLICE_ENZYMES;
+  else if (groupKey === 'glue') list = SPLICE_GLUES;
+  else if (groupKey === 'polarity') list = GEL_POLARITIES;
+  else if (groupKey === 'lane') list = p.lanes.map(l => l.name);
+  else if (groupKey === 'fastest') list = GEL_SPEED_OPTS;
+  else if (groupKey === 'pam') list = CRISPR_PAMS;
+
+  if (list[optionIdx] !== undefined) {
+    currentInput[groupKey] = list[optionIdx];
+    renderControls(p);
+  }
+}
+
+function renderControls(p) {
+  const area = document.getElementById('controlsArea');
+  if (p.type === 'bioreactor') {
+    document.getElementById('simModeBadge').textContent = '🫧 2D BIOREACTOR FERMENTATION TANK';
+    area.innerHTML = `
+      <div class="control-group"><div class="control-label"><span>1. Select Host Cell Culture</span></div><div class="choice-grid">${renderChoiceGroup('cell', BIOREACTOR_CELLS)}</div></div>
+      <div class="control-group"><div class="control-label"><span>2. Bioreactor Temperature</span><span id="tempReadout" class="cosmic-mono" style="color:var(--bubble-cyan); font-size:1.1rem;">${currentInput.temp}°C</span></div><input type="range" class="cosmic-slider" min="20" max="80" step="1" value="${currentInput.temp}" oninput="updateBioTemp(this.value)"></div>
+      <div class="control-group"><div class="control-label"><span>3. Nutrient Ingredients (Broth)</span></div><div class="choice-grid">${renderChoiceGroup('broth', BIOREACTOR_BROTHS)}</div></div>
+      <div class="control-group"><div class="control-label"><span>4. Gas & Light Environment</span></div><div class="choice-grid">${renderChoiceGroup('mode', BIOREACTOR_MODES)}</div></div>`;
+  } else if (p.type === 'dna_splice') {
+    document.getElementById('simModeBadge').textContent = '🧬 2D PLASMID & BASE-PAIR SPLICER';
+    area.innerHTML = `
+      <div class="control-group"><div class="control-label"><span>1. Template DNA Strand (Click Bottom Boxes to Cycle A / T / C / G)</span></div>
+        <div class="dna-strip">${p.templateDNA.map(b => `<div class="base-box base-${b}">${b}<small>TOP</small></div>`).join('')}</div>
+        <div class="dna-strip">${currentInput.bases.map((b, i) => `<div class="base-box slot-btn base-${b} ${activeSlotIdx === i ? 'active-slot' : ''}" onclick="cycleDnaBase(${i})">${b}<small>PAIR</small></div>`).join('')}</div>
+      </div>
+      <div class="control-group"><div class="control-label"><span>2. Select Restriction Enzyme (Molecular Scissors)</span></div><div class="choice-grid">${renderChoiceGroup('enzyme', SPLICE_ENZYMES)}</div></div>
+      <div class="control-group"><div class="control-label"><span>3. Select Molecular Glue to Seal Plasmid Ring</span></div><div class="choice-grid">${renderChoiceGroup('glue', SPLICE_GLUES)}</div></div>`;
+  } else if (p.type === 'pcr') {
+    document.getElementById('simModeBadge').textContent = '🔥 2D PCR THERMAL CYCLER CHAMBER';
+    const computedCopies = p.startCopies * Math.pow(2, currentInput.cycles);
+    area.innerHTML = `
+      <div class="control-group"><div class="control-label"><span>1. Step 1 — Denaturation Temp (Unzip DNA)</span><span id="pcrT1" class="cosmic-mono" style="color:var(--bubble-cyan);">${currentInput.denatureTemp}°C</span></div><input type="range" class="cosmic-slider" min="80" max="100" step="5" value="${currentInput.denatureTemp}" oninput="setPcrSlider('denatureTemp', this.value, 'pcrT1')"></div>
+      <div class="control-group"><div class="control-label"><span>2. Step 2 — Annealing Temp (Attach Primers)</span><span id="pcrT2" class="cosmic-mono" style="color:var(--bubble-cyan);">${currentInput.annealTemp}°C</span></div><input type="range" class="cosmic-slider" min="45" max="65" step="5" value="${currentInput.annealTemp}" oninput="setPcrSlider('annealTemp', this.value, 'pcrT2')"></div>
+      <div class="control-group"><div class="control-label"><span>3. Step 3 — Extension Temp (Taq Builds DNA)</span><span id="pcrT3" class="cosmic-mono" style="color:var(--bubble-cyan);">${currentInput.extendTemp}°C</span></div><input type="range" class="cosmic-slider" min="60" max="80" step="2" value="${currentInput.extendTemp}" oninput="setPcrSlider('extendTemp', this.value, 'pcrT3')"></div>
+      <div class="control-group"><div class="control-label"><span>4. Doubling Cycles (Start: ${p.startCopies} → Target: ${p.targetCopies})</span><span class="cosmic-mono" style="color:var(--bubble-cyan);">${currentInput.cycles} Cycles = ${computedCopies} copies</span></div>
+        <div class="choice-grid">${[1,2,3,4,5].map(c => `<div class="choice-pill ${currentInput.cycles === c ? 'selected' : ''}" onclick="setPcrCycle(${c})"><span>${currentInput.cycles === c ? '✓ ' : ''}${c} Cycles</span></div>`).join('')}</div>
+      </div>`;
+  } else if (p.type === 'gel') {
+    document.getElementById('simModeBadge').textContent = '⚡ 2D AGAROSE GEL ELECTROPHORESIS';
+    area.innerHTML = `
+      <div class="control-group"><div class="control-label"><span>1. Set Power Pack Electrode Polarity</span></div><div class="choice-grid">${renderChoiceGroup('polarity', GEL_POLARITIES)}</div></div>
+      <div class="control-group"><div class="control-label"><span>2. Which Lane Matches the Evidence (${p.evidenceBands.join(' bp & ')} bp)?</span></div><div class="choice-grid">${renderChoiceGroup('lane', p.lanes.map(l => l.name))}</div></div>
+      <div class="control-group"><div class="control-label"><span>3. Which DNA Fragment Moves Fastest in This Gel?</span></div><div class="choice-grid">${renderChoiceGroup('fastest', GEL_SPEED_OPTS)}</div></div>`;
+  } else if (p.type === 'crispr') {
+    document.getElementById('simModeBadge').textContent = '✂️ 2D CRISPR-CAS9 GENE EDITOR';
+    area.innerHTML = `
+      <div class="control-group"><div class="control-label"><span>1. Build Guide RNA (gRNA) — Click Bottom Boxes to Cycle A / U / C / G</span></div>
+        <div class="dna-strip">${p.dnaTarget.map(b => `<div class="base-box base-${b}">${b}<small>DNA</small></div>`).join('')}</div>
+        <div class="dna-strip">${currentInput.rna.map((b, i) => `<div class="base-box slot-btn base-${b} ${activeSlotIdx === i ? 'active-slot' : ''}" onclick="cycleRnaBase(${i})">${b}<small>gRNA</small></div>`).join('')}</div>
+      </div>
+      <div class="control-group"><div class="control-label"><span>2. Select Valid Cas9 PAM Recognition Site</span></div><div class="choice-grid">${renderChoiceGroup('pam', CRISPR_PAMS)}</div></div>`;
+  }
+}
+
+function setPcrCycle(c) { if (!isExperimentRunning) { playBubblePop(540); currentInput.cycles = c; renderControls(PUZZLES[currentIdx]); } }
+function updateBioTemp(v) { if (!isExperimentRunning) { currentInput.temp = Number(v); document.getElementById('tempReadout').textContent = `${v}°C`; } }
+function setPcrSlider(k, v, id) { if (!isExperimentRunning) { currentInput[k] = Number(v); document.getElementById(id).textContent = `${v}°C`; } }
+function cycleDnaBase(i) {
+  if (isExperimentRunning) return;
+  playBubblePop(620); activeSlotIdx = i;
+  const order = ['A','T','C','G'];
+  currentInput.bases[i] = order[(order.indexOf(currentInput.bases[i]) + 1) % 4];
+  renderControls(PUZZLES[currentIdx]);
+}
+function cycleRnaBase(i) {
+  if (isExperimentRunning) return;
+  playBubblePop(660); activeSlotIdx = i;
+  const order = ['A','U','C','G'];
+  currentInput.rna[i] = order[(order.indexOf(currentInput.rna[i]) + 1) % 4];
+  renderControls(PUZZLES[currentIdx]);
+}
+
+/* ============================================================================
+   5. VALIDATION, 150-PT ONCE CAP, -100 PENALTY & CUTSCENE LAUNCH
+   ============================================================================ */
+function submitSolution() {
+  if (isExperimentRunning) return;
+  const p = PUZZLES[currentIdx];
+  let isCorrect = false, feedbackMsg = '';
+  totalAttempts++;
+
+  if (p.type === 'bioreactor') {
+    const tempOk = Math.abs(currentInput.temp - p.target.temp) <= 2;
+    const cellOk = currentInput.cell === p.target.cell;
+    const brothOk = currentInput.broth === p.target.broth;
+    const modeOk = currentInput.mode === p.target.mode;
+    isCorrect = tempOk && cellOk && brothOk && modeOk;
+    if (!isCorrect) {
+      if (!cellOk) feedbackMsg = 'Wrong cell species selected! Check Chapter 1.';
+      else if (!tempOk) feedbackMsg = `Temperature (${currentInput.temp}°C) is off! Check Chapter 1.`;
+      else if (!brothOk) feedbackMsg = 'Nutrient ingredients don\'t match this microbe! Check Chapter 1.';
+      else feedbackMsg = 'Check the Oxygen / Light rule in Chapter 1!';
+    }
+  } else if (p.type === 'dna_splice') {
+    const basesOk = currentInput.bases.join('') === p.targetDNA.join('');
+    const enzOk = currentInput.enzyme === p.enzyme;
+    const glueOk = currentInput.glue === p.glue;
+    isCorrect = basesOk && enzOk && glueOk;
+    if (!isCorrect) {
+      if (!basesOk) feedbackMsg = 'Complementary DNA base pairing isn\'t right! Remember: A↔T and C↔G.';
+      else if (!enzOk) feedbackMsg = 'Wrong Restriction Enzyme for this gene! Check Chapter 2.';
+      else feedbackMsg = 'Select DNA Ligase ("molecular glue") to seal the plasmid ring!';
+    }
+  } else if (p.type === 'pcr') {
+    const tOk = currentInput.denatureTemp === p.denatureTemp && currentInput.annealTemp === p.annealTemp && currentInput.extendTemp === p.extendTemp;
+    const cycOk = currentInput.cycles === p.targetCycles;
+    isCorrect = tOk && cycOk;
+    if (!isCorrect) {
+      if (!tOk) feedbackMsg = 'Check Chapter 3 for the 3 PCR temperatures (95°C, 55°C, 72°C)!';
+      else feedbackMsg = `With ${currentInput.cycles} cycles from ${p.startCopies} start copy, you get ${p.startCopies * Math.pow(2, currentInput.cycles)} copies (Target: ${p.targetCopies}).`;
+    }
+  } else if (p.type === 'gel') {
+    const polOk = currentInput.polarity === p.correctPolarity;
+    const laneOk = currentInput.lane === p.correctLane;
+    const fastOk = currentInput.fastest === p.fastestSize;
+    isCorrect = polOk && laneOk && fastOk;
+    if (!isCorrect) {
+      if (!polOk) feedbackMsg = 'DNA is negatively charged! It moves from Negative (-) to Positive (+).';
+      else if (!laneOk) feedbackMsg = 'Pick the lane whose glowing bands line up with the Evidence lane!';
+      else feedbackMsg = 'Remember: the smallest bp fragment travels fastest!';
+    }
+  } else if (p.type === 'crispr') {
+    const rnaOk = currentInput.rna.join('') === p.targetRNA.join('');
+    const pamOk = currentInput.pam.includes('Valid NGG PAM');
+    isCorrect = rnaOk && pamOk;
+    if (!isCorrect) {
+      if (!rnaOk) feedbackMsg = 'Check Guide RNA pairing in Chapter 5: DNA "A" pairs with RNA "U", and DNA "T" pairs with RNA "A"!';
+      else feedbackMsg = 'Cas9 requires a valid NGG PAM site!';
+    }
+  }
+
+  const fb = document.getElementById('feedbackBanner');
+
+  if (isCorrect) {
+    isExperimentRunning = true;
+    document.getElementById('runExpBtn').disabled = true;
+    fb.style.display = 'none';
+
+    const alreadySolved = solvedSet.has(p.id);
+    let earnedPts = 0;
+    if (!alreadySolved) {
+      earnedPts = 150;
+      score += 150;
+      streak++;
+      if (streak > bestStreak) bestStreak = streak;
+      solvedSet.add(p.id);
+      if (currentIdx === maxUnlockedIdx && maxUnlockedIdx < PUZZLES.length - 1) maxUnlockedIdx++;
+    }
+
+    document.getElementById('hudScore').textContent = score;
+    document.getElementById('hudStreak').textContent = `${streak}x`;
+    document.getElementById('hudSolved').textContent = `${maxUnlockedIdx + 1} / 30`;
+    document.getElementById('puzzleTitle').textContent = p.title + ' ✅';
+
+    updateNavigationButtons();
+    renderLevelMap();
+    launchMissionCutscene(p, earnedPts, alreadySolved);
+  } else {
+    playErrorBuzz();
+    streak = 0;
+    totalMistakes++;
+    score -= 100;
+    document.getElementById('hudScore').textContent = score;
+    document.getElementById('hudStreak').textContent = '0x';
+    fb.style.display = 'block';
+    fb.style.background = 'rgba(255, 94, 98, 0.28)';
+    fb.style.border = '2px solid #ff5e62';
+    fb.innerHTML = `❌ <strong>-100 Points!</strong> ${feedbackMsg}`;
+  }
+}
+
+/* ============================================================================
+   6. MISSION CUTSCENE ENGINE & FINALE MENU
+   ============================================================================ */
+function launchMissionCutscene(puzzle, earnedPts, alreadySolved) {
+  playBubblePop(680);
+  cutsceneActive = true;
+  cutsceneStartTime = performance.now();
+  cutsceneMissionId = puzzle.id;
+
+  document.getElementById('cutsceneHeaderTitle').textContent = `🎬 ${puzzle.title.toUpperCase()}`;
+  document.getElementById('cutsceneMissionTag').textContent = `MISSION ${puzzle.id} / 30`;
+  document.getElementById('cutsceneCaption').textContent = puzzle.cutsceneCaption;
+
+  const pop = document.getElementById('wellDonePop');
+  pop.classList.remove('show');
+  document.getElementById('wellDoneSubtext').textContent = puzzle.cutsceneCaption;
+  document.getElementById('wellDonePointsPill').textContent = alreadySolved
+    ? 'MISSION ALREADY COMPLETED (+0 PTS)'
+    : `+${earnedPts} POINTS EARNED!`;
+  document.getElementById('cutsceneContinueBtn').textContent = (puzzle.id === 30) ? '🏆 Mission Control Finale!' : 'Next Mission ▶';
+  document.getElementById('cutsceneModal').classList.add('active');
+
+  setTimeout(() => {
+    if (!cutsceneActive) return;
+    playSuccessFanfare();
+    pop.classList.add('show');
+  }, 2400);
+}
+
+function finishCutsceneAndAdvance() {
+  playBubblePop(580);
+  cutsceneActive = false;
+  document.getElementById('cutsceneModal').classList.remove('active');
+  isExperimentRunning = false;
+  const runBtn = document.getElementById('runExpBtn');
+  if (runBtn) runBtn.disabled = false;
+
+  if (currentIdx === PUZZLES.length - 1 && solvedSet.size === PUZZLES.length) {
+    showCongratsMenu();
+  } else if (currentIdx < maxUnlockedIdx) {
+    loadPuzzle(currentIdx + 1);
+  } else {
+    loadPuzzle(currentIdx);
+  }
+}
+
+function showCongratsMenu() {
+  playSuccessFanfare();
+  const accuracy = totalAttempts > 0 ? Math.round(((totalAttempts - totalMistakes) / totalAttempts) * 100) : 100;
+  let rankTitle = 'Mission Control Chief Geneticist 🌟';
+  if (score < 2500) rankTitle = 'Mission Control Cadet 🧪';
+  else if (score < 3800) rankTitle = 'Senior Orbital Specialist 🔬';
+
+  document.getElementById('finalScoreVal').textContent = `${score} pts`;
+  document.getElementById('finalAccuracyVal').textContent = `${accuracy}% (${totalMistakes} mistakes)`;
+  document.getElementById('finalStreakVal').textContent = `${bestStreak}x`;
+  document.getElementById('finalRankVal').textContent = rankTitle;
+  openModal('congratsModal');
+}
+
+function nextLevel() {
+  if (isExperimentRunning) return;
+  const p = PUZZLES[currentIdx];
+  if (!solvedSet.has(p.id)) return;
+  if (currentIdx === PUZZLES.length - 1) { showCongratsMenu(); return; }
+  if (currentIdx < maxUnlockedIdx) { playBubblePop(580); loadPuzzle(currentIdx + 1); }
+}
+
+function prevLevel() {
+  if (!isExperimentRunning && currentIdx > 0) { playBubblePop(460); loadPuzzle(currentIdx - 1); }
+}
+
+function openModal(id) {
+  playBubblePop(500);
+  if (id === 'exitModal') {
+    document.getElementById('exitScoreVal').textContent = score;
+    document.getElementById('exitSolvedVal').textContent = `${solvedSet.size} / 30`;
+  }
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  playBubblePop(420);
+  document.getElementById(id).classList.remove('active');
+  resizeCanvases();
+}
+
+function switchTab(idx) {
+  playBubblePop(560);
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  document.querySelectorAll('.textbook-page').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+function openTextbookAtRelevantChapter() {
+  switchTab(PUZZLES[currentIdx].chapter);
+  openModal('guideModal');
+}
+
+function selectMapLevel(idx) {
+  if (idx > maxUnlockedIdx) { playErrorBuzz(); return; }
+  loadPuzzle(idx);
+  closeModal('mapModal');
+}
+
+function renderLevelMap() {
+  document.getElementById('levelGridContainer').innerHTML = PUZZLES.map((p, i) => {
+    const isSolved = solvedSet.has(p.id), isLocked = i > maxUnlockedIdx, isCurrent = i === currentIdx;
+    const icon = isSolved ? '✅' : (isLocked ? '🔒' : '🔓');
+    return `<div class="level-node ${isSolved ? 'solved' : ''} ${isCurrent ? 'current' : ''} ${isLocked ? 'locked' : ''}" onclick="selectMapLevel(${i})">
+      <div style="font-weight:700; color:${isLocked ? '#8892b0' : 'var(--bubble-cyan)'};">Mission ${p.id} ${icon}</div>
+      <div style="font-size:0.78rem; margin-top:4px; color:#fff;">${p.title.replace(/^Mission \d+:\s*/, '')}</div>
+    </div>`;
+  }).join('');
+}
+
+function resetProgress() {
+  score = 0; streak = 0; bestStreak = 0; totalAttempts = 0; totalMistakes = 0; maxUnlockedIdx = 0;
+  solvedSet.clear(); closeModal('exitModal'); loadPuzzle(0);
+}
+
+function enterStandbyScreen() { closeModal('exitModal'); openModal('titleModal'); }
+
+/* ============================================================================
+   7. 2D CANVAS ANIMATION ENGINE (SPACE BUBBLES + SIMULATOR + 30 CUTSCENES)
+   ============================================================================ */
+const bgCanvas = document.getElementById('bgCanvas'), bgCtx = bgCanvas.getContext('2d');
+const simCanvas = document.getElementById('simCanvas'), simCtx = simCanvas.getContext('2d');
+const csCanvas = document.getElementById('cutsceneCanvas'), csCtx = csCanvas.getContext('2d');
+
+let spaceBubbles = Array.from({ length: 36 }, (_, i) => ({
+  x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+  r: 6 + Math.random() * 24, vy: 0.25 + Math.random() * 0.65, hue: [190, 280, 320, 145][i % 4]
+}));
+
+function resizeCanvases() {
+  bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
+  const rect = simCanvas.parentElement.getBoundingClientRect();
+  simCanvas.width = rect.width || 500; simCanvas.height = rect.height || 240;
+}
+window.addEventListener('resize', resizeCanvases);
+
+let animTick = 0;
+function animateLoop() {
+  animTick += 0.04;
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  spaceBubbles.forEach(b => {
+    b.y -= b.vy;
+    if (b.y + b.r < 0) { b.y = bgCanvas.height + b.r; b.x = Math.random() * bgCanvas.width; }
+    bgCtx.beginPath();
+    bgCtx.arc(b.x + Math.sin(animTick + b.r) * 8, b.y, b.r, 0, Math.PI * 2);
+    bgCtx.strokeStyle = `hsla(${b.hue}, 100%, 75%, 0.35)`; bgCtx.lineWidth = 2; bgCtx.stroke();
+    bgCtx.fillStyle = `hsla(${b.hue}, 100%, 65%, 0.08)`; bgCtx.fill();
+  });
+
+  drawBiotechSimulation();
+  if (cutsceneActive) drawMissionCutscene(cutsceneMissionId, (performance.now() - cutsceneStartTime) / 1000);
+  requestAnimationFrame(animateLoop);
+}
+
+/* Helper to draw a softly morphing cell with its inner dark circle (nucleus/plasmid) */
+function drawMorphingCell(ctx, cx, cy, baseRx, baseRy, wobble, fillColor, seed) {
+  ctx.save();
+  // Outer softly morphing cell membrane
+  ctx.beginPath();
+  ctx.ellipse(
+    cx,
+    cy,
+    baseRx + wobble,
+    baseRy - wobble * 0.5,
+    Math.sin(animTick * 0.8 + seed) * 0.18,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+
+  // Inner dark circle (nucleus / plasmid ring) drifting softly inside the cell
+  const nucX = cx - 4 + Math.sin(animTick * 1.6 + seed) * 2.5;
+  const nucY = cy + Math.cos(animTick * 1.4 + seed) * 2.0;
+  const nucWobble = Math.sin(animTick * 2.5 + seed) * 0.8;
+  ctx.beginPath();
+  ctx.ellipse(nucX, nucY, 6.8 + nucWobble, 6.2 - nucWobble * 0.5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(20, 10, 50, 0.68)';
+  ctx.fill();
+
+  // Tiny glossy highlight on the cell
+  ctx.beginPath();
+  ctx.arc(cx - baseRx * 0.35, cy - baseRy * 0.35, 3.2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawMissionCutscene(mId, t) {
+  const w = csCanvas.width, h = csCanvas.height, cx = w / 2, cy = h / 2;
+  csCtx.clearRect(0, 0, w, h);
+  for (let i = 0; i < 26; i++) {
+    csCtx.fillStyle = i % 2 === 0 ? '#00f2fe' : '#ffffff';
+    csCtx.beginPath(); csCtx.arc((i * 137 + t * 25) % w, (i * 89) % h, (i % 3) + 1, 0, Math.PI * 2); csCtx.fill();
+  }
+  csCtx.save();
+  if (mId === 1) {
+    drawGlowingTank(csCtx, cx - 150, cy, '#00f2fe', 'E. coli 37°C');
+    drawEnergyBeam(csCtx, cx - 80, cy, cx + 80, cy, '#5eff8a', t);
+    drawVial(csCtx, cx + 130, cy + Math.sin(t * 4) * 8, '#5eff8a', 'INSULIN');
+  } else if (mId === 2) {
+    drawGlowingTank(csCtx, cx - 120, cy + 10, '#42e695', 'Spirulina 25°C');
+    for (let i = 0; i < 10; i++) drawBubbleWithText(csCtx, cx - 30 + ((t * 90 + i * 25) % 230), cy + Math.sin(t * 3 + i) * 40, 18, '#00f2fe', 'O₂');
+  } else if (mId === 3) {
+    drawGlowingTank(csCtx, cx - 180, cy + 20, '#ffd15c', 'Yeast Ethanol');
+    drawSpaceShuttle(csCtx, cx + 80, cy - Math.min(65, t * 28), t);
+  } else if (mId === 4) {
+    [-1, 0, 1].forEach(i => drawYogurtCup(csCtx, cx + i * 150, cy + Math.sin(t * 3 + i) * 14, i === 0 ? '#ff85e4' : '#00f2fe'));
+  } else if (mId === 5) {
+    drawHydrothermalVent(csCtx, cx, h);
+    for (let i = 0; i < 7; i++) drawBubbleWithText(csCtx, cx + Math.sin(t * 2 + i) * 70, h - 80 - ((t * 85 + i * 35) % 230), 20, '#ffd15c', 'Taq');
+  } else if (mId === 6) {
+    drawKneeJointScan(csCtx, cx, cy, t);
+  } else if (mId >= 7 && mId <= 12) {
+    drawPlasmidCutscene(csCtx, cx, cy, mId, t);
+  } else if (mId >= 13 && mId <= 18) {
+    drawPcrCutscene(csCtx, cx, cy, mId, t);
+  } else if (mId >= 19 && mId <= 24) {
+    drawGelCutscene(csCtx, cx, cy, mId, t);
+  } else {
+    drawCrisprCutscene(csCtx, cx, cy, mId, t);
+  }
+  csCtx.restore();
+}
+
+function drawGlowingTank(ctx, x, y, color, label) {
+  ctx.fillStyle = 'rgba(0, 242, 254, 0.14)'; ctx.strokeStyle = color; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(x - 65, y - 80, 130, 160, 22); ctx.fill(); ctx.stroke();
+
+  // Draw 3 softly morphing cells with inner dark nuclei inside the cutscene tank
+  for (let i = 0; i < 3; i++) {
+    const cellX = x - 25 + (i % 2) * 50 + Math.sin(animTick * 1.5 + i) * 6;
+    const cellY = y - 35 + i * 35 + Math.cos(animTick * 1.3 + i) * 5;
+    const wobble = Math.sin(animTick * 2.2 + i) * 3;
+    drawMorphingCell(ctx, cellX, cellY, 18, 14, wobble, color, i);
+  }
+
+  ctx.fillStyle = color; ctx.font = '700 15px Fredoka, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(label, x, y + 105);
+}
+function drawEnergyBeam(ctx, x1, y1, x2, y2, color, t) {
+  ctx.strokeStyle = color; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x1, y1);
+  for (let x = x1; x <= x2; x += 15) ctx.lineTo(x, y1 + Math.sin((x - x1) * 0.08 - t * 10) * 12);
+  ctx.stroke();
+}
+function drawVial(ctx, x, y, color, label) {
+  ctx.fillStyle = color; ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(x - 32, y - 55, 64, 110, 16); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#051923'; ctx.font = '700 13px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(label, x, y + 5);
+}
+function drawBubbleWithText(ctx, x, y, r, color, txt) {
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#041022'; ctx.font = '700 12px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(txt, x, y + 4);
+}
+function drawSpaceShuttle(ctx, x, y, t) {
+  ctx.fillStyle = '#00f2fe'; ctx.beginPath(); ctx.moveTo(x - 22, y + 60); ctx.lineTo(x + 22, y + 60);
+  ctx.lineTo(x, y + 120 + Math.sin(t * 25) * 18); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#00f2fe'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(x, y - 75); ctx.quadraticCurveTo(x + 42, y - 10, x + 32, y + 60);
+  ctx.lineTo(x - 32, y + 60); ctx.quadraticCurveTo(x - 42, y - 10, x, y - 75); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#ff5ebc'; ctx.font = '700 12px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ORBIT-1', x, y + 15);
+}
+function drawYogurtCup(ctx, x, y, color) {
+  ctx.fillStyle = color; ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(x - 45, y - 40, 90, 85, 18); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#081226'; ctx.font = '700 13px Fredoka, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('PROBIOTIC', x, y + 2); ctx.fillText('YOGURT', x, y + 20);
+}
+function drawHydrothermalVent(ctx, cx, h) {
+  ctx.fillStyle = '#3a1c54'; ctx.beginPath(); ctx.moveTo(cx - 140, h); ctx.lineTo(cx - 45, h - 120);
+  ctx.lineTo(cx + 45, h - 120); ctx.lineTo(cx + 140, h); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#ff5e62'; ctx.lineWidth = 4; ctx.stroke();
+}
+function drawKneeJointScan(ctx, cx, cy, t) {
+  ctx.strokeStyle = '#00f2fe'; ctx.lineWidth = 18; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx - 110, cy - 70); ctx.lineTo(cx - 20, cy); ctx.moveTo(cx + 20, cy); ctx.lineTo(cx + 110, cy + 70); ctx.stroke();
+  ctx.fillStyle = 'rgba(94, 255, 138, 0.45)'; ctx.beginPath(); ctx.arc(cx, cy, 38 + Math.sin(t * 6) * 8, 0, Math.PI * 2); ctx.fill();
+  drawBubbleWithText(ctx, cx, cy, 28, '#5eff8a', 'STEM');
+}
+function drawPlasmidCutscene(ctx, cx, cy, mId, t) {
+  ctx.save(); ctx.translate(cx - 150, cy); ctx.rotate(t * 1.2);
+  ctx.strokeStyle = '#00f2fe'; ctx.lineWidth = 14; ctx.beginPath(); ctx.arc(0, 0, 65, 0.4, Math.PI * 1.9); ctx.stroke();
+  ctx.strokeStyle = '#5eff8a'; ctx.beginPath(); ctx.arc(0, 0, 65, Math.PI * 1.92, Math.PI * 2.38); ctx.stroke();
+  ctx.restore();
+  drawEnergyBeam(ctx, cx - 60, cy, cx + 50, cy, '#ff5ebc', t);
+  const rx = cx + 145;
+  if (mId === 7) drawVial(ctx, rx, cy, '#00f2fe', 'INSULIN');
+  else if (mId === 8) drawBubbleWithText(ctx, rx, cy, 48, '#5eff8a', 'GFP MOSS');
+  else if (mId === 9) drawBubbleWithText(ctx, rx, cy, 48, '#ffd15c', 'POTATO');
+  else if (mId === 10) drawBubbleWithText(ctx, rx, cy, 48, '#b16cea', 'SHIELD');
+  else if (mId === 11) drawBubbleWithText(ctx, rx, cy, 48, '#42e695', '3D INK');
+  else drawBubbleWithText(ctx, rx, cy, 48, '#ffd15c', 'BONE+');
+}
+function drawPcrCutscene(ctx, cx, cy, mId, t) {
+  const p = PUZZLES[mId - 1], copies = p.targetCopies;
+  const shown = Math.min(32, Math.floor(Math.min(1, t / 1.8) * copies));
+  ctx.fillStyle = '#ffd15c'; ctx.font = '700 18px Fredoka, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`PCR AMPLIFICATION: ${p.startCopies} → ${copies} COPIES!`, cx, 48);
+  for (let i = 0; i < shown; i++) {
+    const x = cx - 245 + (i % 8) * 70, y = 105 + Math.floor(i / 8) * 60 + Math.sin(t * 4 + i) * 5;
+    ctx.strokeStyle = i % 2 === 0 ? '#00f2fe' : '#5eff8a'; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(x - 18, y - 6); ctx.quadraticCurveTo(x, y + 9, x + 18, y - 6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - 18, y + 6); ctx.quadraticCurveTo(x, y - 9, x + 18, y + 6); ctx.stroke();
+  }
+}
+function drawGelCutscene(ctx, cx, cy, mId, t) {
+  const p = PUZZLES[mId - 1];
+  ctx.fillStyle = '#00f2fe'; ctx.font = '700 18px Fredoka, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`ELECTROPHORESIS MATCH: ${p.correctLane.toUpperCase()}`, cx, 55);
+  if (mId === 19) {
+    drawBubbleWithText(ctx, cx - 50, cy + 10, 44, '#ff5ebc', 'DR. NOVA');
+    drawBubbleWithText(ctx, cx + 50, cy + 10, 38, '#ff5e62', '🍓 DNA');
+  } else {
+    ctx.fillStyle = '#ffd15c'; ctx.fillRect(cx - 150, cy - 25, 110, 14); ctx.fillRect(cx - 150, cy + 35, 110, 14);
+    const slideX = cx + 40 - Math.max(0, (1 - t * 0.8) * 110);
+    ctx.fillStyle = '#5eff8a'; ctx.fillRect(slideX, cy - 25, 110, 14); ctx.fillRect(slideX, cy + 35, 110, 14);
+    ctx.fillStyle = '#fff'; ctx.font = '700 14px Space Mono, monospace';
+    ctx.fillText(`${p.evidenceBands[0]} bp MATCH`, cx, cy - 35); ctx.fillText(`${p.evidenceBands[1]} bp MATCH`, cx, cy + 25);
+  }
+}
+function drawCrisprCutscene(ctx, cx, cy, mId, t) {
+  const p = PUZZLES[mId - 1];
+  ctx.fillStyle = '#ff5ebc'; ctx.font = '700 17px Fredoka, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`CRISPR-Cas9 EDIT COMPLETE: gRNA ${p.targetRNA.join('-')} + ${p.pamSite.split(' ')[0]}`, cx, 52);
+  if (mId === 25) {
+    ctx.fillStyle = '#ff4b72'; ctx.beginPath(); ctx.arc(cx, cy + 15, 56, 0, Math.PI * (1.2 + Math.min(1, t / 1.8) * 0.8)); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.stroke();
+  } else if (mId === 30) {
+    drawSpaceShuttle(ctx, cx, cy, t);
+    ctx.strokeStyle = '#ffd15c'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, 92 + Math.sin(t * 8) * 10, 0, Math.PI * 2); ctx.stroke();
+  } else {
+    drawEnergyBeam(ctx, cx - 180, cy + 10, cx + 180, cy + 10, '#00f2fe', t);
+    drawBubbleWithText(ctx, cx, cy + 10, 48, '#5eff8a', 'EDITED!');
+  }
+}
+
+/* --- Workspace Live 2D Simulator --- */
+function drawBiotechSimulation() {
+  const w = simCanvas.width, h = simCanvas.height, p = PUZZLES[currentIdx];
+  simCtx.clearRect(0, 0, w, h);
+  if (!p) return;
+
+  if (p.type === 'bioreactor') {
+    const temp = currentInput.temp || 37, hue = Math.max(0, 210 - (temp - 20) * 3.5);
+    simCtx.fillStyle = `hsla(${hue}, 85%, 45%, 0.25)`;
+    simCtx.fillRect(w * 0.14, h * 0.18, w * 0.72, h * 0.66);
+    simCtx.strokeStyle = '#00f2fe';
+    simCtx.lineWidth = 3;
+    simCtx.strokeRect(w * 0.14, h * 0.18, w * 0.72, h * 0.66);
+
+    const cellColor = currentInput.cell.includes('Algae') ? '#42e695' :
+                      currentInput.cell.includes('Yeast') ? '#ffd15c' :
+                      currentInput.cell.includes('Mammalian') ? '#ff75c3' : '#00f2fe';
+
+    // Draw 6 softly morphing cells with inner dark circle (nucleus/plasmid)
+    for (let i = 0; i < 6; i++) {
+      const cx = w * (0.28 + (i % 3) * 0.22) + Math.sin(animTick + i) * 12;
+      const cy = h * (0.37 + Math.floor(i / 3) * 0.25) + Math.cos(animTick * 1.2 + i) * 8;
+      const wobble = Math.sin(animTick * 2 + i) * 3.5;
+      drawMorphingCell(simCtx, cx, cy, 24, 18, wobble, cellColor, i);
+    }
+
+    simCtx.fillStyle = '#00f2fe';
+    simCtx.font = '700 13px Fredoka, sans-serif';
+    simCtx.fillText(`Active: ${currentInput.cell} | ${temp}°C | ${currentInput.mode}`, w * 0.14, h * 0.93);
+  } else if (p.type === 'dna_splice') {
+    const cx = w * 0.5, cy = h * 0.52, r = Math.min(w, h) * 0.28;
+    simCtx.beginPath(); simCtx.arc(cx, cy, r, 0.3, Math.PI * 1.85); simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 11; simCtx.stroke();
+    simCtx.beginPath(); simCtx.arc(cx, cy, r, Math.PI * 1.88, Math.PI * 2.27); simCtx.strokeStyle = '#ff5ebc'; simCtx.lineWidth = 13; simCtx.stroke();
+    simCtx.fillStyle = '#fff'; simCtx.font = '700 13px Fredoka, sans-serif'; simCtx.textAlign = 'center';
+    simCtx.fillText(`Scissors: ${currentInput.enzyme}`, cx, cy - 12);
+    simCtx.fillStyle = '#00f2fe'; simCtx.fillText(`Strand: ${currentInput.bases.join('-')}`, cx, cy + 8);
+    simCtx.fillStyle = '#5eff8a'; simCtx.fillText(`Glue: ${currentInput.glue}`, cx, cy + 28); simCtx.textAlign = 'left';
+  } else if (p.type === 'pcr') {
+    const count = Math.min(32, p.startCopies * Math.pow(2, currentInput.cycles || 1));
+    simCtx.fillStyle = '#00f2fe'; simCtx.font = '700 13px Fredoka, sans-serif';
+    simCtx.fillText(`PCR Output: ${p.startCopies * Math.pow(2, currentInput.cycles || 1)} Copies (${currentInput.denatureTemp}°C / ${currentInput.annealTemp}°C / ${currentInput.extendTemp}°C)`, 18, h - 12);
+    for (let i = 0; i < count; i++) {
+      const x = w * 0.14 + (i % 8) * (w * 0.1), y = h * 0.28 + Math.floor(i / 8) * (h * 0.15) + Math.sin(animTick * 2 + i) * 3;
+      simCtx.strokeStyle = i % 2 === 0 ? '#00f2fe' : '#ff5ebc'; simCtx.lineWidth = 2.5;
+      simCtx.beginPath(); simCtx.moveTo(x - 12, y - 5); simCtx.quadraticCurveTo(x, y + 7, x + 12, y - 5); simCtx.stroke();
+      simCtx.beginPath(); simCtx.moveTo(x - 12, y + 5); simCtx.quadraticCurveTo(x, y - 7, x + 12, y + 5); simCtx.stroke();
+    }
+  } else if (p.type === 'gel') {
+    const gx = w * 0.08, gy = h * 0.18, gw = w * 0.84, gh = h * 0.72, colW = gw / 4;
+    simCtx.fillStyle = 'rgba(18, 32, 76, 0.85)'; simCtx.fillRect(gx, gy, gw, gh);
+    simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 2; simCtx.strokeRect(gx, gy, gw, gh);
+    [{ name: 'EVIDENCE', bands: p.evidenceBands }, ...p.lanes].forEach((col, idx) => {
+      const cx = gx + idx * colW + colW * 0.5, isPicked = currentInput.lane === col.name;
+      simCtx.fillStyle = idx === 0 ? '#ffd15c' : (isPicked ? '#00f2fe' : '#b9c8f0');
+      simCtx.font = '700 11px Fredoka, sans-serif'; simCtx.textAlign = 'center';
+      simCtx.fillText(col.name.split(' (')[0], cx, gy + 18);
+      col.bands.forEach(bp => {
+        const by = gy + 34 + (1 - bp / 1000) * (gh - 52);
+        simCtx.fillStyle = idx === 0 ? '#ffd15c' : (isPicked ? '#00f2fe' : '#5eff8a');
+        simCtx.fillRect(cx - 22, by, 44, 7);
+        simCtx.fillStyle = '#fff'; simCtx.font = '700 10px Space Mono, monospace'; simCtx.fillText(`${bp}bp`, cx + 36, by + 7);
+      });
+    });
+    simCtx.textAlign = 'left';
+  } else if (p.type === 'crispr') {
+    const cy = h * 0.54;
+    simCtx.beginPath(); simCtx.ellipse(w * 0.5, cy, w * 0.35, h * 0.32, 0, 0, Math.PI * 2);
+    simCtx.fillStyle = 'rgba(0, 242, 254, 0.18)'; simCtx.fill(); simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 3; simCtx.stroke();
+    simCtx.fillStyle = '#fff'; simCtx.font = '700 14px Space Mono, monospace'; simCtx.textAlign = 'center';
+    simCtx.fillText(`Target DNA: ${p.dnaTarget.join('-')}`, w * 0.5, cy - 16);
+    simCtx.fillStyle = '#00f2fe'; simCtx.fillText(`Guide RNA:  ${currentInput.rna.join('-')}`, w * 0.5, cy + 10);
+    simCtx.fillStyle = '#ffd15c'; simCtx.fillText(`PAM Site:   ${currentInput.pam}`, w * 0.5, cy + 34); simCtx.textAlign = 'left';
+  }
+}
+
+window.onload = function () {
+  resizeCanvases();
+  loadPuzzle(0);
+  requestAnimationFrame(animateLoop);
+};
+</script>
+</body>
+</html>

@@ -41,10 +41,10 @@
   .st { font:800 1.12rem "Nunito Sans",sans-serif; padding-top:4px; }
   .who { display:inline-block; font-size:.75rem; font-weight:800; margin-left:8px; padding:2px 9px; border-radius:99px; background:var(--accent); color:var(--navy); vertical-align:middle; }
   .stepbody { grid-column:2; }
-  pre.code { margin:8px 0 10px; padding:12px 16px; background:var(--navy); border:1px solid rgba(255,255,255,.1); border-radius:12px; font:600 .95rem/1.7 ui-monospace,Menlo,Consolas,monospace; overflow-x:auto; white-space:pre; color:#e8eefc; }
-  pre.code .tb { color:var(--muted); }
-  pre.code .gv { background:rgba(247,149,50,.25); color:#ffd2a0; border-radius:6px; padding:0 6px; font-weight:800; }
-  .shot { border:2px dashed rgba(255,255,255,.22); border-radius:12px; min-height:110px; display:grid; place-items:center; color:var(--muted); font-size:.9rem; text-align:center; padding:10px; }
+  pre.code { margin:8px 0 10px; padding:14px 16px; background:var(--navy); border:1px solid rgba(255,255,255,.1); border-radius:12px; font:700 .95rem/1.5 "Nunito",system-ui,sans-serif; overflow-x:auto; white-space:normal; color:#fff; }
+  pre.code .ln { display:block; width:fit-content; max-width:100%; background:var(--c); color:#fff; padding:5px 14px; border-radius:7px; margin:3px 0 3px calc(var(--i) * 24px); white-space:pre-wrap; box-shadow:inset 0 -2px 0 rgba(0,0,0,.18); }
+  pre.code .tb { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; opacity:.8; margin-right:8px; }
+  pre.code .gv { background:rgba(255,255,255,.28); color:#fff; border-radius:6px; padding:0 7px; font-weight:800; }
   .shotimg { max-width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.15); display:block; }
   .check { margin-top:18px; padding:14px 16px; background:rgba(var(--green-rgb),.1); border:1px solid rgba(var(--green-rgb),.4); border-radius:12px; line-height:1.5; }
   .check b { color:var(--green); }
@@ -61,13 +61,13 @@
 <div class="wrap">
 
   <div class="topbar">
-    <img class="logo" src="../assets/mega-logo.png" alt="MEGA — Motivated, Educated Generation with Ambition"><a class="backlink" href="../index.html">← All MEGA days</a>
+    <img class="logo" src="../assets/mega-logo.png" alt="MEGA — Motivated, Educated Generation with Ambition"><a class="backlink" href="index.html">← Frontier Explorers</a>
   </div>
 
   <div class="hero">
     <span class="eyebrow">Networking · micro:bit radio</span>
     <h1>Radio Challenge</h1>
-    <p>Five levels. Start at Level 1 and work up. Copy the code, download it to your micro:bit and test it with your partner.</p>
+    <p>Start at Level 3 and work up. Copy the code, download it to your micro:bit and test it with your partner.</p>
   </div>
 
   <div class="setup">
@@ -90,7 +90,7 @@
 
   <a class="ext" href="radio-extensions.html" target="_blank" rel="noopener">
     <div class="badge">+</div>
-    <div><b>Finished all 5 levels? Extensions ↗</b><span style="color:var(--muted)">More radio projects to try. These ones make you think a bit harder.</span></div>
+    <div><b>Finished Level 5? Extensions ↗</b><span style="color:var(--muted)">More radio projects to try. These ones make you think a bit harder.</span></div>
   </a>
 
   <footer>
@@ -107,29 +107,6 @@
 // {G} = your pair number, {B} = your beacon number.
 // ---------------------------------------------------------------
 const LEVELS = [
- { n:1, accent:'lightblue', emoji:'📨', name:'Send a Number', time:'About 10 min · We build this together',
-   blurb:'Press a button on one micro:bit. A number appears on the other.',
-   make:'You and your partner each send a number by radio. Press A to send 1. Press B to send 2.',
-   same:'Same program on both micro:bits',
-   steps:[
-    {t:'Join your radio group', code:['basic: on start','  radio: set group {G}'], img:'l1-s1.png'},
-    {t:'Send a number', code:['input: on button A pressed','  radio: send number 1','input: on button B pressed','  radio: send number 2'], img:'l1-s2.png'},
-    {t:'Show the number you get', code:['radio: on radio received receivedNumber','  basic: show number receivedNumber'], img:'l1-s3.png'}
-   ],
-   check:'Press A on your micro:bit. Your partner’s screen shows 1. Press B and it shows 2.'},
-
- { n:2, accent:'purple', emoji:'🔦', name:'Signal Hunt', time:'About 10 min',
-   blurb:'Find the hidden beacon by watching the signal bar grow.',
-   make:'Your coach has hidden a beacon micro:bit. Make a hunter that shows how strong the signal is. The closer you get, the more LEDs light up.',
-   same:'Hunter program (the beacon is already done)',
-   beacon:true,
-   steps:[
-    {t:'Pick your beacon', code:['basic: on start','  radio: set group {B}'], img:'l2-s1.png'},
-    {t:'Show the signal bar', code:['radio: on radio received receivedNumber','  led: plot bar graph of','       (radio received packet signal strength + 128)','       up to 100'], img:'l2-s2.png'},
-    {t:'Found it!', bonus:true, code:['radio: on radio received receivedNumber','  (keep your bar graph block)','  logic: if radio received packet signal strength > -50 then','    basic: show icon happy face','    music: play tone High C for 1/2 beat'], img:'l2-s3.png'}
-   ],
-   check:'Walk away from the beacon and the bar shrinks. Walk towards it and the bar grows. Find the beacon!'},
-
  { n:3, accent:'pink', emoji:'🚨', name:'Stop, Thief!', time:'About 10 min',
    blurb:'Shake one micro:bit and the other one sets off an alarm.',
    make:'Hide one micro:bit in a bag. If someone shakes it, your other micro:bit shows an angry face and beeps.',
@@ -149,7 +126,7 @@ const LEVELS = [
     {t:'Join your radio group', who:'Instrument', code:['basic: on start','  radio: set group {G}'], img:'l4-s1.png'},
     {t:'Send the tilt', who:'Instrument', code:['basic: forever','  logic: if button A is pressed then','    radio: send number acceleration (mg) x','  basic: pause 100 ms'], img:'l4-s2.png'},
     {t:'Join your radio group and set the volume', who:'Speaker', code:['basic: on start','  radio: set group {G}','  music: set volume 80'], img:'l4-s3.png'},
-    {t:'Play the note', who:'Speaker', code:['radio: on radio received receivedNumber','  music: play tone','    (map receivedNumber','       from low -1023 high 1023','       to low 200 high 1000)','    for 100 ms'], img:'l4-s4.png'}
+    {t:'Play the note', who:'Speaker', code:['radio: on radio received receivedNumber','  music: play tone','    math: map receivedNumber','       ~math:from low -1023 high 1023','       ~math:to low 200 high 1000','    ~music:for 100 ms'], img:'l4-s4.png'}
    ],
    check:'Hold A on the instrument and tilt it left and right. The speaker’s note goes up and down.'},
 
@@ -169,18 +146,24 @@ const LEVELS = [
 // ---------- tiny storage helper (works even if storage is blocked) ----------
 const store = { get(k){ try{ return localStorage.getItem('mega78:'+k); }catch(e){ return null; } },
                 set(k,v){ try{ localStorage.setItem('mega78:'+k,v); }catch(e){} } };
-const mem = { pair: store.get('pair') || '', beacon: store.get('beacon') || '', done: {}, open: 1 };
+const mem = { pair: store.get('pair') || '', beacon: store.get('beacon') || '', done: {}, open: 3 };
 LEVELS.forEach(l => { mem.done[l.n] = store.get('done'+l.n) === '1'; });
 
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// Block colours match the MakeCode editor drawers
+const BLOCK = { basic:'#1E90FF', input:'#D400D4', music:'#E30FC0', led:'#5C2D91', radio:'#E3008C', loops:'#00A65C', logic:'#00A4A6', variables:'#DC143C', math:'#9C27B0' };
 function codeHtml(lines){
+  let col = BLOCK.basic;
   return lines.map(line => {
-    let h = esc(line);
-    h = h.replace(/^(\s*)([a-z]+:)/, '$1<span class="tb">$2</span>');
+    const sp = (line.match(/^\s*/)[0] || '').length;
+    let rest = line.slice(sp), tag = '';
+    const m = rest.match(/^(~?)([a-z]+):\s?(.*)$/);
+    if (m && BLOCK[m[2]]) { col = BLOCK[m[2]]; if (!m[1]) tag = '<span class="tb">'+m[2]+'</span>'; rest = m[3]; }
+    let h = esc(rest);
     h = h.replace(/\{G\}/g, '<span class="gv" data-g>'+esc(mem.pair||'your pair number')+'</span>')
          .replace(/\{B\}/g, '<span class="gv" data-b>'+esc(mem.beacon||'beacon number')+'</span>');
-    return h;
-  }).join('\n');
+    return '<span class="ln" style="--c:'+col+';--i:'+Math.floor(sp/2)+'">'+tag+h+'</span>';
+  }).join('');
 }
 function render(){
   const path = document.getElementById('path'); let html = '';
@@ -200,7 +183,7 @@ function render(){
         ${l.steps.map((s,i)=>`<div class="step"><div class="sn">${i+1}</div>
           <div class="st">${esc(s.t)}${s.who?`<span class="who">${esc(s.who)}</span>`:''}${s.bonus?`<div class="bonus">BONUS STEP</div>`:''}</div>
           <div class="stepbody"><pre class="code">${codeHtml(s.code)}</pre>
-          <img class="shotimg" src="img/${s.img}" alt="Screenshot of the blocks for step ${i+1}" onerror="this.outerHTML='<div class=&quot;shot&quot;>Screenshot of the blocks goes here<br>(img/${s.img})</div>'"></div></div>`).join('')}
+          <img class="shotimg" src="img/${s.img}" alt="" onerror="this.remove()"></div></div>`).join('')}
         <div class="check"><b>It works when…</b><br>${esc(l.check)}</div>
         <button class="btn donebtn${done?' ghost':''}" data-done="${l.n}">${done?'Level complete ✓ (tap to undo)':'I’ve finished this level'}</button>
         ${l.n<5?`<button class="btn ghost donebtn" data-next="${l.n+1}" style="margin-left:8px">Go to Level ${l.n+1} →</button>`:''}
