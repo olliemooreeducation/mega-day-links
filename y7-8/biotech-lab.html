@@ -7,7 +7,7 @@
 <!-- Option A: Cosmic Pop Fonts (Fredoka, Nunito, Space Mono) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root {
@@ -248,15 +248,26 @@
 
   #puzzleTitle {
     margin: 0;
-    font-size: 1.35rem;
+    font-size: 1.55rem;
     color: #ffffff;
+    letter-spacing: 0.3px;
   }
 
   #puzzleStory {
     margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.48;
-    color: #e4ecff;
+    font-size: clamp(1.18rem, 1.45vw, 1.34rem);
+    line-height: 1.58;
+    font-weight: 400;
+    color: #dbe7ff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  #puzzleStory strong {
+    font-weight: 800;
+    color: #ffffff;
+    background: rgba(0, 242, 254, 0.14);
+    padding: 1px 6px;
+    border-radius: 6px;
   }
 
   /* Clickable Lightbulb Hide & Reveal Clue Button */
@@ -297,13 +308,14 @@
   #clueContentBox {
     display: none;
     margin-top: 6px;
-    padding: 10px 14px;
+    padding: 11px 16px;
     border-radius: 14px;
     background: rgba(0, 242, 254, 0.14);
     border-left: 4px solid var(--bubble-cyan);
-    font-size: 0.94rem;
-    color: #d6f9ff;
-    line-height: 1.45;
+    font-size: 1.08rem;
+    font-weight: 400;
+    color: #e6fcff;
+    line-height: 1.5;
     animation: fadeSlide 0.22s ease-out;
   }
 
@@ -314,6 +326,23 @@
   @keyframes fadeSlide {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Wrong Answer Shake & Red Glow Animation */
+  @keyframes errorShake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    15% { transform: translate(-9px, -3px) rotate(-0.8deg); }
+    30% { transform: translate(9px, 3px) rotate(0.8deg); }
+    45% { transform: translate(-8px, 2px) rotate(-0.6deg); }
+    60% { transform: translate(8px, -2px) rotate(0.6deg); }
+    75% { transform: translate(-5px, 1px) rotate(-0.3deg); }
+    90% { transform: translate(5px, -1px) rotate(0.3deg); }
+  }
+
+  .error-shake-glow {
+    animation: errorShake 0.62s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+    border-color: #ff2d55 !important;
+    box-shadow: 0 0 28px rgba(255, 45, 85, 0.92), inset 0 0 18px rgba(255, 45, 85, 0.55) !important;
   }
 
   /* 2D Live Visual Simulator Container */
@@ -344,6 +373,21 @@
     font-weight: 700;
     color: var(--bubble-cyan);
     pointer-events: none;
+  }
+
+  .visualizer-tier-badge {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: linear-gradient(135deg, rgba(255, 209, 92, 0.24), rgba(255, 94, 188, 0.28));
+    border: 1.5px solid var(--bubble-gold);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--bubble-gold);
+    pointer-events: none;
+    box-shadow: 0 0 14px rgba(255, 209, 92, 0.35);
   }
 
   /* Right Column: Interactive Biotech Controls */
@@ -650,6 +694,20 @@
     font-size: 0.95rem;
   }
 
+  .ligase-rule-card {
+    margin-top: 14px;
+    padding: 13px 18px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(94, 255, 138, 0.16), rgba(0, 242, 254, 0.14));
+    border: 2px solid rgba(94, 255, 138, 0.55);
+    box-shadow: 0 6px 18px rgba(94, 255, 138, 0.15);
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1.6fr;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.95rem;
+  }
+
   /* 30-Mission Map Grid */
   .level-grid {
     display: grid;
@@ -805,6 +863,194 @@
     margin-top: 4px;
   }
 
+  /* ============================================================================
+     FULL-SCREEN SWEEP TRANSITION, BONUS MINI-GAME DECK & FLOATING LAB MASCOTS
+     ============================================================================ */
+  #sweepOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    background: linear-gradient(135deg, #00f2fe 0%, #7b2ff7 50%, #ff5ebc 100%);
+    transform: translateX(-110%) skewX(-12deg);
+    transition: transform 0.58s cubic-bezier(0.77, 0, 0.175, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 60px rgba(0, 242, 254, 0.9);
+  }
+
+  #sweepOverlay.sweep-in {
+    transform: translateX(0%) skewX(0deg);
+    pointer-events: auto;
+  }
+
+  #sweepOverlay.sweep-out {
+    transform: translateX(110%) skewX(-12deg);
+  }
+
+  .sweep-banner-text {
+    font-family: 'Fredoka', cursive, sans-serif;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    letter-spacing: 1.5px;
+    text-align: center;
+  }
+
+  /* Full-Screen Mini-Game Arena (Replaces main #app view instead of overlapping) */
+  #minigameScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: radial-gradient(circle at 50% 30%, #2a1468 0%, #090420 70%, #040112 100%);
+  }
+
+  #minigameScreen.active {
+    display: flex;
+  }
+
+  #mgTopBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  #mgArenaWrap {
+    flex: 1;
+    margin: 14px 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-color: var(--bubble-gold);
+    box-shadow: 0 0 36px rgba(255, 209, 92, 0.25), inset 0 2px 12px rgba(255, 255, 255, 0.25);
+  }
+
+  #mgCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+  }
+
+  #mgInstBadge {
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem) !important;
+    padding: 10px 24px !important;
+    border-radius: 30px !important;
+    border-width: 2.5px !important;
+    background: rgba(10, 6, 34, 0.92) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 22px rgba(0, 242, 254, 0.4);
+    max-width: 92%;
+    white-space: normal;
+    line-height: 1.35;
+    z-index: 6;
+  }
+
+  #mgPreStartOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 3, 24, 0.88);
+    backdrop-filter: blur(10px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 28px;
+    z-index: 15;
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  #mgPreStartOverlay.show {
+    display: flex;
+  }
+
+  .mg-prep-card {
+    background: linear-gradient(145deg, rgba(32, 20, 82, 0.96), rgba(12, 8, 42, 0.98));
+    border: 3px solid var(--bubble-cyan);
+    border-radius: 32px;
+    padding: 32px 40px;
+    max-width: 650px;
+    box-shadow: 0 0 50px rgba(0, 242, 254, 0.45), inset 0 2px 15px rgba(255, 255, 255, 0.25);
+  }
+
+  .mg-countdown-ring {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    margin: 18px auto;
+    background: rgba(0, 242, 254, 0.14);
+    border: 4px solid var(--bubble-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--bubble-gold);
+    box-shadow: 0 0 28px rgba(255, 209, 92, 0.65);
+  }
+
+  #mgCompleteOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 4, 28, 0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    z-index: 10;
+  }
+
+  #mgCompleteOverlay.show {
+    display: flex;
+  }
+
+  /* Floating Unlocked Lab Mascot Dock */
+  #mascotDock {
+    position: fixed;
+    bottom: 16px;
+    left: 20px;
+    z-index: 30;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-radius: 40px;
+    background: rgba(14, 9, 42, 0.88);
+    border: 2px solid var(--bubble-gold);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 209, 92, 0.35);
+    pointer-events: none;
+  }
+
+  #mascotDock.visible {
+    display: flex;
+  }
+
+  .mascot-avatar {
+    font-size: 1.65rem;
+    display: inline-block;
+    animation: mascotFloat 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.8));
+  }
+
+  @keyframes mascotFloat {
+    0%, 100% { transform: translateY(0px) rotate(-4deg); }
+    50% { transform: translateY(-7px) rotate(6deg); }
+  }
+
   @media (max-width: 900px) {
     #mainWorkspace {
       grid-template-columns: 1fr;
@@ -823,6 +1069,71 @@
 
 <!-- Background Floating Space Bubbles Canvas -->
 <canvas id="bgCanvas"></canvas>
+
+<!-- Full-Screen Sweep Transition Curtain -->
+<div id="sweepOverlay">
+  <div class="sweep-banner-text" id="sweepText">🌟 BONUS ARCADE UNLOCKED! 🌟</div>
+</div>
+
+<!-- Floating Unlocked Lab Mascots Dock -->
+<div id="mascotDock">
+  <span style="font-family:'Fredoka',sans-serif; font-size:0.82rem; color:var(--bubble-gold); font-weight:700; text-transform:uppercase; letter-spacing:0.6px;">Lab Pets:</span>
+  <div id="mascotList" style="display:flex; gap:8px; align-items:center;"></div>
+</div>
+
+<!-- Full-Screen Sector Reward Mini-Game Screen (Takes over screen instead of overlapping) -->
+<div id="minigameScreen">
+  <header id="mgTopBar" class="bubble-panel">
+    <div class="brand-title"><span id="mgTitleText">🎮 SECTOR 1 BONUS MINI-GAME</span></div>
+    <div class="stats-row">
+      <div class="stat-pill">⏱️ Time Left: <span class="val cosmic-mono" id="mgTimerVal">18s</span></div>
+      <div class="stat-pill">🌟 Bonus Pts: <span class="val cosmic-mono" id="mgBonusVal">+0</span></div>
+      <button class="bubble-btn btn-gold" id="mgActionBtn" onclick="triggerMgButtonAction()" style="display:none;">⚡ SNIP NOW! (Spacebar / Click)</button>
+    </div>
+  </header>
+
+  <div id="mgArenaWrap" class="bubble-panel">
+    <div class="visualizer-badge" id="mgInstBadge">Click the spiky purple viruses! Avoid friendly green cells!</div>
+    <canvas id="mgCanvas"></canvas>
+
+    <!-- 8-Second Pre-Game Instructions Countdown Overlay -->
+    <div id="mgPreStartOverlay">
+      <div class="mg-prep-card">
+        <div style="font-size:0.95rem; font-weight:800; color:var(--bubble-cyan); letter-spacing:1.8px; text-transform:uppercase;">
+          🚀 GET READY FOR BONUS ARCADE!
+        </div>
+        <h2 id="mgPrepTitle" style="margin:8px 0 14px; font-size:clamp(1.7rem, 2.5vw, 2.25rem); color:#ffffff;">
+          SECTOR 1 BONUS MINI-GAME
+        </h2>
+        <p id="mgPrepInstructions" style="font-size:clamp(1.22rem, 1.6vw, 1.42rem); line-height:1.55; color:#e6f2ff; margin:0 auto 12px; font-weight:700;">
+          Instructions loading...
+        </p>
+        <div class="mg-countdown-ring cosmic-mono" id="mgPrepCountNum">8</div>
+        <div style="font-size:1rem; color:var(--bubble-lime); font-weight:700; margin-bottom:14px;">
+          Mini-game starts automatically in <span id="mgPrepSecText">8</span> seconds...
+        </div>
+        <button class="bubble-btn btn-green" style="font-size:1.1rem; padding:12px 30px;" onclick="startMiniGameNow()">
+          ⚡ Start Now!
+        </button>
+      </div>
+    </div>
+
+    <!-- End of Mini-Game Mascot Unlock Card -->
+    <div id="mgCompleteOverlay">
+      <div class="well-done-card" style="max-width:540px;">
+        <div style="font-size:3.6rem; margin-bottom:6px;" id="mgUnlockIcon">🐻‍❄️✨</div>
+        <h2 style="margin:0; font-size:2rem; color:var(--bubble-gold);" id="mgUnlockHeading">SECTOR 1 MASTERED!</h2>
+        <p id="mgUnlockDesc" style="color:#e2eeff; font-size:1.05rem; margin:10px 0 14px;"></p>
+        <div id="mgEarnedPill" class="cosmic-mono" style="display:inline-block; padding:8px 22px; border-radius:30px; background:rgba(94,255,138,0.2); border:2px solid var(--bubble-lime); color:var(--bubble-lime); font-weight:700; font-size:1.15rem; margin-bottom:18px;">
+          +250 BONUS POINTS!
+        </div>
+        <div>
+          <button class="bubble-btn btn-green" style="font-size:1.1rem; padding:12px 32px;" onclick="exitMiniGameWithSweep()">🚀 Return to Mission Control ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="app">
   <!-- TOP HUD BAR -->
@@ -872,6 +1183,7 @@
 
       <div id="visualizerContainer" class="bubble-panel">
         <div class="visualizer-badge" id="simModeBadge">2D LIVE BIO-SCANNER</div>
+        <div class="visualizer-tier-badge cosmic-mono" id="tierBadge">⚙️ LAB TECH TIER: Mk-I</div>
         <canvas id="simCanvas"></canvas>
       </div>
     </section>
@@ -901,13 +1213,13 @@
     <div class="modal-body" style="padding:36px 30px;">
       <div style="font-size:3.5rem; margin-bottom:6px;">🫧🧬🚀</div>
       <div style="font-size:0.9rem; font-weight:700; letter-spacing:2px; color:var(--bubble-cyan); text-transform:uppercase;">
-        Mission Control Biotechnology Challenge
+        Y7/8 Mission Control Biotechnology Challenge
       </div>
       <h1 style="margin:6px 0 12px; font-size:2.5rem; background:linear-gradient(90deg,#00f2fe,#ff85e4,#ffe47a); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
         MEGA BIOTECH LAB
       </h1>
       <p style="color:var(--text-soft); font-size:1.05rem; max-width:560px; margin:0 auto;">
-        Welcome to <strong>Mission Control</strong>, Chief Bio-Engineer! Complete <strong>30 sequential biotechnology missions</strong> using real genetic engineering tools. Each mission awards <strong>+150 points once</strong>, wrong answers cost <strong>-100 points</strong>, and every solved mission plays a live cutscene!
+        Welcome to <strong>Mission Control</strong>, Y7/8 Chief Bio-Engineer! Complete <strong>30 sequential biotechnology missions</strong> using real genetic engineering tools. Every correct mission upgrades your lab equipment, unlocks a live cutscene, and awards <strong>+150 points once</strong> (wrong answers cost <strong>-100 points</strong>)!
       </p>
 
       <div class="start-feature-grid">
@@ -997,7 +1309,7 @@
 <div class="modal-backdrop" id="guideModal">
   <div class="modal-card bubble-panel">
     <div class="modal-header">
-      <h2>📘 Mission Control Bio-Textbook (Year 8 Field Guide)</h2>
+      <h2>📘 Mission Control Bio-Textbook (Y7/8 Field Guide)</h2>
       <button class="close-x-btn" onclick="closeModal('guideModal')" title="Close Textbook">✖</button>
     </div>
     <div class="modal-body">
@@ -1026,7 +1338,7 @@
           </tbody>
         </table>
         <div class="callout-card">
-          <strong>🔬 Year 8 Cell Tip:</strong> Bacteria are <em>prokaryotes</em> (no nucleus; their DNA floats in circular rings called plasmids). Yeast, Algae, and Mammalian cells are <em>eukaryotes</em> (DNA is stored safely inside a nucleus).
+          <strong>🔬 Y7/8 Cell Tip:</strong> Bacteria are <em>prokaryotes</em> (no nucleus; their DNA floats in circular rings called plasmids). Yeast, Algae, and Mammalian cells are <em>eukaryotes</em> (DNA is stored safely inside a nucleus).
         </div>
       </div>
 
@@ -1040,15 +1352,24 @@
         <p>To give bacteria a new superpower, genetic engineers cut open a bacterial DNA ring (a <strong>Plasmid</strong>) and paste in a new gene:</p>
         <table class="bio-table">
           <thead>
-            <tr><th>Molecular Tool</th><th>What It Does in the Lab</th><th>When to Choose It</th></tr>
+            <tr><th>Molecular Tool (Scissors)</th><th>What It Does in the Lab</th><th>When to Choose It</th></tr>
           </thead>
           <tbody>
             <tr><td><strong>EcoRI Enzyme</strong></td><td>Molecular scissors that cut cleanly at <code>GAATTC</code> sequences.</td><td>Used for <strong>Human Insulin</strong> & <strong>Hormone</strong> genes.</td></tr>
             <tr><td><strong>BamHI Enzyme</strong></td><td>Molecular scissors that cut at <code>GGATCC</code> sequences.</td><td>Used for <strong>Bioluminescent (Glow) GFP</strong> & <strong>Radiation-Shield</strong> genes.</td></tr>
             <tr><td><strong>HindIII Enzyme</strong></td><td>Molecular scissors that cut at <code>AAGCTT</code> sequences.</td><td>Used for <strong>Crop Frost/Drought Resistance</strong> & <strong>Plastic-Eating</strong> genes.</td></tr>
-            <tr><td><strong>DNA Ligase</strong></td><td><strong>Molecular Glue!</strong> Seals the sticky ends of DNA back together.</td><td>Required in <strong>every</strong> plasmid splicing mission to finish the ring.</td></tr>
           </tbody>
         </table>
+
+        <!-- Separated & Lightly Highlighted Underlying Rule for DNA Ligase -->
+        <div style="margin-top: 16px; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--bubble-lime);">
+          ✨ Underlying Rule for All Plasmid Missions:
+        </div>
+        <div class="ligase-rule-card">
+          <div><strong style="color: var(--bubble-lime); font-size: 1.05rem;">🧴 DNA Ligase</strong></div>
+          <div><strong>Molecular Glue!</strong> Seals the sticky ends of DNA back together.</div>
+          <div>Required in <strong>every single</strong> plasmid splicing mission to finish the ring.</div>
+        </div>
       </div>
 
       <div class="textbook-page" id="tab2">
@@ -1208,66 +1529,172 @@ function playErrorBuzz() {
 
 function startUpbeatSpaceMusic() {
   if (musicInterval) return;
-  const melodySeq = [
-    523.25, 659.25, 783.99, 987.77, 783.99, 659.25, 1046.50, 783.99,
-    440.00, 523.25, 659.25, 880.00, 659.25, 523.25, 783.99, 659.25,
-    349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 880.00, 698.46,
-    392.00, 493.88, 587.33, 783.99, 659.25, 783.99, 987.77, 1046.50
+
+  // 5 Distinct Sector Soundtracks (Track 1 kept intact; Tracks 2-5 use deeper, calmer space-tech vibes)
+  const SECTOR_TRACKS = [
+    {
+      name: 'Bubble Groove',
+      leadType: 'sine',
+      bassType: 'triangle',
+      leadGainVal: 0.042,
+      bassGainVal: 0.048,
+      melody: [
+        523.25, 659.25, 783.99, 987.77, 783.99, 659.25, 1046.50, 783.99,
+        440.00, 523.25, 659.25, 880.00, 659.25, 523.25, 783.99, 659.25,
+        349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 880.00, 698.46,
+        392.00, 493.88, 587.33, 783.99, 659.25, 783.99, 987.77, 1046.50
+      ],
+      bass: [130.81, 130.81, 110.00, 110.00, 87.31, 87.31, 98.00, 98.00],
+      sparkleFreq: 2400
+    },
+    {
+      name: 'Deep Nebula Pulse',
+      leadType: 'sine',
+      bassType: 'sine',
+      leadGainVal: 0.032,
+      bassGainVal: 0.055,
+      melody: [
+        220.00, 0, 261.63, 329.63, 0, 293.66, 261.63, 0,
+        196.00, 0, 246.94, 293.66, 0, 261.63, 220.00, 0,
+        174.61, 0, 220.00, 261.63, 0, 329.63, 293.66, 0,
+        164.81, 0, 196.00, 246.94, 0, 220.00, 196.00, 0
+      ],
+      bass: [110.00, 110.00, 98.00, 98.00, 87.31, 87.31, 82.41, 82.41],
+      sparkleFreq: 0
+    },
+    {
+      name: 'Orbital Telemetry',
+      leadType: 'triangle',
+      bassType: 'sine',
+      leadGainVal: 0.026,
+      bassGainVal: 0.052,
+      melody: [
+        293.66, 0, 0, 349.23, 293.66, 0, 440.00, 0,
+        261.63, 0, 0, 329.63, 261.63, 0, 392.00, 0,
+        220.00, 0, 0, 261.63, 329.63, 0, 293.66, 0,
+        196.00, 0, 246.94, 0, 293.66, 0, 261.63, 0
+      ],
+      bass: [73.42, 146.83, 65.41, 130.81, 110.00, 110.00, 98.00, 98.00],
+      sparkleFreq: 587.33
+    },
+    {
+      name: 'Zero-G Ambient Lounge',
+      leadType: 'sine',
+      bassType: 'triangle',
+      leadGainVal: 0.030,
+      bassGainVal: 0.045,
+      melody: [
+        329.63, 293.66, 246.94, 0, 293.66, 0, 246.94, 220.00,
+        261.63, 246.94, 196.00, 0, 246.94, 0, 196.00, 174.61,
+        220.00, 261.63, 329.63, 0, 293.66, 0, 261.63, 220.00,
+        196.00, 246.94, 293.66, 0, 246.94, 0, 220.00, 0
+      ],
+      bass: [82.41, 82.41, 98.00, 98.00, 110.00, 110.00, 73.42, 73.42],
+      sparkleFreq: 0
+    },
+    {
+      name: 'Starship Sub-Core',
+      leadType: 'triangle',
+      bassType: 'sine',
+      leadGainVal: 0.028,
+      bassGainVal: 0.058,
+      melody: [
+        196.00, 246.94, 293.66, 0, 392.00, 293.66, 246.94, 0,
+        174.61, 220.00, 261.63, 0, 349.23, 261.63, 220.00, 0,
+        164.81, 196.00, 246.94, 0, 329.63, 246.94, 196.00, 0,
+        146.83, 196.00, 220.00, 0, 293.66, 220.00, 196.00, 0
+      ],
+      bass: [98.00, 98.00, 87.31, 87.31, 82.41, 82.41, 73.42, 98.00],
+      sparkleFreq: 440.00
+    }
   ];
-  const bassSeq = [130.81, 130.81, 110.00, 110.00, 87.31, 87.31, 98.00, 98.00];
 
   musicInterval = setInterval(() => {
     if (!musicEnabled || !audioCtx || audioCtx.state !== 'running') return;
     const now = audioCtx.currentTime;
+    const sectorIdx = Math.min(4, Math.floor(currentIdx / 6));
+    const track = SECTOR_TRACKS[sectorIdx];
+    const noteFreq = track.melody[musicStep % track.melody.length];
 
-    const leadOsc = audioCtx.createOscillator();
-    const leadGain = audioCtx.createGain();
-    leadOsc.type = 'sine';
-    leadOsc.frequency.setValueAtTime(melodySeq[musicStep % melodySeq.length], now);
-    leadGain.gain.setValueAtTime(0.001, now);
-    leadGain.gain.linearRampToValueAtTime(0.042, now + 0.02);
-    leadGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.21);
-    leadOsc.connect(leadGain);
-    leadGain.connect(audioCtx.destination);
-    leadOsc.start(now);
-    leadOsc.stop(now + 0.22);
+    if (noteFreq > 0) {
+      const leadOsc = audioCtx.createOscillator();
+      const leadGain = audioCtx.createGain();
+      leadOsc.type = track.leadType;
+      leadOsc.frequency.setValueAtTime(noteFreq, now);
+      leadGain.gain.setValueAtTime(0.001, now);
+      leadGain.gain.linearRampToValueAtTime(track.leadGainVal, now + 0.03);
+      leadGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.28);
+      leadOsc.connect(leadGain);
+      leadGain.connect(audioCtx.destination);
+      leadOsc.start(now);
+      leadOsc.stop(now + 0.29);
+    }
 
     if (musicStep % 2 === 0) {
       const bassOsc = audioCtx.createOscillator();
       const bassGain = audioCtx.createGain();
-      bassOsc.type = 'triangle';
-      bassOsc.frequency.setValueAtTime(bassSeq[Math.floor(musicStep / 4) % bassSeq.length], now);
+      bassOsc.type = track.bassType;
+      bassOsc.frequency.setValueAtTime(track.bass[Math.floor(musicStep / 4) % track.bass.length], now);
       bassGain.gain.setValueAtTime(0.001, now);
-      bassGain.gain.linearRampToValueAtTime(0.05, now + 0.03);
-      bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+      bassGain.gain.linearRampToValueAtTime(track.bassGainVal, now + 0.04);
+      bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
       bassOsc.connect(bassGain);
       bassGain.connect(audioCtx.destination);
       bassOsc.start(now);
-      bassOsc.stop(now + 0.38);
+      bassOsc.stop(now + 0.42);
     }
 
-    if (musicStep % 2 === 1) {
+    if (track.sparkleFreq > 0 && musicStep % 4 === 1) {
       const tickOsc = audioCtx.createOscillator();
       const tickGain = audioCtx.createGain();
       tickOsc.type = 'sine';
-      tickOsc.frequency.setValueAtTime(2400, now);
-      tickGain.gain.setValueAtTime(0.008, now);
-      tickGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.04);
+      tickOsc.frequency.setValueAtTime(track.sparkleFreq, now);
+      tickGain.gain.setValueAtTime(0.005, now);
+      tickGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.05);
       tickOsc.connect(tickGain);
       tickGain.connect(audioCtx.destination);
       tickOsc.start(now);
-      tickOsc.stop(now + 0.045);
+      tickOsc.stop(now + 0.055);
     }
     musicStep++;
-  }, 240);
+  }, 230);
+}
+
+function updateMusicButtonLabel() {
+  const sectorNum = Math.min(5, Math.floor(currentIdx / 6) + 1);
+  const btn = document.getElementById('musicBtn');
+  if (btn) {
+    btn.textContent = musicEnabled ? `🎵 Track ${sectorNum}: ON` : `🔇 Track ${sectorNum}: OFF`;
+  }
 }
 
 function toggleMusic() {
   initAudio();
   musicEnabled = !musicEnabled;
-  document.getElementById('musicBtn').textContent = musicEnabled ? '🎵 Music: ON' : '🔇 Music: OFF';
+  updateMusicButtonLabel();
   playBubblePop(440);
   if (musicEnabled) startUpbeatSpaceMusic();
+}
+
+function triggerErrorShake() {
+  const targets = [
+    document.getElementById('topHud'),
+    document.getElementById('missionBox'),
+    document.getElementById('visualizerContainer'),
+    document.getElementById('rightCol'),
+    ...document.querySelectorAll('.control-group')
+  ];
+  targets.forEach(el => {
+    if (!el) return;
+    el.classList.remove('error-shake-glow');
+    void el.offsetWidth; // Force reflow so repeated wrong clicks re-trigger the shake
+    el.classList.add('error-shake-glow');
+  });
+  setTimeout(() => {
+    targets.forEach(el => {
+      if (el) el.classList.remove('error-shake-glow');
+    });
+  }, 650);
 }
 
 /* ============================================================================
@@ -1320,135 +1747,135 @@ const CRISPR_PAMS = [
 
 const PUZZLES = [
   { id: 1, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 1: Emergency Space Insulin',
-    story: 'Mission Control Life Support is online! Commander Patel needs human insulin for the medical bay. Set up the bioreactor tank with the correct cell, temperature, broth, and oxygen rule.',
+    story: 'Mission Control Life Support is online! Commander Patel needs <strong>human insulin</strong> for the medical bay. Set up the bioreactor tank with the correct <strong>cell</strong>, <strong>temperature</strong>, <strong>broth</strong>, and <strong>oxygen rule</strong>.',
     hint: 'Check Chapter 1: Which prokaryote bacterium grows at human body temp and uses Glucose + Amino Acids with Oxygen ON?',
     cutsceneCaption: 'E. coli rapidly brews pure Human Insulin Vials for Commander Patel!',
     target: { cell: "E. coli Bacteria", temp: 37, broth: "Glucose + Amino Acids", mode: "Aerobic (Oxygen ON)" } },
   { id: 2, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 2: Green Oxygen Scrubber',
-    story: 'Mission Control air filters need immediate oxygen generation! Cultivate a photosynthetic microbe that absorbs carbon dioxide and releases fresh oxygen bubbles under grow-lights.',
+    story: 'Mission Control air filters need immediate <strong>oxygen generation</strong>! Cultivate a <strong>photosynthetic microbe</strong> that absorbs carbon dioxide and releases fresh oxygen bubbles under <strong>grow-lights</strong>.',
     hint: 'Check Chapter 1: Which photosynthetic cell thrives in mild conditions and needs mineral nitrates plus UV-Grow Light?',
     cutsceneCaption: 'Spirulina Algae photosynthesizes CO2 into fresh Oxygen bubbles for Mission Control!',
     target: { cell: "Spirulina Algae", temp: 25, broth: "CO2 + Mineral Nitrates", mode: "UV-Grow Light + CO2" } },
   { id: 3, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 3: Rocket Bio-Ethanol Fuel',
-    story: 'Mission Control shuttle thrusters need eco-friendly ethanol biofuel! Ferment sugar using a single-celled fungus without any oxygen so it produces clean ethanol.',
+    story: 'Mission Control shuttle thrusters need eco-friendly <strong>ethanol biofuel</strong>! Ferment sugar using a <strong>single-celled fungus</strong> with <strong>no oxygen</strong> so it produces clean ethanol.',
     hint: 'Check Chapter 1: How does Baker\'s / Brewer\'s Yeast ferment Sucrose Sugar into ethanol biofuel?',
     cutsceneCaption: 'Anaerobic Yeast fermentation fills the shuttle auxiliary fuel tanks for liftoff!',
     target: { cell: "Baker's / Brewer's Yeast", temp: 30, broth: "Sucrose Sugar + Yeast Extract", mode: "Anaerobic (No Oxygen)" } },
   { id: 4, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 4: Probiotic Space Yogurt',
-    story: 'Long spaceflights weaken astronaut digestion. Brew a batch of probiotic yogurt by fermenting milk sugar into tangy lactic acid!',
+    story: 'Long spaceflights weaken astronaut digestion. Brew a batch of <strong>probiotic yogurt</strong> by fermenting <strong>milk sugar</strong> into tangy lactic acid!',
     hint: 'Check Chapter 1: Look up Lactobacillus—what cozy temperature, sugar, and oxygen setting does it need?',
     cutsceneCaption: 'Lactobacillus ferments lactose at 42°C into creamy Probiotic Space Yogurt!',
     target: { cell: "Lactobacillus", temp: 42, broth: "Lactose Milk Sugar", mode: "Anaerobic (No Oxygen)" } },
   { id: 5, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 5: Europa Volcano Enzyme Harvest',
-    story: 'We need heat-proof Taq enzymes for our Mission Control DNA copiers! Grow the volcanic extremophile microbe discovered in boiling deep-sea vents.',
+    story: 'We need heat-proof <strong>Taq enzymes</strong> for our Mission Control DNA copiers! Grow the <strong>volcanic extremophile</strong> microbe discovered in boiling deep-sea vents.',
     hint: 'Check Chapter 1: Which extremophile loves super-hot temperatures and sulfur minerals?',
     cutsceneCaption: 'Thermus aquaticus thrives at 72°C around volcanic vents, yielding golden Taq Enzymes!',
     target: { cell: "Thermus aquaticus", temp: 72, broth: "Sulfur Minerals + Peptone", mode: "Aerobic (Oxygen ON)" } },
   { id: 6, type: 'bioreactor', chapter: 0, sector: 'Sector 1: Mission Control Bioreactors', title: 'Mission 6: Zero-G Cartilage Tissue Repair',
-    story: 'A crew member sprained a knee during lunar training. Grow fragile human stem cells to repair cartilage tissue without bursting their membranes!',
+    story: 'A crew member sprained a knee during lunar training. Grow fragile <strong>human stem cells</strong> to repair <strong>cartilage tissue</strong> without bursting their membranes!',
     hint: 'Check Chapter 1: What temperature, serum, and buffer do fragile Mammalian Stem Cells require?',
     cutsceneCaption: 'Mammalian Stem Cells weave healthy new cartilage tissue across the knee joint!',
     target: { cell: "Mammalian Stem Cells", temp: 37, broth: "Growth Serum + Vitamins", mode: "Aerobic + 5% CO2 Buffer" } },
 
   { id: 7, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 7: Splicing the Human Insulin Gene',
-    story: 'Complete the complementary DNA strand for human insulin and choose the right restriction enzyme and glue to seal it into the plasmid!',
+    story: 'Complete the <strong>complementary DNA strand</strong> for <strong>human insulin</strong> and choose the right <strong>restriction enzyme</strong> and <strong>molecular glue</strong> to seal it into the plasmid!',
     hint: 'Check Chapter 2: Pair A with T and C with G. Which restriction enzyme cuts Human Insulin genes?',
     cutsceneCaption: 'EcoRI cuts the plasmid and DNA Ligase seals the TACGT Human Insulin gene into the ring!',
     templateDNA: ['A','T','G','C','A'], targetDNA: ['T','A','C','G','T'], enzyme: 'EcoRI Enzyme', glue: 'DNA Ligase' },
   { id: 8, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 8: Bioluminescent Space Moss (GFP)',
-    story: 'Engineer glowing moss to light up dark Martian caves without electricity! Build the complementary DNA strand and select the GFP restriction enzyme.',
+    story: 'Engineer <strong>glowing moss (GFP)</strong> to light up dark Martian caves without electricity! Build the <strong>complementary DNA strand</strong> and select the <strong>GFP restriction enzyme</strong>.',
     hint: 'Check Chapter 2: Match each DNA base (A-T, C-G) and check which enzyme cuts Bioluminescent (GFP) genes.',
     cutsceneCaption: 'Dark Martian caves and station bays illuminate with neon-green Bioluminescent Space Moss!',
     templateDNA: ['G','G','A','T','C'], targetDNA: ['C','C','T','A','G'], enzyme: 'BamHI Enzyme', glue: 'DNA Ligase' },
   { id: 9, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 9: Frost-Proof Martian Potatoes',
-    story: 'Martian nights are freezing! Splice an arctic fish anti-freeze gene into potato plant plasmids so our space crops survive frost.',
+    story: 'Martian nights are freezing! Splice an arctic fish <strong>anti-freeze gene</strong> into potato plant plasmids for <strong>crop frost resistance</strong>.',
     hint: 'Check Chapter 2: Which restriction enzyme is used for Crop Frost/Drought Resistance genes?',
     cutsceneCaption: 'Potato crops glow with a warm anti-freeze shield against sub-zero blizzards!',
     templateDNA: ['A','A','G','C','T'], targetDNA: ['T','T','C','G','A'], enzyme: 'HindIII Enzyme', glue: 'DNA Ligase' },
   { id: 10, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 10: Cosmic Radiation Shield Protein',
-    story: 'Tardigrades have a special protein that shields DNA from cosmic radiation! Splice this shield gene into our orbital plasmid.',
+    story: 'Tardigrades have a special protein that shields DNA from cosmic rays! Splice this <strong>radiation-shield gene</strong> into our orbital plasmid.',
     hint: 'Check Chapter 2: Check the enzyme table for Radiation-Shield genes, and remember DNA Ligase seals the ring.',
     cutsceneCaption: 'Tardigrade shield proteins project a golden barrier deflecting deep-space cosmic rays!',
     templateDNA: ['C','G','T','A','G'], targetDNA: ['G','C','A','T','C'], enzyme: 'BamHI Enzyme', glue: 'DNA Ligase' },
   { id: 11, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 11: Plastic-Recycling Super Bacteria',
-    story: 'Station waste plastic needs to be recycled into 3D-printer ink! Splice the PETase plastic-eating enzyme gene into a bacterial plasmid.',
+    story: 'Station waste plastic needs to be recycled into 3D-printer ink! Splice the <strong>plastic-eating enzyme gene</strong> into a bacterial plasmid.',
     hint: 'Check Chapter 2: Which molecular scissors cut Plastic-Eating genes?',
     cutsceneCaption: 'Engineered bacteria chomp waste plastic and spin fresh 3D-Printer Filament!',
     templateDNA: ['T','C','A','G','A'], targetDNA: ['A','G','T','C','T'], enzyme: 'HindIII Enzyme', glue: 'DNA Ligase' },
   { id: 12, type: 'dna_splice', chapter: 1, sector: 'Sector 2: Mission Control Gene Splicing', title: 'Mission 12: Bone-Growth Hormone Plasmid',
-    story: 'Zero gravity causes bones to lose calcium. Engineer a plasmid carrying the human growth hormone gene to protect crew bone density!',
+    story: 'Zero gravity causes bones to lose calcium. Engineer a plasmid carrying the human <strong>growth hormone gene</strong> to protect crew bone density!',
     hint: 'Check Chapter 2: Which enzyme cuts Human Insulin & Hormone genes?',
     cutsceneCaption: 'Bone-Growth Hormone plasmids reinforce astronaut skeletal density in zero gravity!',
     templateDNA: ['G','A','A','T','T'], targetDNA: ['C','T','T','A','A'], enzyme: 'EcoRI Enzyme', glue: 'DNA Ligase' },
 
   { id: 13, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 13: Meteorite Microbe Amplification',
-    story: 'We found 1 single strand of fossil DNA inside a Martian meteorite! Set the 3 PCR temperatures and run enough cycles to produce 8 copies.',
+    story: 'We found <strong>1 single strand</strong> of fossil DNA inside a Martian meteorite! Set the <strong>3 PCR temperatures</strong> and run enough cycles to produce <strong>8 copies</strong>.',
     hint: 'Check Chapter 3: Review the 3 PCR stage temperatures and use the Doubling Math Rule starting from 1 copy to reach 8 copies.',
     cutsceneCaption: '3 PCR thermal cycles amplify the lone meteorite strand into 8 glowing DNA copies!',
     startCopies: 1, targetCopies: 8, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
   { id: 14, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 14: Hydroponic Plant Virus Check',
-    story: 'Our space tomatoes have yellow spots! Starting with 1 viral DNA strand, run the PCR machine to amplify it into 16 copies for testing.',
+    story: 'Our space tomatoes have yellow spots! Starting with <strong>1 viral DNA strand</strong>, run the PCR machine to amplify it into <strong>16 copies</strong> for testing.',
     hint: 'Check Chapter 3: How many doublings turn 1 copy into 16 copies?',
     cutsceneCaption: '16 amplified viral DNA strands identify the tomato virus so the greenhouse cures the crop!',
     startCopies: 1, targetCopies: 16, targetCycles: 4, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
   { id: 15, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 15: Airlock Contamination Trace',
-    story: 'We swabbed 1 bacterial DNA molecule from the airlock handle. Amplify it to 32 copies so the scanner can identify the species!',
+    story: 'We swabbed <strong>1 bacterial DNA molecule</strong> from the airlock handle. Amplify it to <strong>32 copies</strong> so the scanner can identify the species!',
     hint: 'Check Chapter 3: Count the doublings from 1 → 2 → 4 → 8 → 16 → 32!',
     cutsceneCaption: '32 amplified DNA strands trigger the Airlock UV Bio-Sanitizer beam—contaminant cleared!',
     startCopies: 1, targetCopies: 32, targetCycles: 5, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
   { id: 16, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 16: Twin Sample Quick Doubling',
-    story: 'This tube already starts with 2 DNA templates! How many PCR cycles do we need to reach 16 copies while using the standard thermal profile?',
+    story: 'This tube already starts with <strong>2 DNA templates</strong>! How many PCR cycles do we need to reach <strong>16 copies</strong> using the standard thermal profile?',
     hint: 'Careful! You are starting with 2 copies this time: 1 cycle = 4, 2 cycles = 8, 3 cycles = 16!',
     cutsceneCaption: 'Twin test tubes pulse through 3 thermal cycles to synchronize 16 gleaming DNA helices!',
     startCopies: 2, targetCopies: 16, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
   { id: 17, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 17: Deep-Space Seed Bank Verification',
-    story: 'Starting with 3 DNA strands from heritage wheat seeds, run the PCR thermal cycler to reach 24 strands!',
+    story: 'Starting with <strong>3 DNA strands</strong> from heritage wheat seeds, run the PCR thermal cycler to reach <strong>24 strands</strong>!',
     hint: 'Double from 3 copies each cycle: 3 → 6 → 12 → 24!',
     cutsceneCaption: '24 verified DNA strands unlock the Deep-Space Seed Vault as golden wheat sprouts!',
     startCopies: 3, targetCopies: 24, targetCycles: 3, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
   { id: 18, type: 'pcr', chapter: 2, sector: 'Sector 3: Mission Control PCR Thermal Cycler', title: 'Mission 18: Sub-Surface Ice Core DNA',
-    story: 'We extracted 2 ancient DNA strands from Enceladus ice cores. Amplify them until you have 64 strands!',
+    story: 'We extracted <strong>2 ancient DNA strands</strong> from Enceladus ice cores. Amplify them until you have <strong>64 strands</strong>!',
     hint: 'Start at 2 and double each cycle: 2 → 4 → 8 → 16 → 32 → 64.',
     cutsceneCaption: 'Enceladus glacier core unlocks 64 ancient cryo-DNA strands across the hologram!',
     startCopies: 2, targetCopies: 64, targetCycles: 5, denatureTemp: 95, annealTemp: 55, extendTemp: 72 },
 
   { id: 19, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 19: Who Ate the Space Strawberries?',
-    story: 'Someone sneaked into the greenhouse and ate the prize strawberries! Set the correct electrode polarity, match the Evidence DNA bands (200 bp & 600 bp) to the culprit\'s Lane, and identify the fastest band.',
+    story: 'Someone sneaked into the greenhouse and ate the prize strawberries! Set the correct <strong>electrode polarity</strong>, match the <strong>Evidence DNA bands (200 bp & 600 bp)</strong> to the culprit\'s Lane, and identify the <strong>fastest band</strong>.',
     hint: 'Check Chapter 4: Remember DNA is negatively charged! Look at the 2D Gel Tank below to see which suspect lane matches the Evidence lane.',
     cutsceneCaption: 'DNA Match Confirmed! Spotlight catches Dr. Nova red-handed with the prize Space Strawberries!',
     evidenceBands: [200, 600],
     lanes: [{ name: 'Lane 1 (Pilot Leo)', bands: [300, 800] }, { name: 'Lane 2 (Dr. Nova)', bands: [200, 600] }, { name: 'Lane 3 (Engineer Zac)', bands: [150, 450] }],
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 2 (Dr. Nova)', fastestSize: '150 bp (Smallest travels farthest)' },
   { id: 20, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 20: Pure Spirulina Strain Check',
-    story: 'We need the pure Spirulina strain that shows bands at 150 bp and 500 bp. Run the gel and select the matching batch!',
+    story: 'We need the pure Spirulina strain that shows bands at <strong>150 bp and 500 bp</strong>. Run the gel and select the <strong>matching batch</strong>!',
     hint: 'Check Chapter 4: Which lane on the glowing agarose gel has bands at 150 bp and 500 bp?',
     cutsceneCaption: 'Batch Alpha matches 150bp & 500bp—certified 100% Pure Spirulina Super-Culture!',
     evidenceBands: [150, 500],
     lanes: [{ name: 'Lane 1 (Batch Alpha)', bands: [150, 500] }, { name: 'Lane 2 (Batch Beta)', bands: [250, 700] }, { name: 'Lane 3 (Batch Gamma)', bands: [400, 900] }],
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 1 (Batch Alpha)', fastestSize: '150 bp (Smallest travels farthest)' },
   { id: 21, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 21: Plasmid Cut Confirmation',
-    story: 'If our EcoRI enzyme successfully cut the insulin plasmid, it should produce fragments at 300 bp and 750 bp. Find the successful tube!',
+    story: 'If our EcoRI enzyme successfully cut the insulin plasmid, it should produce fragments at <strong>300 bp and 750 bp</strong>. Find the <strong>successful tube</strong>!',
     hint: 'Look closely at the 2D gel lanes: which lane lines up horizontally with the Evidence (300 bp & 750 bp)?',
     cutsceneCaption: 'Tube C glows emerald green as 300bp and 750bp plasmid fragments confirm a clean cut!',
     evidenceBands: [300, 750],
     lanes: [{ name: 'Lane 1 (Tube A)', bands: [200, 900] }, { name: 'Lane 2 (Tube B)', bands: [350, 600] }, { name: 'Lane 3 (Tube C)', bands: [300, 750] }],
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 3 (Tube C)', fastestSize: '200 bp (Smallest travels farthest)' },
   { id: 22, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 22: Martian Soil Fungus ID',
-    story: 'We isolated a helpful soil fungus with signature DNA bands at 100 bp and 400 bp. Match it to the known catalogue species!',
+    story: 'We isolated a helpful soil fungus with signature DNA bands at <strong>100 bp and 400 bp</strong>. Match it to the <strong>known catalogue species</strong>!',
     hint: 'Compare the Evidence lane (100 bp & 400 bp) against Lanes 1, 2, and 3 on the scanner.',
     cutsceneCaption: 'Species Y Soil Fungus confirmed! Friendly mycorrhizal mushrooms enrich the Martian soil!',
     evidenceBands: [100, 400],
     lanes: [{ name: 'Lane 1 (Species X)', bands: [250, 850] }, { name: 'Lane 2 (Species Y)', bands: [100, 400] }, { name: 'Lane 3 (Species Z)', bands: [300, 650] }],
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 2 (Species Y)', fastestSize: '100 bp (Smallest travels farthest)' },
   { id: 23, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 23: Water Recycler Bio-Filter Match',
-    story: 'Which bacterial colony carries the water-purifying gene profile (350 bp & 850 bp)? Verify the gel polarity and lane match.',
+    story: 'Which bacterial colony carries the water-purifying gene profile (<strong>350 bp & 850 bp</strong>)? Verify the <strong>gel polarity</strong> and <strong>lane match</strong>.',
     hint: 'Check Chapter 4 for polarity rules and find the lane matching 350 bp and 850 bp.',
     cutsceneCaption: 'Colony Red Bio-Filter purifies murky station wastewater into sparkling crystal-clear water!',
     evidenceBands: [350, 850],
     lanes: [{ name: 'Lane 1 (Colony Red)', bands: [350, 850] }, { name: 'Lane 2 (Colony Blue)', bands: [200, 500] }, { name: 'Lane 3 (Colony Gold)', bands: [450, 900] }],
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 1 (Colony Red)', fastestSize: '200 bp (Smallest travels farthest)' },
   { id: 24, type: 'gel', chapter: 3, sector: 'Sector 4: Mission Control Gel Electrophoresis', title: 'Mission 24: Space Wheat Hybrid Parentage',
-    story: 'Confirm which hybrid seedling inherited the drought-resistant bands at 250 bp and 550 bp!',
+    story: 'Confirm which <strong>hybrid seedling</strong> inherited the drought-resistant bands at <strong>250 bp and 550 bp</strong>!',
     hint: 'Match the horizontal glowing bands on the 2D gel display and pick the smallest fragment as the fastest swimmer.',
     cutsceneCaption: 'Seedling 3 confirmed! Golden drought-resistant Space Wheat flourishes under twin suns!',
     evidenceBands: [250, 550],
@@ -1456,32 +1883,32 @@ const PUZZLES = [
     correctPolarity: 'Top: Negative (-) / Bottom: Positive (+)', correctLane: 'Lane 3 (Seedling 3)', fastestSize: '180 bp (Smallest travels farthest)' },
 
   { id: 25, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 25: Fixing Sickle-Cell Hemoglobin',
-    story: 'Program Cas9 with a complementary Guide RNA (gRNA) sequence to locate the mutated hemoglobin DNA strand and lock onto a valid PAM site!',
+    story: 'Program Cas9 with a complementary <strong>Guide RNA (gRNA)</strong> sequence to locate the mutated <strong>hemoglobin DNA strand</strong> and lock onto a valid <strong>PAM site</strong>!',
     hint: 'Check Chapter 5: In RNA, DNA "A" pairs with RNA "U"! (T→A, C→G, G→C). Also select the PAM sequence ending in GG.',
     cutsceneCaption: 'CRISPR-Cas9 edits the hemoglobin gene—sickle cells transform into healthy round red blood cells!',
     dnaTarget: ['T','A','C','G','A'], targetRNA: ['A','U','G','C','U'], pamSite: 'AGG (Valid NGG PAM)' },
   { id: 26, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 26: Disabling Allergen Gene in Space Peanuts',
-    story: 'Edit out the allergy-causing protein in our orbital peanut crop so every astronaut can safely eat peanut butter!',
+    story: 'Edit out the <strong>allergy-causing protein</strong> in our orbital peanut crop using <strong>complementary Guide RNA</strong> so every astronaut can safely eat peanut butter!',
     hint: 'Check Chapter 5: Translate the DNA target into complementary Guide RNA (remember U instead of T!).',
     cutsceneCaption: 'Cas9 snips out the allergen sequence—100% Allergy-Free Space Peanut Butter is served!',
     dnaTarget: ['A','A','G','C','T'], targetRNA: ['U','U','C','G','A'], pamSite: 'TGG (Valid NGG PAM)' },
   { id: 27, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 27: Boosting Algae Chlorophyll Capture',
-    story: 'Use CRISPR-Cas9 to upgrade the photosynthesis promoter in our oxygen-making algae!',
+    story: 'Use <strong>CRISPR-Cas9</strong> to upgrade the <strong>photosynthesis promoter</strong> in our oxygen-making algae!',
     hint: 'Match each DNA letter to its RNA partner (A→U, T→A, C→G, G→C).',
     cutsceneCaption: 'Upgraded chloroplasts absorb 200% more starlight, turbo-charging station oxygen output!',
     dnaTarget: ['G','C','A','T','C'], targetRNA: ['C','G','U','A','G'], pamSite: 'CGG (Valid NGG PAM)' },
   { id: 28, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 28: Cystic Fibrosis Ion-Channel Repair',
-    story: 'Guide Cas9 to the faulty CFTR chloride channel gene and splice in the corrected repair sequence.',
+    story: 'Guide Cas9 to the faulty <strong>CFTR chloride channel gene</strong> using a matching <strong>gRNA sequence</strong> and valid <strong>PAM site</strong>.',
     hint: 'Carefully check your A→U and T→A pairings in the Guide RNA slots!',
     cutsceneCaption: 'Repaired CFTR protein gates open smoothly, allowing glowing chloride ions to flow freely!',
     dnaTarget: ['C','T','A','G','G'], targetRNA: ['G','A','U','C','C'], pamSite: 'AGG (Valid NGG PAM)' },
   { id: 29, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 29: Blight-Proof Martian Tomatoes',
-    story: 'Fungal blight threatens the greenhouse! Program Cas9 to knock out the susceptibility receptor in tomato cells.',
+    story: 'Fungal blight threatens the greenhouse! Program <strong>Cas9</strong> with the matching <strong>Guide RNA</strong> to knock out the susceptibility receptor in tomato cells.',
     hint: 'Remember: DNA Adenine (A) always pairs with RNA Uracil (U).',
     cutsceneCaption: 'CRISPR shield activated! Plump red Martian tomatoes deflect incoming fungal blight spores!',
     dnaTarget: ['T','T','A','C','G'], targetRNA: ['A','A','U','G','C'], pamSite: 'TGG (Valid NGG PAM)' },
   { id: 30, type: 'crispr', chapter: 4, sector: 'Sector 5: Mission Control CRISPR-Cas9 Bay', title: 'Mission 30: Final Boss — Deep-Space Hibernation Gene',
-    story: 'For the 5-year voyage to Jupiter\'s moons, engineer the metabolic protection gene using precision CRISPR-Cas9 guide RNA for Mission Control!',
+    story: 'For the 5-year voyage to Jupiter\'s moons, engineer the <strong>metabolic protection gene</strong> using precision <strong>CRISPR-Cas9 Guide RNA</strong> for Mission Control!',
     hint: 'Final Mission! Build the exact 5-base Guide RNA sequence and lock onto the NGG PAM site.',
     cutsceneCaption: 'Hibernation Gene Active! All 5 Mission Control Bio-Domes ignite as the flagship warps toward Jupiter!',
     dnaTarget: ['A','G','T','A','C'], targetRNA: ['U','C','A','U','G'], pamSite: 'CGG (Valid NGG PAM)' }
@@ -1590,13 +2017,31 @@ function loadPuzzle(idx) {
   document.getElementById('hudStreak').textContent = `${streak}x`;
   document.getElementById('hudSolved').textContent = `${maxUnlockedIdx + 1} / 30`;
 
+  // Update progressive Lab Tech Upgrade Tier Badge (Mk-I to Mk-VI within each 6-mission sector)
+  const romanTiers = ['Mk-I', 'Mk-II', 'Mk-III', 'Mk-IV', 'Mk-V', 'Mk-VI MAX'];
+  const tierIdx = currentIdx % 6;
+  const tierNames = [
+    ['Base Glass Tank', '+ Bubble Sparger', '+ Impeller Stirrer', '+ Thermal Coils', '+ UV Grow Dome', 'Cyber-Bioreactor MAX'],
+    ['Base Plasmid Ring', '+ Enzyme Scissors', '+ H-Bond Spokes', '+ Ligase Nanobots', '+ Supercoil Halo', 'Holo-Splicer MAX'],
+    ['Base DNA Array', '+ Thermal Wells', '+ Laser Scanner', '+ Taq Orbs', '+ Cryo Turbines', 'Quantum Cycler MAX'],
+    ['Base Gel Slab', '+ HV Electrodes', '+ Buffer Bubbles', '+ UV Scan Bar', '+ Laser Ruler', 'Forensic Holo-Gel MAX'],
+    ['Base Cas9 Complex', '+ DNA Feed Cleft', '+ gRNA Hairpin', '+ PAM Radar Lock', '+ Nuclease Blades', 'Omega Gene-Forge MAX']
+  ];
+  const sectorIdx = Math.min(4, Math.floor(currentIdx / 6));
+  const tierBadgeEl = document.getElementById('tierBadge');
+  if (tierBadgeEl) {
+    tierBadgeEl.textContent = `⚙️ ${romanTiers[tierIdx]}: ${tierNames[sectorIdx][tierIdx]}`;
+  }
+
+  updateMusicButtonLabel();
+
   const alreadyDone = solvedSet.has(p.id);
   document.getElementById('sectorBadge').textContent = p.sector;
   document.getElementById('rewardBadge').textContent = alreadyDone
     ? '✅ Solved (0 pts on replay) | Wrong: -100 pts'
     : 'First Solve: +150 pts | Wrong: -100 pts';
   document.getElementById('puzzleTitle').textContent = p.title + (alreadyDone ? ' ✅' : '');
-  document.getElementById('puzzleStory').textContent = p.story;
+  document.getElementById('puzzleStory').innerHTML = p.story;
   document.getElementById('puzzleHint').textContent = p.hint;
   document.getElementById('feedbackBanner').style.display = 'none';
 
@@ -1783,20 +2228,21 @@ function submitSolution() {
     launchMissionCutscene(p, earnedPts, alreadySolved);
   } else {
     playErrorBuzz();
+    triggerErrorShake();
     streak = 0;
     totalMistakes++;
     score -= 100;
     document.getElementById('hudScore').textContent = score;
     document.getElementById('hudStreak').textContent = '0x';
     fb.style.display = 'block';
-    fb.style.background = 'rgba(255, 94, 98, 0.28)';
-    fb.style.border = '2px solid #ff5e62';
+    fb.style.background = 'rgba(255, 45, 85, 0.32)';
+    fb.style.border = '2px solid #ff2d55';
     fb.innerHTML = `❌ <strong>-100 Points!</strong> ${feedbackMsg}`;
   }
 }
 
 /* ============================================================================
-   6. MISSION CUTSCENE ENGINE & FINALE MENU
+   6. MISSION CUTSCENE ENGINE, MODALS & FINALE MENU
    ============================================================================ */
 function launchMissionCutscene(puzzle, earnedPts, alreadySolved) {
   playBubblePop(680);
@@ -1814,7 +2260,14 @@ function launchMissionCutscene(puzzle, earnedPts, alreadySolved) {
   document.getElementById('wellDonePointsPill').textContent = alreadySolved
     ? 'MISSION ALREADY COMPLETED (+0 PTS)'
     : `+${earnedPts} POINTS EARNED!`;
-  document.getElementById('cutsceneContinueBtn').textContent = (puzzle.id === 30) ? '🏆 Mission Control Finale!' : 'Next Mission ▶';
+
+  const isSectorBoss = (puzzle.id % 6 === 0);
+  if (isSectorBoss) {
+    const sectorNum = puzzle.id / 6;
+    document.getElementById('cutsceneContinueBtn').textContent = `🎮 Play Sector ${sectorNum} Bonus Mini-Game! ▶`;
+  } else {
+    document.getElementById('cutsceneContinueBtn').textContent = 'Next Mission ▶';
+  }
   document.getElementById('cutsceneModal').classList.add('active');
 
   setTimeout(() => {
@@ -1832,6 +2285,14 @@ function finishCutsceneAndAdvance() {
   const runBtn = document.getElementById('runExpBtn');
   if (runBtn) runBtn.disabled = false;
 
+  const completedPuzzle = PUZZLES[currentIdx];
+  // Trigger Full-Screen Sweep Transition into Sector Mini-Game after every 6th mission!
+  if (completedPuzzle && completedPuzzle.id % 6 === 0) {
+    const sectorNum = completedPuzzle.id / 6;
+    launchSectorMiniGameWithSweep(sectorNum);
+    return;
+  }
+
   if (currentIdx === PUZZLES.length - 1 && solvedSet.size === PUZZLES.length) {
     showCongratsMenu();
   } else if (currentIdx < maxUnlockedIdx) {
@@ -1841,12 +2302,816 @@ function finishCutsceneAndAdvance() {
   }
 }
 
+/* ============================================================================
+   6B. SWEEP TRANSITION, 5 SECTOR MINI-GAMES & UNLOCKABLE LAB MASCOTS
+   ============================================================================ */
+const MASCOT_REWARDS = [
+  { sector: 1, icon: '🐻‍❄️', name: 'Toby the Tardigrade', desc: 'Unlocked Mascot: Toby the Tardigrade (Water Bear) now floats in your lab!' },
+  { sector: 2, icon: '🪼', name: 'Glowy the GFP Jellyfish', desc: 'Unlocked Mascot: Glowy the Bioluminescent Jellyfish joined your lab!' },
+  { sector: 3, icon: '🌋', name: 'Pyro the Extremophile Blob', desc: 'Unlocked Mascot: Pyro the 72°C Volcanic Extremophile joined your lab!' },
+  { sector: 4, icon: '🍓', name: 'Nova’s Space Strawberry Drone', desc: 'Unlocked Mascot: The Forensic Space Strawberry Drone joined your lab!' },
+  { sector: 5, icon: '👑', name: 'Golden DNA Helix Crown', desc: 'Unlocked Mascot: The Golden CRISPR Helix Crown is yours!' }
+];
+
+const SECTOR_MINIGAMES = [
+  {
+    sector: 1,
+    title: '🎮 SECTOR 1 BONUS: CONTAMINANT BUBBLE POPPER!',
+    instructions: 'Click or Tap the spiky purple space-viruses (+30 pts)! Avoid popping the friendly green Spirulina algae cells (-15 pts)!',
+    duration: 18
+  },
+  {
+    sector: 2,
+    title: '🛸 SECTOR 2 BONUS: ZERO-G NUTRIENT CATCHER!',
+    instructions: 'Move your mouse or finger left & right to slide the glowing Bio-Collector! Catch golden Plasmids (+30 pts) and dodge red fiery meteors (-20 pts)!',
+    duration: 18
+  },
+  {
+    sector: 3,
+    title: '⚡ SECTOR 3 BONUS: CRISPR LASER SNIP TIMING!',
+    instructions: 'Watch the DNA strand scroll across the scanner! Click anywhere (or press SPACEBAR) right when a RED MUTATION enters the golden target ring (+40 pts)!',
+    duration: 18
+  },
+  {
+    sector: 4,
+    title: '🦠 SECTOR 4 BONUS: MICROBE AGAROSE DASH!',
+    instructions: 'Move your mouse or finger UP & DOWN to steer your glowing cell through the gel chamber! Collect green ATP Energy Orbs (+30 pts) and dodge red gel blockers!',
+    duration: 18
+  },
+  {
+    sector: 5,
+    title: '🚀 SECTOR 5 FINALE BONUS: HYPERDRIVE CRYO-POD LAUNCH!',
+    instructions: 'Click or Tap the glowing golden Star-Cores (+35 pts) as they rise to supercharge the flagship warp drive before launch!',
+    duration: 18
+  }
+];
+
+let unlockedMascots = [];
+let mgActive = false;
+let mgPreCountdownActive = false;
+let mgSector = 1;
+let mgBonusScore = 0;
+let mgTimeLeft = 18;
+let mgPrepTimeLeft = 8;
+let mgTimerInterval = null;
+let mgPrepInterval = null;
+let mgEntities = [];
+let mgParticles = [];
+let mgFloatingTexts = [];
+let mgBgStars = [];
+let mgLaserFlash = 0;
+let mgPlayerX = 400;
+let mgPlayerY = 220;
+
+const mgCanvas = document.getElementById('mgCanvas');
+const mgCtx = mgCanvas.getContext('2d');
+
+function spawnMgBurst(x, y, color, textLabel) {
+  for (let i = 0; i < 16; i++) {
+    const ang = (Math.PI * 2 * i) / 16 + Math.random() * 0.3;
+    const spd = 2 + Math.random() * 4.5;
+    mgParticles.push({
+      x, y,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd,
+      r: 4 + Math.random() * 5,
+      color,
+      alpha: 1
+    });
+  }
+  if (textLabel) {
+    mgFloatingTexts.push({
+      x, y: y - 10,
+      text: textLabel,
+      color,
+      alpha: 1,
+      vy: -1.8
+    });
+  }
+}
+
+function runSweepTransition(bannerMsg, midCallback) {
+  const overlay = document.getElementById('sweepOverlay');
+  document.getElementById('sweepText').textContent = bannerMsg;
+  overlay.classList.remove('sweep-out');
+  overlay.classList.add('sweep-in');
+  playBubblePop(640);
+
+  setTimeout(() => {
+    if (midCallback) midCallback();
+    overlay.classList.remove('sweep-in');
+    overlay.classList.add('sweep-out');
+    setTimeout(() => {
+      overlay.style.transition = 'none';
+      overlay.classList.remove('sweep-out');
+      void overlay.offsetWidth;
+      overlay.style.transition = 'transform 0.58s cubic-bezier(0.77, 0, 0.175, 1)';
+    }, 600);
+  }, 620);
+}
+
+function renderMascotDock() {
+  const dock = document.getElementById('mascotDock');
+  const list = document.getElementById('mascotList');
+  if (unlockedMascots.length === 0) {
+    dock.classList.remove('visible');
+    return;
+  }
+  dock.classList.add('visible');
+  list.innerHTML = unlockedMascots.map((m, idx) => `
+    <span class="mascot-avatar" style="animation-delay:${idx * 0.35}s" title="${m.name}">${m.icon}</span>
+  `).join('');
+}
+
+function launchSectorMiniGameWithSweep(sectorNum) {
+  const mgCfg = SECTOR_MINIGAMES[sectorNum - 1];
+  runSweepTransition(`🌟 SECTOR ${sectorNum} BONUS MINI-GAME! 🌟`, () => {
+    document.getElementById('app').style.display = 'none';
+    const mgScreen = document.getElementById('minigameScreen');
+    mgScreen.classList.add('active');
+    document.getElementById('mgCompleteOverlay').classList.remove('show');
+
+    setupMiniGameArena(sectorNum, mgCfg);
+  });
+}
+
+function setupMiniGameArena(sectorNum, mgCfg) {
+  mgSector = sectorNum;
+  mgBonusScore = 0;
+  mgTimeLeft = mgCfg.duration;
+  mgEntities = [];
+  mgParticles = [];
+  mgFloatingTexts = [];
+  mgLaserFlash = 0;
+  mgActive = false;
+  mgPreCountdownActive = true;
+
+  document.getElementById('mgTitleText').textContent = mgCfg.title;
+  document.getElementById('mgInstBadge').textContent = mgCfg.instructions;
+  document.getElementById('mgTimerVal').textContent = `${mgTimeLeft}s`;
+  document.getElementById('mgBonusVal').textContent = `+0`;
+
+  const actionBtn = document.getElementById('mgActionBtn');
+  actionBtn.style.display = (sectorNum === 3) ? 'inline-flex' : 'none';
+
+  const rect = mgCanvas.parentElement.getBoundingClientRect();
+  mgCanvas.width = rect.width || 860;
+  mgCanvas.height = rect.height || 460;
+  mgPlayerX = mgCanvas.width * 0.5;
+  mgPlayerY = mgCanvas.height * 0.5;
+
+  // Generate parallax background starfield for mini-game arena
+  mgBgStars = Array.from({ length: 45 }, (_, i) => ({
+    x: Math.random() * mgCanvas.width,
+    y: Math.random() * mgCanvas.height,
+    r: 1.2 + (i % 3) * 1.1,
+    alpha: 0.3 + Math.random() * 0.6,
+    speed: 0.3 + (i % 4) * 0.25
+  }));
+
+  // Populate initial mini-game entities so players see a live preview behind the countdown
+  if (sectorNum === 1 || sectorNum === 5) {
+    for (let i = 0; i < 9; i++) spawnMgBubbleEntity();
+  } else if (sectorNum === 2) {
+    for (let i = 0; i < 7; i++) spawnMgFallingItem();
+  } else if (sectorNum === 3) {
+    for (let i = 0; i < 6; i++) {
+      mgEntities.push({
+        x: -i * 210,
+        y: mgCanvas.height * 0.52,
+        isMutation: i % 2 === 0,
+        snipped: false
+      });
+    }
+  } else if (sectorNum === 4) {
+    for (let i = 0; i < 7; i++) {
+      mgEntities.push({
+        x: mgCanvas.width + i * 185,
+        y: 80 + Math.random() * (mgCanvas.height - 150),
+        r: 26,
+        isOrb: i % 3 !== 0,
+        collected: false
+      });
+    }
+  }
+
+  // Show 8-Second Pre-Start Instructions Countdown Overlay
+  mgPrepTimeLeft = 8;
+  document.getElementById('mgPrepTitle').textContent = mgCfg.title;
+  document.getElementById('mgPrepInstructions').textContent = mgCfg.instructions;
+  document.getElementById('mgPrepCountNum').textContent = mgPrepTimeLeft;
+  document.getElementById('mgPrepSecText').textContent = mgPrepTimeLeft;
+  document.getElementById('mgPreStartOverlay').classList.add('show');
+
+  if (mgTimerInterval) clearInterval(mgTimerInterval);
+  if (mgPrepInterval) clearInterval(mgPrepInterval);
+
+  mgPrepInterval = setInterval(() => {
+    if (!mgPreCountdownActive) return;
+    mgPrepTimeLeft--;
+    playBubblePop(440 + (8 - mgPrepTimeLeft) * 30);
+    document.getElementById('mgPrepCountNum').textContent = mgPrepTimeLeft;
+    document.getElementById('mgPrepSecText').textContent = mgPrepTimeLeft;
+    if (mgPrepTimeLeft <= 0) {
+      startMiniGameNow();
+    }
+  }, 1000);
+}
+
+function startMiniGameNow() {
+  if (!mgPreCountdownActive) return;
+  mgPreCountdownActive = false;
+  if (mgPrepInterval) clearInterval(mgPrepInterval);
+  document.getElementById('mgPreStartOverlay').classList.remove('show');
+  playBubblePop(720);
+  mgActive = true;
+
+  if (mgTimerInterval) clearInterval(mgTimerInterval);
+  mgTimerInterval = setInterval(() => {
+    if (!mgActive) return;
+    mgTimeLeft--;
+    document.getElementById('mgTimerVal').textContent = `${mgTimeLeft}s`;
+    if (mgTimeLeft <= 0) {
+      completeMiniGameSession();
+    }
+  }, 1000);
+}
+
+function spawnMgBubbleEntity() {
+  const w = mgCanvas.width || 800, h = mgCanvas.height || 440;
+  const isGood = Math.random() < 0.26 && mgSector === 1;
+  mgEntities.push({
+    x: 75 + Math.random() * (w - 150),
+    y: h + 30 + Math.random() * 140,
+    vx: (Math.random() - 0.5) * 2.2,
+    vy: -(1.5 + Math.random() * 2.1),
+    r: 34 + Math.random() * 10,
+    isFriendly: isGood,
+    phase: Math.random() * Math.PI * 2
+  });
+}
+
+function spawnMgFallingItem() {
+  const w = mgCanvas.width || 800;
+  mgEntities.push({
+    x: 65 + Math.random() * (w - 130),
+    y: -40 - Math.random() * 220,
+    vy: 2.6 + Math.random() * 2.3,
+    r: 28,
+    isHazard: Math.random() < 0.3,
+    rot: Math.random() * Math.PI * 2
+  });
+}
+
+mgCanvas.addEventListener('pointermove', (e) => {
+  const rect = mgCanvas.getBoundingClientRect();
+  mgPlayerX = e.clientX - rect.left;
+  mgPlayerY = e.clientY - rect.top;
+});
+
+mgCanvas.addEventListener('pointerdown', (e) => {
+  if (!mgActive) return;
+  const rect = mgCanvas.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const clickY = e.clientY - rect.top;
+
+  if (mgSector === 1 || mgSector === 5) {
+    for (let i = mgEntities.length - 1; i >= 0; i--) {
+      const ent = mgEntities[i];
+      const dist = Math.hypot(clickX - ent.x, clickY - ent.y);
+      if (dist <= ent.r + 16) {
+        if (ent.isFriendly) {
+          playErrorBuzz();
+          mgBonusScore = Math.max(0, mgBonusScore - 15);
+          spawnMgBurst(ent.x, ent.y, '#ff5e62', '-15 PTS!');
+        } else {
+          playBubblePop(740);
+          const pts = mgSector === 5 ? 35 : 30;
+          mgBonusScore += pts;
+          spawnMgBurst(ent.x, ent.y, mgSector === 5 ? '#ffd15c' : '#00f2fe', `+${pts} PTS!`);
+        }
+        document.getElementById('mgBonusVal').textContent = `+${mgBonusScore}`;
+        mgEntities.splice(i, 1);
+        spawnMgBubbleEntity();
+        break;
+      }
+    }
+  } else if (mgSector === 3) {
+    triggerMgButtonAction();
+  }
+});
+
+window.addEventListener('keydown', (e) => {
+  if (mgActive && mgSector === 3 && e.code === 'Space') {
+    e.preventDefault();
+    triggerMgButtonAction();
+  }
+});
+
+function triggerMgButtonAction() {
+  if (!mgActive || mgSector !== 3) return;
+  const cx = mgCanvas.width * 0.5;
+  const cy = mgCanvas.height * 0.52;
+  mgLaserFlash = 1.0;
+  let hit = false;
+  mgEntities.forEach(node => {
+    if (!node.snipped && Math.abs(node.x - cx) < 58) {
+      node.snipped = true;
+      hit = true;
+      if (node.isMutation) {
+        playBubblePop(780);
+        mgBonusScore += 40;
+        spawnMgBurst(node.x, cy, '#5eff8a', '+40 SNIPPED!');
+      } else {
+        playErrorBuzz();
+        mgBonusScore = Math.max(0, mgBonusScore - 15);
+        spawnMgBurst(node.x, cy, '#ff5e62', '-15 HEALTHY!');
+      }
+    }
+  });
+  if (!hit) playBubblePop(360);
+  document.getElementById('mgBonusVal').textContent = `+${mgBonusScore}`;
+}
+
+function updateAndDrawMiniGame() {
+  if (!mgActive && !mgPreCountdownActive) return;
+  const w = mgCanvas.width, h = mgCanvas.height;
+  mgCtx.clearRect(0, 0, w, h);
+
+  // 1. Rich Cosmic Grid & Nebula Backdrop
+  const bgGrad = mgCtx.createRadialGradient(w * 0.5, h * 0.45, 30, w * 0.5, h * 0.5, w * 0.65);
+  bgGrad.addColorStop(0, 'rgba(52, 24, 115, 0.55)');
+  bgGrad.addColorStop(1, 'rgba(6, 3, 24, 0.85)');
+  mgCtx.fillStyle = bgGrad;
+  mgCtx.fillRect(0, 0, w, h);
+
+  mgCtx.strokeStyle = 'rgba(0, 242, 254, 0.08)';
+  mgCtx.lineWidth = 1;
+  for (let gx = 0; gx < w; gx += 55) {
+    mgCtx.beginPath(); mgCtx.moveTo(gx, 0); mgCtx.lineTo(gx, h); mgCtx.stroke();
+  }
+  for (let gy = 0; gy < h; gy += 55) {
+    mgCtx.beginPath(); mgCtx.moveTo(0, gy); mgCtx.lineTo(w, gy); mgCtx.stroke();
+  }
+
+  // Twinkling background stars
+  mgBgStars.forEach(st => {
+    if (mgActive) st.y -= st.speed;
+    if (st.y < 0) st.y = h;
+    mgCtx.fillStyle = `rgba(255, 255, 255, ${st.alpha})`;
+    mgCtx.beginPath();
+    mgCtx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+    mgCtx.fill();
+  });
+
+  if (mgSector === 1 || mgSector === 5) {
+    // Sector 1 (Spiky Virus Popper) & Sector 5 (Hyperdrive Star-Core Charger)
+    mgEntities.forEach(ent => {
+      if (mgActive) {
+        ent.x += ent.vx + Math.sin(animTick * 2 + ent.phase) * 0.6;
+        ent.y += ent.vy;
+        if (ent.y + ent.r < 0) {
+          ent.y = h + ent.r + 20;
+          ent.x = 75 + Math.random() * (w - 150);
+        }
+      }
+      mgCtx.save();
+      mgCtx.translate(ent.x, ent.y);
+
+      if (mgSector === 5) {
+        // Golden Star-Core with rotating energy ring
+        mgCtx.save();
+        mgCtx.rotate(animTick * 1.8 + ent.phase);
+        mgCtx.strokeStyle = 'rgba(255, 209, 92, 0.7)';
+        mgCtx.lineWidth = 3;
+        mgCtx.setLineDash([8, 6]);
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r + 8, 0, Math.PI * 2);
+        mgCtx.stroke();
+        mgCtx.restore();
+
+        const coreGrad = mgCtx.createRadialGradient(-8, -8, 4, 0, 0, ent.r);
+        coreGrad.addColorStop(0, '#ffffff');
+        coreGrad.addColorStop(0.45, '#ffd15c');
+        coreGrad.addColorStop(1, '#f78812');
+        mgCtx.fillStyle = coreGrad;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r, 0, Math.PI * 2);
+        mgCtx.fill();
+        mgCtx.lineWidth = 3;
+        mgCtx.strokeStyle = '#ffffff';
+        mgCtx.stroke();
+
+        mgCtx.fillStyle = '#231100';
+        mgCtx.font = '700 16px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText('⭐ CORE', 0, 6);
+      } else if (ent.isFriendly) {
+        // Friendly Green Spirulina Cell with soft glow & nucleus
+        mgCtx.fillStyle = 'rgba(66, 230, 149, 0.22)';
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r + 7, 0, Math.PI * 2);
+        mgCtx.fill();
+
+        mgCtx.fillStyle = '#42e695';
+        mgCtx.strokeStyle = '#ffffff';
+        mgCtx.lineWidth = 3;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r, 0, Math.PI * 2);
+        mgCtx.fill();
+        mgCtx.stroke();
+
+        // Gloss highlight
+        mgCtx.fillStyle = 'rgba(255,255,255,0.45)';
+        mgCtx.beginPath();
+        mgCtx.arc(-ent.r * 0.3, -ent.r * 0.3, ent.r * 0.22, 0, Math.PI * 2);
+        mgCtx.fill();
+
+        mgCtx.fillStyle = '#042412';
+        mgCtx.font = '700 16px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText('🌿 ALGAE', 0, 6);
+      } else {
+        // Spiky Purple Space-Virus with 10 corona spikes
+        mgCtx.strokeStyle = '#ff5ebc';
+        mgCtx.lineWidth = 4;
+        const spikes = 10;
+        for (let s = 0; s < spikes; s++) {
+          const ang = (Math.PI * 2 * s) / spikes + animTick * 1.2;
+          const sx = Math.cos(ang) * (ent.r + 10);
+          const sy = Math.sin(ang) * (ent.r + 10);
+          mgCtx.beginPath();
+          mgCtx.moveTo(0, 0);
+          mgCtx.lineTo(sx, sy);
+          mgCtx.stroke();
+          mgCtx.fillStyle = '#ff5ebc';
+          mgCtx.beginPath();
+          mgCtx.arc(sx, sy, 4, 0, Math.PI * 2);
+          mgCtx.fill();
+        }
+
+        const vGrad = mgCtx.createRadialGradient(-6, -6, 4, 0, 0, ent.r);
+        vGrad.addColorStop(0, '#e08cff');
+        vGrad.addColorStop(1, '#6c2cf5');
+        mgCtx.fillStyle = vGrad;
+        mgCtx.strokeStyle = '#ffffff';
+        mgCtx.lineWidth = 2.5;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r, 0, Math.PI * 2);
+        mgCtx.fill();
+        mgCtx.stroke();
+
+        mgCtx.fillStyle = '#ffffff';
+        mgCtx.font = '700 16px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText('👾 VIRUS', 0, 6);
+      }
+      mgCtx.restore();
+    });
+
+  } else if (mgSector === 2) {
+    // Sector 2: Zero-G Nutrient Catcher with Tractor-Beam Collector Paddle
+    const padW = 140, padH = 26, padY = h - 54;
+
+    // Glowing tractor aura above paddle
+    const beamGrad = mgCtx.createLinearGradient(mgPlayerX, padY - 38, mgPlayerX, padY);
+    beamGrad.addColorStop(0, 'rgba(0, 242, 254, 0)');
+    beamGrad.addColorStop(1, 'rgba(0, 242, 254, 0.35)');
+    mgCtx.fillStyle = beamGrad;
+    mgCtx.beginPath();
+    mgCtx.moveTo(mgPlayerX - padW * 0.6, padY - 38);
+    mgCtx.lineTo(mgPlayerX + padW * 0.6, padY - 38);
+    mgCtx.lineTo(mgPlayerX + padW * 0.48, padY);
+    mgCtx.lineTo(mgPlayerX - padW * 0.48, padY);
+    mgCtx.closePath();
+    mgCtx.fill();
+
+    mgCtx.fillStyle = '#00f2fe';
+    mgCtx.strokeStyle = '#ffffff';
+    mgCtx.lineWidth = 3;
+    mgCtx.beginPath();
+    mgCtx.roundRect(mgPlayerX - padW / 2, padY, padW, padH, 14);
+    mgCtx.fill();
+    mgCtx.stroke();
+
+    mgCtx.fillStyle = '#041028';
+    mgCtx.font = '700 14px Fredoka, sans-serif';
+    mgCtx.textAlign = 'center';
+    mgCtx.fillText('🛸 BIO-COLLECTOR', mgPlayerX, padY + 18);
+
+    mgEntities.forEach(item => {
+      if (mgActive) {
+        item.y += item.vy;
+        if (item.y > padY - 14 && item.y < padY + padH + 14 && Math.abs(item.x - mgPlayerX) < padW * 0.58) {
+          if (item.isHazard) {
+            playErrorBuzz();
+            mgBonusScore = Math.max(0, mgBonusScore - 20);
+            spawnMgBurst(item.x, item.y, '#ff5e62', '-20 METEOR!');
+          } else {
+            playBubblePop(720);
+            mgBonusScore += 30;
+            spawnMgBurst(item.x, item.y, '#ffd15c', '+30 PLASMID!');
+          }
+          document.getElementById('mgBonusVal').textContent = `+${mgBonusScore}`;
+          item.y = -45;
+          item.x = 65 + Math.random() * (w - 130);
+        } else if (item.y > h + 35) {
+          item.y = -45;
+          item.x = 65 + Math.random() * (w - 130);
+        }
+      }
+
+      mgCtx.save();
+      mgCtx.translate(item.x, item.y);
+      if (item.isHazard) {
+        // Fiery Red Meteor with flame tail
+        mgCtx.fillStyle = 'rgba(255, 94, 98, 0.35)';
+        mgCtx.beginPath();
+        mgCtx.moveTo(-18, 0);
+        mgCtx.lineTo(0, -42);
+        mgCtx.lineTo(18, 0);
+        mgCtx.closePath();
+        mgCtx.fill();
+
+        mgCtx.fillStyle = '#ff5e62';
+        mgCtx.strokeStyle = '#ffd15c';
+        mgCtx.lineWidth = 3;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, item.r, 0, Math.PI * 2);
+        mgCtx.fill();
+        mgCtx.stroke();
+
+        mgCtx.fillStyle = '#ffffff';
+        mgCtx.font = '700 14px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText('☄️ ROCK', 0, 5);
+      } else {
+        // Glowing Golden Plasmid Ring
+        mgCtx.strokeStyle = '#ffd15c';
+        mgCtx.lineWidth = 7;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, item.r - 3, 0, Math.PI * 2);
+        mgCtx.stroke();
+        mgCtx.strokeStyle = '#5eff8a';
+        mgCtx.lineWidth = 7;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, item.r - 3, -0.6, 0.6);
+        mgCtx.stroke();
+
+        mgCtx.fillStyle = '#ffffff';
+        mgCtx.font = '700 14px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText('🧬 DNA', 0, 5);
+      }
+      mgCtx.restore();
+    });
+
+  } else if (mgSector === 3) {
+    // Sector 3: CRISPR Laser Snip Timing
+    const cx = w * 0.5, cy = h * 0.52;
+
+    // Horizontal DNA Ladder Track
+    mgCtx.strokeStyle = 'rgba(0, 242, 254, 0.45)';
+    mgCtx.lineWidth = 4;
+    mgCtx.beginPath();
+    mgCtx.moveTo(0, cy - 34); mgCtx.lineTo(w, cy - 34);
+    mgCtx.moveTo(0, cy + 34); mgCtx.lineTo(w, cy + 34);
+    mgCtx.stroke();
+
+    for (let rx = ((animTick * 60) % 40); rx < w; rx += 40) {
+      mgCtx.strokeStyle = 'rgba(180, 225, 255, 0.22)';
+      mgCtx.lineWidth = 2;
+      mgCtx.beginPath();
+      mgCtx.moveTo(rx, cy - 34);
+      mgCtx.lineTo(rx, cy + 34);
+      mgCtx.stroke();
+    }
+
+    // Top & Bottom Cas9 Laser Emitters
+    mgCtx.fillStyle = '#2b195c';
+    mgCtx.strokeStyle = '#ffd15c';
+    mgCtx.lineWidth = 3;
+    mgCtx.beginPath();
+    mgCtx.roundRect(cx - 36, 28, 72, 28, 8);
+    mgCtx.roundRect(cx - 36, h - 56, 72, 28, 8);
+    mgCtx.fill();
+    mgCtx.stroke();
+
+    // Active Laser Beam Flash when player clicks/presses Space
+    if (mgLaserFlash > 0) {
+      mgCtx.save();
+      mgCtx.strokeStyle = `rgba(94, 255, 138, ${mgLaserFlash})`;
+      mgCtx.lineWidth = 12 * mgLaserFlash;
+      mgCtx.beginPath();
+      mgCtx.moveTo(cx, 56);
+      mgCtx.lineTo(cx, h - 56);
+      mgCtx.stroke();
+      mgCtx.restore();
+      mgLaserFlash = Math.max(0, mgLaserFlash - 0.08);
+    }
+
+    // Scrolling DNA Nodes
+    mgEntities.forEach(node => {
+      if (mgActive) {
+        node.x += 4.3;
+        if (node.x > w + 70) {
+          node.x = -140;
+          node.snipped = false;
+          node.isMutation = Math.random() < 0.65;
+        }
+      }
+      const col = node.snipped ? '#5eff8a' : (node.isMutation ? '#ff5e62' : '#00f2fe');
+      const txt = node.snipped ? '✓ FIXED' : (node.isMutation ? '⚠️ MUTATION' : 'HEALTHY');
+
+      mgCtx.save();
+      mgCtx.translate(node.x, cy);
+      mgCtx.fillStyle = col;
+      mgCtx.strokeStyle = '#ffffff';
+      mgCtx.lineWidth = 3;
+      mgCtx.beginPath();
+      mgCtx.arc(0, 0, 38, 0, Math.PI * 2);
+      mgCtx.fill();
+      mgCtx.stroke();
+
+      mgCtx.fillStyle = '#060318';
+      mgCtx.font = '700 13.5px Fredoka, sans-serif';
+      mgCtx.textAlign = 'center';
+      mgCtx.fillText(txt, 0, 5);
+      mgCtx.restore();
+    });
+
+    // Golden Target Reticle in Center
+    mgCtx.save();
+    mgCtx.translate(cx, cy);
+    mgCtx.rotate(animTick * 0.8);
+    mgCtx.strokeStyle = '#ffd15c';
+    mgCtx.lineWidth = 4;
+    mgCtx.setLineDash([14, 8]);
+    mgCtx.beginPath();
+    mgCtx.arc(0, 0, 54, 0, Math.PI * 2);
+    mgCtx.stroke();
+    mgCtx.restore();
+
+    mgCtx.fillStyle = '#ffd15c';
+    mgCtx.font = '700 15px Fredoka, sans-serif';
+    mgCtx.textAlign = 'center';
+    mgCtx.fillText('🎯 SNIP ZONE (CLICK OR SPACEBAR)', cx, cy - 68);
+
+  } else if (mgSector === 4) {
+    // Sector 4: Microbe Agarose Dash
+    // Glowing Agarose Gel Tunnel Streamlines
+    mgCtx.strokeStyle = 'rgba(0, 242, 254, 0.25)';
+    mgCtx.lineWidth = 3;
+    for (let i = 0; i < 6; i++) {
+      const ly = 65 + i * ((h - 110) / 5);
+      mgCtx.beginPath();
+      for (let lx = 0; lx <= w; lx += 30) {
+        const wy = ly + Math.sin(lx * 0.02 + animTick * 3 + i) * 8;
+        if (lx === 0) mgCtx.moveTo(lx, wy);
+        else mgCtx.lineTo(lx, wy);
+      }
+      mgCtx.stroke();
+    }
+
+    // Player Morphing Cell with propulsion trail
+    for (let t = 1; t <= 4; t++) {
+      mgCtx.fillStyle = `rgba(0, 242, 254, ${0.25 - t * 0.05})`;
+      mgCtx.beginPath();
+      mgCtx.arc(125 - t * 18, mgPlayerY + Math.sin(animTick * 5 + t) * 4, 22 - t * 3, 0, Math.PI * 2);
+      mgCtx.fill();
+    }
+    drawMorphingCell(mgCtx, 125, mgPlayerY, 32, 24, Math.sin(animTick * 3) * 3.5, '#00f2fe', 1);
+
+    mgEntities.forEach(ent => {
+      if (mgActive) {
+        ent.x -= 4.6;
+        if (ent.x < -50) {
+          ent.x = w + 70;
+          ent.y = 75 + Math.random() * (h - 140);
+          ent.collected = false;
+        }
+        if (!ent.collected && Math.hypot(ent.x - 125, ent.y - mgPlayerY) < 52) {
+          ent.collected = true;
+          if (ent.isOrb) {
+            playBubblePop(740);
+            mgBonusScore += 30;
+            spawnMgBurst(ent.x, ent.y, '#5eff8a', '+30 ATP!');
+          } else {
+            playErrorBuzz();
+            mgBonusScore = Math.max(0, mgBonusScore - 15);
+            spawnMgBurst(ent.x, ent.y, '#ff5e62', '-15 BLOCKER!');
+          }
+          document.getElementById('mgBonusVal').textContent = `+${mgBonusScore}`;
+        }
+      }
+      if (!ent.collected) {
+        mgCtx.save();
+        mgCtx.translate(ent.x, ent.y);
+        mgCtx.fillStyle = ent.isOrb ? '#5eff8a' : '#ff5e62';
+        mgCtx.strokeStyle = '#ffffff';
+        mgCtx.lineWidth = 3;
+        mgCtx.beginPath();
+        mgCtx.arc(0, 0, ent.r, 0, Math.PI * 2);
+        mgCtx.fill();
+        mgCtx.stroke();
+
+        mgCtx.fillStyle = '#06141f';
+        mgCtx.font = '700 15px Fredoka, sans-serif';
+        mgCtx.textAlign = 'center';
+        mgCtx.fillText(ent.isOrb ? '⚡ ATP' : '🛑 GEL', 0, 5);
+        mgCtx.restore();
+      }
+    });
+  }
+
+  // Render Particle Bursts
+  for (let i = mgParticles.length - 1; i >= 0; i--) {
+    const pt = mgParticles[i];
+    pt.x += pt.vx;
+    pt.y += pt.vy;
+    pt.alpha -= 0.03;
+    if (pt.alpha <= 0) {
+      mgParticles.splice(i, 1);
+      continue;
+    }
+    mgCtx.save();
+    mgCtx.globalAlpha = pt.alpha;
+    mgCtx.fillStyle = pt.color;
+    mgCtx.beginPath();
+    mgCtx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
+    mgCtx.fill();
+    mgCtx.restore();
+  }
+
+  // Render Floating Score Popups
+  for (let i = mgFloatingTexts.length - 1; i >= 0; i--) {
+    const ft = mgFloatingTexts[i];
+    ft.y += ft.vy;
+    ft.alpha -= 0.025;
+    if (ft.alpha <= 0) {
+      mgFloatingTexts.splice(i, 1);
+      continue;
+    }
+    mgCtx.save();
+    mgCtx.globalAlpha = ft.alpha;
+    mgCtx.font = '700 20px Fredoka, sans-serif';
+    mgCtx.fillStyle = ft.color;
+    mgCtx.strokeStyle = '#050214';
+    mgCtx.lineWidth = 4;
+    mgCtx.textAlign = 'center';
+    mgCtx.strokeText(ft.text, ft.x, ft.y);
+    mgCtx.fillText(ft.text, ft.x, ft.y);
+    mgCtx.restore();
+  }
+}
+
+function completeMiniGameSession() {
+  mgActive = false;
+  mgPreCountdownActive = false;
+  if (mgTimerInterval) clearInterval(mgTimerInterval);
+  if (mgPrepInterval) clearInterval(mgPrepInterval);
+  playSuccessFanfare();
+
+  // Award guaranteed completion bonus + mini-game score
+  const totalBonus = Math.max(100, mgBonusScore);
+  score += totalBonus;
+  document.getElementById('hudScore').textContent = score;
+
+  const reward = MASCOT_REWARDS[mgSector - 1];
+  if (reward && !unlockedMascots.some(m => m.sector === reward.sector)) {
+    unlockedMascots.push(reward);
+    renderMascotDock();
+  }
+
+  document.getElementById('mgUnlockIcon').textContent = `${reward.icon}✨`;
+  document.getElementById('mgUnlockHeading').textContent = `SECTOR ${mgSector} BONUS COMPLETE!`;
+  document.getElementById('mgUnlockDesc').textContent = reward.desc;
+  document.getElementById('mgEarnedPill').textContent = `+${totalBonus} BONUS POINTS ADDED!`;
+  document.getElementById('mgCompleteOverlay').classList.add('show');
+}
+
+function exitMiniGameWithSweep() {
+  runSweepTransition('🚀 RETURNING TO MISSION CONTROL...', () => {
+    document.getElementById('minigameScreen').classList.remove('active');
+    document.getElementById('app').style.display = 'flex';
+    resizeCanvases();
+
+    if (currentIdx === PUZZLES.length - 1 && solvedSet.size === PUZZLES.length) {
+      showCongratsMenu();
+    } else if (currentIdx < maxUnlockedIdx) {
+      loadPuzzle(currentIdx + 1);
+    } else {
+      loadPuzzle(currentIdx);
+    }
+  });
+}
+
 function showCongratsMenu() {
   playSuccessFanfare();
   const accuracy = totalAttempts > 0 ? Math.round(((totalAttempts - totalMistakes) / totalAttempts) * 100) : 100;
   let rankTitle = 'Mission Control Chief Geneticist 🌟';
-  if (score < 2500) rankTitle = 'Mission Control Cadet 🧪';
-  else if (score < 3800) rankTitle = 'Senior Orbital Specialist 🔬';
+  if (score < 2500) rankTitle = 'Junior Bio-Cadet 🧪';
+  else if (score < 3800) rankTitle = 'Senior Orbital Scientist 🔬';
 
   document.getElementById('finalScoreVal').textContent = `${score} pts`;
   document.getElementById('finalAccuracyVal').textContent = `${accuracy}% (${totalMistakes} mistakes)`;
@@ -1930,9 +3195,11 @@ let spaceBubbles = Array.from({ length: 36 }, (_, i) => ({
 }));
 
 function resizeCanvases() {
-  bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
   const rect = simCanvas.parentElement.getBoundingClientRect();
-  simCanvas.width = rect.width || 500; simCanvas.height = rect.height || 240;
+  simCanvas.width = rect.width || 500;
+  simCanvas.height = rect.height || 240;
 }
 window.addEventListener('resize', resizeCanvases);
 
@@ -1951,43 +3218,31 @@ function animateLoop() {
 
   drawBiotechSimulation();
   if (cutsceneActive) drawMissionCutscene(cutsceneMissionId, (performance.now() - cutsceneStartTime) / 1000);
+  if (mgActive || mgPreCountdownActive) updateAndDrawMiniGame();
   requestAnimationFrame(animateLoop);
 }
 
-/* Helper to draw a softly morphing cell with its inner dark circle (nucleus/plasmid) */
-function drawMorphingCell(ctx, cx, cy, baseRx, baseRy, wobble, fillColor, seed) {
+/* Softly Morphing Cell Helper with Inner Dark Nucleus/Plasmid Circle */
+function drawMorphingCell(ctx, cx, cy, rx, ry, wobble, color, idx) {
   ctx.save();
-  // Outer softly morphing cell membrane
   ctx.beginPath();
-  ctx.ellipse(
-    cx,
-    cy,
-    baseRx + wobble,
-    baseRy - wobble * 0.5,
-    Math.sin(animTick * 0.8 + seed) * 0.18,
-    0,
-    Math.PI * 2
-  );
-  ctx.fillStyle = fillColor;
+  ctx.ellipse(cx, cy, rx + wobble, ry - wobble * 0.5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = color;
   ctx.fill();
   ctx.lineWidth = 2.5;
   ctx.strokeStyle = '#ffffff';
   ctx.stroke();
 
-  // Inner dark circle (nucleus / plasmid ring) drifting softly inside the cell
-  const nucX = cx - 4 + Math.sin(animTick * 1.6 + seed) * 2.5;
-  const nucY = cy + Math.cos(animTick * 1.4 + seed) * 2.0;
-  const nucWobble = Math.sin(animTick * 2.5 + seed) * 0.8;
+  // Inner dark circle (nucleus/plasmid) softly drifting inside the cell
+  const nucX = cx - 4 + Math.sin(animTick * 1.6 + idx) * 2.5;
+  const nucY = cy + Math.cos(animTick * 1.4 + idx) * 2;
   ctx.beginPath();
-  ctx.ellipse(nucX, nucY, 6.8 + nucWobble, 6.2 - nucWobble * 0.5, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(20, 10, 50, 0.68)';
+  ctx.arc(nucX, nucY, 6 + wobble * 0.18, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(20, 10, 50, 0.72)';
   ctx.fill();
-
-  // Tiny glossy highlight on the cell
-  ctx.beginPath();
-  ctx.arc(cx - baseRx * 0.35, cy - baseRy * 0.35, 3.2, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-  ctx.fill();
+  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -2031,15 +3286,10 @@ function drawMissionCutscene(mId, t) {
 function drawGlowingTank(ctx, x, y, color, label) {
   ctx.fillStyle = 'rgba(0, 242, 254, 0.14)'; ctx.strokeStyle = color; ctx.lineWidth = 4;
   ctx.beginPath(); ctx.roundRect(x - 65, y - 80, 130, 160, 22); ctx.fill(); ctx.stroke();
-
-  // Draw 3 softly morphing cells with inner dark nuclei inside the cutscene tank
   for (let i = 0; i < 3; i++) {
-    const cellX = x - 25 + (i % 2) * 50 + Math.sin(animTick * 1.5 + i) * 6;
-    const cellY = y - 35 + i * 35 + Math.cos(animTick * 1.3 + i) * 5;
     const wobble = Math.sin(animTick * 2.2 + i) * 3;
-    drawMorphingCell(ctx, cellX, cellY, 18, 14, wobble, color, i);
+    drawMorphingCell(ctx, x - 22 + i * 22, y - 20 + (i % 2) * 35, 16, 12, wobble, color, i);
   }
-
   ctx.fillStyle = color; ctx.font = '700 15px Fredoka, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(label, x, y + 105);
 }
@@ -2064,7 +3314,7 @@ function drawSpaceShuttle(ctx, x, y, t) {
   ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#00f2fe'; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.moveTo(x, y - 75); ctx.quadraticCurveTo(x + 42, y - 10, x + 32, y + 60);
   ctx.lineTo(x - 32, y + 60); ctx.quadraticCurveTo(x - 42, y - 10, x, y - 75); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#ff5ebc'; ctx.font = '700 12px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ORBIT-1', x, y + 15);
+  ctx.fillStyle = '#ff5ebc'; ctx.font = '700 12px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('SHUTTLE', x, y + 15);
 }
 function drawYogurtCup(ctx, x, y, color) {
   ctx.fillStyle = color; ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
@@ -2140,78 +3390,472 @@ function drawCrisprCutscene(ctx, cx, cy, mId, t) {
   }
 }
 
-/* --- Workspace Live 2D Simulator --- */
+/* --- Workspace Live 2D Simulator with 6-Tier Progressive Equipment Upgrades --- */
 function drawBiotechSimulation() {
   const w = simCanvas.width, h = simCanvas.height, p = PUZZLES[currentIdx];
   simCtx.clearRect(0, 0, w, h);
   if (!p) return;
 
+  // Tier 1 (Mk-I) to Tier 6 (Mk-VI) within each 6-mission chapter
+  const tier = (currentIdx % 6) + 1;
+
   if (p.type === 'bioreactor') {
-    const temp = currentInput.temp || 37, hue = Math.max(0, 210 - (temp - 20) * 3.5);
-    simCtx.fillStyle = `hsla(${hue}, 85%, 45%, 0.25)`;
-    simCtx.fillRect(w * 0.14, h * 0.18, w * 0.72, h * 0.66);
-    simCtx.strokeStyle = '#00f2fe';
+    const temp = currentInput.temp || 37;
+    const hue = Math.max(0, 210 - (temp - 20) * 3.5);
+    const tx = w * 0.16, ty = h * 0.20, tw = w * 0.68, th = h * 0.64;
+
+    // Tier 6: Golden Plasma Containment Aura & Outer Holo-Rings
+    if (tier >= 6) {
+      simCtx.save();
+      simCtx.strokeStyle = 'rgba(255, 209, 92, 0.55)';
+      simCtx.lineWidth = 3;
+      simCtx.setLineDash([10, 6]);
+      simCtx.strokeRect(tx - 16, ty - 10, tw + 32, th + 20);
+      simCtx.setLineDash([]);
+      // Orbiting telemetry rings
+      simCtx.beginPath();
+      simCtx.ellipse(w * 0.5, ty + th * 0.5, tw * 0.56, 18, Math.sin(animTick) * 0.15, 0, Math.PI * 2);
+      simCtx.strokeStyle = 'rgba(0, 242, 254, 0.45)';
+      simCtx.stroke();
+      simCtx.restore();
+    }
+
+    // Tier 5: Top UV/LED Photosynthetic Grow-Light Dome & Light Rays
+    if (tier >= 5) {
+      const grad = simCtx.createLinearGradient(w * 0.5, ty, w * 0.5, ty + th);
+      grad.addColorStop(0, 'rgba(255, 94, 188, 0.28)');
+      grad.addColorStop(1, 'rgba(0, 242, 254, 0.0)');
+      simCtx.fillStyle = grad;
+      simCtx.fillRect(tx, ty, tw, th);
+
+      // Top light dome housing
+      simCtx.fillStyle = '#2b195c';
+      simCtx.strokeStyle = '#ff5ebc';
+      simCtx.lineWidth = 2.5;
+      simCtx.beginPath();
+      simCtx.roundRect(w * 0.32, ty - 14, w * 0.36, 14, 7);
+      simCtx.fill();
+      simCtx.stroke();
+
+      // Glowing LED bulbs along the dome
+      for (let i = 0; i < 5; i++) {
+        simCtx.fillStyle = i % 2 === 0 ? '#00f2fe' : '#ff5ebc';
+        simCtx.beginPath();
+        simCtx.arc(w * 0.36 + i * (w * 0.07), ty - 7, 3.5, 0, Math.PI * 2);
+        simCtx.fill();
+      }
+    }
+
+    // Tier 1: Base Glass Tank & Nutrient Broth
+    simCtx.fillStyle = `hsla(${hue}, 85%, 45%, 0.26)`;
+    simCtx.fillRect(tx, ty, tw, th);
+
+    // Tier 3: Central Mechanical Impeller Shaft & Spinning Stirrer Blades
+    if (tier >= 3) {
+      const bladeSpan = Math.cos(animTick * 4.5) * 34;
+      simCtx.save();
+      simCtx.strokeStyle = 'rgba(200, 235, 255, 0.65)';
+      simCtx.lineWidth = 4;
+      simCtx.beginPath();
+      simCtx.moveTo(w * 0.5, ty);
+      simCtx.lineTo(w * 0.5, ty + th - 14);
+      simCtx.stroke();
+
+      // Upper & lower stirrer paddles
+      [ty + th * 0.38, ty + th * 0.72].forEach(py => {
+        simCtx.fillStyle = '#00f2fe';
+        simCtx.beginPath();
+        simCtx.ellipse(w * 0.5, py, Math.abs(bladeSpan) + 6, 6, 0, 0, Math.PI * 2);
+        simCtx.fill();
+      });
+      simCtx.restore();
+    }
+
+    // Tier 2: Bottom Sparger Pipe & Rising Streams of Micro-Bubbles
+    if (tier >= 2) {
+      simCtx.strokeStyle = '#9be8ff';
+      simCtx.lineWidth = 4;
+      simCtx.beginPath();
+      simCtx.moveTo(tx + 24, ty + th - 6);
+      simCtx.lineTo(tx + tw - 24, ty + th - 6);
+      simCtx.stroke();
+
+      const bubbleCount = tier >= 6 ? 18 : 10;
+      for (let i = 0; i < bubbleCount; i++) {
+        const bx = tx + 30 + ((i * 47) % (tw - 60)) + Math.sin(animTick * 2 + i) * 5;
+        const by = ty + th - 10 - (((animTick * 40 + i * 23) % (th - 18)));
+        simCtx.fillStyle = 'rgba(180, 248, 255, 0.65)';
+        simCtx.beginPath();
+        simCtx.arc(bx, by, (i % 3) + 2, 0, Math.PI * 2);
+        simCtx.fill();
+      }
+    }
+
+    // Tier 4: External Glowing Thermal Heating Coils & Side Digital Temp Gauge
+    if (tier >= 4) {
+      const coilColor = temp > 55 ? '#ff5e62' : (temp < 28 ? '#00f2fe' : '#ffd15c');
+      simCtx.strokeStyle = coilColor;
+      simCtx.lineWidth = 3.5;
+      for (let c = 0; c < 4; c++) {
+        const cyCoil = ty + 24 + c * (th * 0.22);
+        // Left & right coil wraps
+        simCtx.beginPath();
+        simCtx.arc(tx, cyCoil, 7, Math.PI * 0.5, Math.PI * 1.5);
+        simCtx.stroke();
+        simCtx.beginPath();
+        simCtx.arc(tx + tw, cyCoil, 7, -Math.PI * 0.5, Math.PI * 0.5);
+        simCtx.stroke();
+      }
+      // Side Digital Temp Bar
+      const gaugeX = tx + tw + 18;
+      simCtx.fillStyle = 'rgba(12, 8, 36, 0.8)';
+      simCtx.fillRect(gaugeX, ty + 10, 10, th - 20);
+      const fillH = ((temp - 20) / 60) * (th - 20);
+      simCtx.fillStyle = coilColor;
+      simCtx.fillRect(gaugeX, ty + th - 10 - fillH, 10, fillH);
+    }
+
+    // Tank Glass Outline
+    simCtx.strokeStyle = tier >= 6 ? '#ffd15c' : '#00f2fe';
     simCtx.lineWidth = 3;
-    simCtx.strokeRect(w * 0.14, h * 0.18, w * 0.72, h * 0.66);
+    simCtx.strokeRect(tx, ty, tw, th);
 
     const cellColor = currentInput.cell.includes('Algae') ? '#42e695' :
                       currentInput.cell.includes('Yeast') ? '#ffd15c' :
                       currentInput.cell.includes('Mammalian') ? '#ff75c3' : '#00f2fe';
 
-    // Draw 6 softly morphing cells with inner dark circle (nucleus/plasmid)
-    for (let i = 0; i < 6; i++) {
-      const cx = w * (0.28 + (i % 3) * 0.22) + Math.sin(animTick + i) * 12;
-      const cy = h * (0.37 + Math.floor(i / 3) * 0.25) + Math.cos(animTick * 1.2 + i) * 8;
+    // Tier 1+: Softly Morphing Cells with Inner Dark Circle (Nucleus/Plasmid)
+    const numCells = 5 + tier;
+    for (let i = 0; i < numCells; i++) {
+      const cx = tx + tw * (0.18 + (i % 3) * 0.31) + Math.sin(animTick + i * 1.3) * 12;
+      const cy = ty + th * (0.25 + (Math.floor(i / 3) % 3) * 0.27) + Math.cos(animTick * 1.2 + i) * 8;
       const wobble = Math.sin(animTick * 2 + i) * 3.5;
-      drawMorphingCell(simCtx, cx, cy, 24, 18, wobble, cellColor, i);
+      drawMorphingCell(simCtx, cx, cy, 22, 16, wobble, cellColor, i);
     }
 
     simCtx.fillStyle = '#00f2fe';
     simCtx.font = '700 13px Fredoka, sans-serif';
     simCtx.fillText(`Active: ${currentInput.cell} | ${temp}°C | ${currentInput.mode}`, w * 0.14, h * 0.93);
+
   } else if (p.type === 'dna_splice') {
-    const cx = w * 0.5, cy = h * 0.52, r = Math.min(w, h) * 0.28;
+    const cx = w * 0.5, cy = h * 0.53, r = Math.min(w, h) * 0.27;
+
+    // Tier 6: Holo-Splicer Matrix Laser Grid
+    if (tier >= 6) {
+      simCtx.strokeStyle = 'rgba(0, 242, 254, 0.18)';
+      simCtx.lineWidth = 1;
+      for (let gx = w * 0.15; gx < w * 0.85; gx += 28) {
+        simCtx.beginPath(); simCtx.moveTo(gx, h * 0.18); simCtx.lineTo(gx, h * 0.88); simCtx.stroke();
+      }
+      simCtx.beginPath();
+      simCtx.arc(cx, cy, r + 32, 0, Math.PI * 2);
+      simCtx.strokeStyle = 'rgba(255, 209, 92, 0.5)';
+      simCtx.lineWidth = 2;
+      simCtx.stroke();
+    }
+
+    // Tier 5: Outer Counter-Rotating Supercoiled Halo
+    if (tier >= 5) {
+      simCtx.save();
+      simCtx.translate(cx, cy);
+      simCtx.rotate(-animTick * 0.6);
+      simCtx.strokeStyle = 'rgba(177, 108, 234, 0.55)';
+      simCtx.lineWidth = 2.5;
+      simCtx.setLineDash([8, 6]);
+      simCtx.beginPath();
+      simCtx.arc(0, 0, r + 18, 0, Math.PI * 2);
+      simCtx.stroke();
+      simCtx.setLineDash([]);
+      simCtx.restore();
+    }
+
+    // Tier 3: Internal Base-Pair Hydrogen-Bond Spokes
+    if (tier >= 3) {
+      simCtx.save();
+      simCtx.translate(cx, cy);
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+        simCtx.strokeStyle = 'rgba(94, 255, 138, 0.35)';
+        simCtx.lineWidth = 2;
+        simCtx.beginPath();
+        simCtx.moveTo(Math.cos(a + animTick * 0.2) * (r - 12), Math.sin(a + animTick * 0.2) * (r - 12));
+        simCtx.lineTo(Math.cos(a + animTick * 0.2) * (r + 8), Math.sin(a + animTick * 0.2) * (r + 8));
+        simCtx.stroke();
+      }
+      simCtx.restore();
+    }
+
+    // Tier 1: Base Plasmid Ring + Spliced Gene Segment
     simCtx.beginPath(); simCtx.arc(cx, cy, r, 0.3, Math.PI * 1.85); simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 11; simCtx.stroke();
     simCtx.beginPath(); simCtx.arc(cx, cy, r, Math.PI * 1.88, Math.PI * 2.27); simCtx.strokeStyle = '#ff5ebc'; simCtx.lineWidth = 13; simCtx.stroke();
+
+    // Tier 2: Animated Restriction Enzyme "Molecular Scissors" at Splice Junction
+    if (tier >= 2) {
+      const scX = cx + Math.cos(0.3) * r;
+      const scY = cy + Math.sin(0.3) * r;
+      const snipAngle = Math.abs(Math.sin(animTick * 4)) * 0.45 + 0.15;
+      simCtx.save();
+      simCtx.translate(scX, scY);
+      simCtx.strokeStyle = '#ffd15c';
+      simCtx.lineWidth = 3;
+      simCtx.beginPath();
+      simCtx.moveTo(-12, -12 * snipAngle); simCtx.lineTo(12, 12 * snipAngle);
+      simCtx.moveTo(-12, 12 * snipAngle); simCtx.lineTo(12, -12 * snipAngle);
+      simCtx.stroke();
+      simCtx.restore();
+    }
+
+    // Tier 4: Orbiting DNA Ligase Nanobots & Golden Glue Sparks
+    if (tier >= 4) {
+      for (let b = 0; b < 3; b++) {
+        const ang = animTick * 1.8 + b * 2.1;
+        const bx = cx + Math.cos(ang) * (r + 14);
+        const by = cy + Math.sin(ang) * (r + 14);
+        simCtx.fillStyle = '#5eff8a';
+        simCtx.beginPath();
+        simCtx.arc(bx, by, 5, 0, Math.PI * 2);
+        simCtx.fill();
+      }
+    }
+
     simCtx.fillStyle = '#fff'; simCtx.font = '700 13px Fredoka, sans-serif'; simCtx.textAlign = 'center';
     simCtx.fillText(`Scissors: ${currentInput.enzyme}`, cx, cy - 12);
     simCtx.fillStyle = '#00f2fe'; simCtx.fillText(`Strand: ${currentInput.bases.join('-')}`, cx, cy + 8);
     simCtx.fillStyle = '#5eff8a'; simCtx.fillText(`Glue: ${currentInput.glue}`, cx, cy + 28); simCtx.textAlign = 'left';
+
   } else if (p.type === 'pcr') {
     const count = Math.min(32, p.startCopies * Math.pow(2, currentInput.cycles || 1));
-    simCtx.fillStyle = '#00f2fe'; simCtx.font = '700 13px Fredoka, sans-serif';
-    simCtx.fillText(`PCR Output: ${p.startCopies * Math.pow(2, currentInput.cycles || 1)} Copies (${currentInput.denatureTemp}°C / ${currentInput.annealTemp}°C / ${currentInput.extendTemp}°C)`, 18, h - 12);
+
+    // Tier 2: Anodized Thermal Block Chamber Frame
+    if (tier >= 2) {
+      simCtx.fillStyle = 'rgba(14, 22, 58, 0.72)';
+      simCtx.strokeStyle = 'rgba(0, 242, 254, 0.5)';
+      simCtx.lineWidth = 2;
+      simCtx.beginPath();
+      simCtx.roundRect(w * 0.08, h * 0.19, w * 0.84, h * 0.65, 16);
+      simCtx.fill();
+      simCtx.stroke();
+    }
+
+    // Tier 5: Dual Rotating Cryo-Cooling Fan Turbines on Left & Right
+    if (tier >= 5) {
+      [w * 0.04, w * 0.96].forEach(fx => {
+        simCtx.save();
+        simCtx.translate(fx, h * 0.52);
+        simCtx.rotate(animTick * 3);
+        simCtx.strokeStyle = '#00f2fe';
+        simCtx.lineWidth = 2;
+        for (let k = 0; k < 4; k++) {
+          simCtx.rotate(Math.PI / 2);
+          simCtx.beginPath(); simCtx.moveTo(0, 0); simCtx.lineTo(10, 4); simCtx.stroke();
+        }
+        simCtx.restore();
+      });
+    }
+
+    // Tier 6: Live Sine-Wave Thermal Oscilloscope Header
+    if (tier >= 6) {
+      simCtx.strokeStyle = '#5eff8a';
+      simCtx.lineWidth = 2;
+      simCtx.beginPath();
+      for (let ox = w * 0.25; ox <= w * 0.75; ox += 8) {
+        const oy = h * 0.12 + Math.sin(ox * 0.06 - animTick * 4) * 5;
+        if (ox === w * 0.25) simCtx.moveTo(ox, oy);
+        else simCtx.lineTo(ox, oy);
+      }
+      simCtx.stroke();
+    }
+
+    // Tier 1+: Amplified DNA Double-Helix Strands
     for (let i = 0; i < count; i++) {
-      const x = w * 0.14 + (i % 8) * (w * 0.1), y = h * 0.28 + Math.floor(i / 8) * (h * 0.15) + Math.sin(animTick * 2 + i) * 3;
+      const x = w * 0.15 + (i % 8) * (w * 0.098), y = h * 0.28 + Math.floor(i / 8) * (h * 0.14) + Math.sin(animTick * 2 + i) * 3;
       simCtx.strokeStyle = i % 2 === 0 ? '#00f2fe' : '#ff5ebc'; simCtx.lineWidth = 2.5;
       simCtx.beginPath(); simCtx.moveTo(x - 12, y - 5); simCtx.quadraticCurveTo(x, y + 7, x + 12, y - 5); simCtx.stroke();
       simCtx.beginPath(); simCtx.moveTo(x - 12, y + 5); simCtx.quadraticCurveTo(x, y - 7, x + 12, y + 5); simCtx.stroke();
+
+      // Tier 4: Animated Golden Taq Polymerase Orbs Zipping Along Strands
+      if (tier >= 4 && i % 3 === 0) {
+        const orbX = x + Math.sin(animTick * 3 + i) * 10;
+        simCtx.fillStyle = '#ffd15c';
+        simCtx.beginPath();
+        simCtx.arc(orbX, y, 3.5, 0, Math.PI * 2);
+        simCtx.fill();
+      }
     }
+
+    // Tier 3: Sweeping Laser Thermal Scanner Beam
+    if (tier >= 3) {
+      const scanY = h * 0.22 + ((Math.sin(animTick * 1.8) + 1) * 0.5) * (h * 0.58);
+      simCtx.strokeStyle = 'rgba(255, 209, 92, 0.75)';
+      simCtx.lineWidth = 2.5;
+      simCtx.beginPath();
+      simCtx.moveTo(w * 0.09, scanY);
+      simCtx.lineTo(w * 0.91, scanY);
+      simCtx.stroke();
+    }
+
+    simCtx.fillStyle = '#00f2fe'; simCtx.font = '700 13px Fredoka, sans-serif';
+    simCtx.fillText(`PCR Output: ${p.startCopies * Math.pow(2, currentInput.cycles || 1)} Copies (${currentInput.denatureTemp}°C / ${currentInput.annealTemp}°C / ${currentInput.extendTemp}°C)`, 18, h - 10);
+
   } else if (p.type === 'gel') {
-    const gx = w * 0.08, gy = h * 0.18, gw = w * 0.84, gh = h * 0.72, colW = gw / 4;
+    const gx = w * 0.08, gy = h * 0.20, gw = w * 0.84, gh = h * 0.70, colW = gw / 4;
     simCtx.fillStyle = 'rgba(18, 32, 76, 0.85)'; simCtx.fillRect(gx, gy, gw, gh);
-    simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 2; simCtx.strokeRect(gx, gy, gw, gh);
+    simCtx.strokeStyle = tier >= 6 ? '#ffd15c' : '#00f2fe'; simCtx.lineWidth = 2.5; simCtx.strokeRect(gx, gy, gw, gh);
+
+    // Tier 2: Top Negative (-) Cathode & Bottom Positive (+) Anode Electrode Bars
+    if (tier >= 2) {
+      simCtx.fillStyle = '#00f2fe';
+      simCtx.fillRect(gx, gy - 6, gw, 5);
+      simCtx.fillStyle = '#ff5e62';
+      simCtx.fillRect(gx, gy + gh + 2, gw, 5);
+    }
+
+    // Tier 3: Rising Electrolysis Buffer Bubbles Along Chamber Sides
+    if (tier >= 3) {
+      for (let b = 0; b < 8; b++) {
+        const by = gy + gh - ((animTick * 35 + b * 22) % gh);
+        simCtx.fillStyle = 'rgba(0, 242, 254, 0.5)';
+        simCtx.beginPath();
+        simCtx.arc(gx + 8, by, 2.5, 0, Math.PI * 2);
+        simCtx.arc(gx + gw - 8, by, 2.5, 0, Math.PI * 2);
+        simCtx.fill();
+      }
+    }
+
+    // Tier 5: Horizontal Laser Calibration Ruler Hairlines
+    if (tier >= 5) {
+      simCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      simCtx.lineWidth = 1;
+      for (let bpTick = 200; bpTick <= 800; bpTick += 200) {
+        const tyTick = gy + 34 + (1 - bpTick / 1000) * (gh - 52);
+        simCtx.beginPath(); simCtx.moveTo(gx, tyTick); simCtx.lineTo(gx + gw, tyTick); simCtx.stroke();
+      }
+    }
+
     [{ name: 'EVIDENCE', bands: p.evidenceBands }, ...p.lanes].forEach((col, idx) => {
       const cx = gx + idx * colW + colW * 0.5, isPicked = currentInput.lane === col.name;
       simCtx.fillStyle = idx === 0 ? '#ffd15c' : (isPicked ? '#00f2fe' : '#b9c8f0');
       simCtx.font = '700 11px Fredoka, sans-serif'; simCtx.textAlign = 'center';
       simCtx.fillText(col.name.split(' (')[0], cx, gy + 18);
+
       col.bands.forEach(bp => {
-        const by = gy + 34 + (1 - bp / 1000) * (gh - 52);
+        const by = gy + 38 + (1 - bp / 1000) * (gh - 56);
+        const barW = 28;
+        const barX = cx - 42;
+
+        // Draw glowing DNA band bar shifted cleanly to the left of the lane
         simCtx.fillStyle = idx === 0 ? '#ffd15c' : (isPicked ? '#00f2fe' : '#5eff8a');
-        simCtx.fillRect(cx - 22, by, 44, 7);
-        simCtx.fillStyle = '#fff'; simCtx.font = '700 10px Space Mono, monospace'; simCtx.fillText(`${bp}bp`, cx + 36, by + 7);
+        simCtx.beginPath();
+        simCtx.roundRect(barX, by, barW, 8, 4);
+        simCtx.fill();
+
+        // Format bp number with spaces between digits (e.g., "2 0 0 bp") and larger font
+        const spacedBp = String(bp).split('').join(' ') + ' bp';
+        const labelX = barX + barW + 10;
+        simCtx.fillStyle = 'rgba(6, 3, 22, 0.94)';
+        simCtx.strokeStyle = 'rgba(0, 242, 254, 0.45)';
+        simCtx.lineWidth = 1.2;
+        simCtx.beginPath();
+        simCtx.roundRect(labelX - 5, by - 8, 66, 22, 6);
+        simCtx.fill();
+        simCtx.stroke();
+
+        simCtx.fillStyle = '#ffffff';
+        simCtx.font = '700 12.5px Space Mono, monospace';
+        simCtx.textAlign = 'left';
+        simCtx.fillText(spacedBp, labelX, by + 7);
+        simCtx.textAlign = 'center';
       });
+
+      // Tier 6: Pulsing Target Reticle on Selected Lane
+      if (tier >= 6 && isPicked) {
+        simCtx.strokeStyle = 'rgba(0, 242, 254, 0.75)';
+        simCtx.lineWidth = 2;
+        simCtx.strokeRect(cx - colW * 0.42, gy + 4, colW * 0.84, gh - 8);
+      }
     });
+
+    // Tier 4: Sweeping UV Transilluminator Scan Bar
+    if (tier >= 4) {
+      const uvY = gy + ((Math.sin(animTick * 1.5) + 1) * 0.5) * gh;
+      simCtx.fillStyle = 'rgba(181, 108, 255, 0.22)';
+      simCtx.fillRect(gx, uvY - 8, gw, 16);
+    }
     simCtx.textAlign = 'left';
+
   } else if (p.type === 'crispr') {
-    const cy = h * 0.54;
-    simCtx.beginPath(); simCtx.ellipse(w * 0.5, cy, w * 0.35, h * 0.32, 0, 0, Math.PI * 2);
-    simCtx.fillStyle = 'rgba(0, 242, 254, 0.18)'; simCtx.fill(); simCtx.strokeStyle = '#00f2fe'; simCtx.lineWidth = 3; simCtx.stroke();
+    const cx = w * 0.5, cy = h * 0.55;
+
+    // Tier 2: Horizontal Double-Helix DNA Strand Feeding Through Cas9 Cleft
+    if (tier >= 2) {
+      simCtx.strokeStyle = 'rgba(255, 94, 188, 0.55)';
+      simCtx.lineWidth = 3;
+      simCtx.beginPath();
+      for (let dx = w * 0.1; dx <= w * 0.9; dx += 12) {
+        const dy = cy + Math.sin(dx * 0.05 + animTick * 2) * 14;
+        if (dx === w * 0.1) simCtx.moveTo(dx, dy);
+        else simCtx.lineTo(dx, dy);
+      }
+      simCtx.stroke();
+    }
+
+    // Tier 6: Quantum Halo Rings & Donor-DNA Repair Shuttles
+    if (tier >= 6) {
+      simCtx.save();
+      simCtx.translate(cx, cy);
+      simCtx.rotate(animTick * 0.8);
+      simCtx.strokeStyle = 'rgba(255, 209, 92, 0.55)';
+      simCtx.lineWidth = 2;
+      simCtx.setLineDash([12, 8]);
+      simCtx.beginPath(); simCtx.arc(0, 0, Math.min(w, h) * 0.4, 0, Math.PI * 2); simCtx.stroke();
+      simCtx.setLineDash([]);
+      simCtx.restore();
+    }
+
+    // Tier 1: Base Cas9 Protein Complex Bubble
+    simCtx.beginPath();
+    simCtx.ellipse(cx, cy, w * 0.35 + Math.sin(animTick * 2) * 4, h * 0.32 - Math.sin(animTick * 2) * 3, 0, 0, Math.PI * 2);
+    simCtx.fillStyle = 'rgba(0, 242, 254, 0.18)';
+    simCtx.fill();
+    simCtx.strokeStyle = '#00f2fe';
+    simCtx.lineWidth = 3;
+    simCtx.stroke();
+
+    // Tier 3: Glowing Guide RNA (gRNA) Hairpin Loop
+    if (tier >= 3) {
+      simCtx.strokeStyle = '#5eff8a';
+      simCtx.lineWidth = 3;
+      simCtx.beginPath();
+      simCtx.arc(cx - w * 0.22, cy - 18, 14, Math.PI * 0.5, Math.PI * 1.8);
+      simCtx.stroke();
+    }
+
+    // Tier 4: Rotating Golden PAM-Site Radar Lock Reticle
+    if (tier >= 4) {
+      simCtx.save();
+      simCtx.translate(cx + w * 0.22, cy);
+      simCtx.rotate(-animTick * 2);
+      simCtx.strokeStyle = '#ffd15c';
+      simCtx.lineWidth = 2.5;
+      simCtx.strokeRect(-14, -14, 28, 28);
+      simCtx.restore();
+    }
+
+    // Tier 5: Dual Glowing Cas9 Nuclease Scissor Blades
+    if (tier >= 5) {
+      const cutPulse = Math.sin(animTick * 5) * 5;
+      simCtx.fillStyle = '#ff5ebc';
+      simCtx.beginPath();
+      simCtx.moveTo(cx - 8, cy - 38 - cutPulse); simCtx.lineTo(cx + 8, cy - 38 - cutPulse); simCtx.lineTo(cx, cy - 24 - cutPulse);
+      simCtx.closePath(); simCtx.fill();
+      simCtx.beginPath();
+      simCtx.moveTo(cx - 8, cy + 38 + cutPulse); simCtx.lineTo(cx + 8, cy + 38 + cutPulse); simCtx.lineTo(cx, cy + 24 + cutPulse);
+      simCtx.closePath(); simCtx.fill();
+    }
+
     simCtx.fillStyle = '#fff'; simCtx.font = '700 14px Space Mono, monospace'; simCtx.textAlign = 'center';
-    simCtx.fillText(`Target DNA: ${p.dnaTarget.join('-')}`, w * 0.5, cy - 16);
-    simCtx.fillStyle = '#00f2fe'; simCtx.fillText(`Guide RNA:  ${currentInput.rna.join('-')}`, w * 0.5, cy + 10);
-    simCtx.fillStyle = '#ffd15c'; simCtx.fillText(`PAM Site:   ${currentInput.pam}`, w * 0.5, cy + 34); simCtx.textAlign = 'left';
+    simCtx.fillText(`Target DNA: ${p.dnaTarget.join('-')}`, cx, cy - 16);
+    simCtx.fillStyle = '#00f2fe'; simCtx.fillText(`Guide RNA:  ${currentInput.rna.join('-')}`, cx, cy + 10);
+    simCtx.fillStyle = '#ffd15c'; simCtx.fillText(`PAM Site:   ${currentInput.pam}`, cx, cy + 34); simCtx.textAlign = 'left';
   }
 }
 
