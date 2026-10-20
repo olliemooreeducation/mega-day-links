@@ -44,6 +44,9 @@
   pre.code { margin:8px 0 10px; padding:14px 16px; background:var(--navy); border:1px solid rgba(255,255,255,.1); border-radius:12px; font:700 .95rem/1.5 "Nunito",system-ui,sans-serif; overflow-x:auto; white-space:normal; color:#fff; }
   pre.code .ln { display:block; width:fit-content; max-width:100%; background:var(--c); color:#fff; padding:5px 14px; border-radius:7px; margin:3px 0 3px calc(var(--i) * 24px); white-space:pre-wrap; box-shadow:inset 0 -2px 0 rgba(0,0,0,.18); }
   pre.code .tb { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; opacity:.8; margin-right:8px; }
+  pre.code .inl { display:inline-block; background:var(--c); color:#fff; padding:1px 10px; border-radius:6px; margin:0 3px; border:2px solid rgba(255,255,255,.7); }
+  .stepnote { margin-top:10px; padding:12px 14px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); border-radius:12px; line-height:1.9; font-size:.98rem; }
+  .chip { display:inline-block; font-weight:800; color:#fff; background:var(--c); padding:1px 10px; border-radius:6px; }
   pre.code .gv { background:rgba(255,255,255,.28); color:#fff; border-radius:6px; padding:0 7px; font-weight:800; }
   .shotimg { max-width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.15); display:block; }
   .check { margin-top:18px; padding:14px 16px; background:rgba(var(--green-rgb),.1); border:1px solid rgba(var(--green-rgb),.4); border-radius:12px; line-height:1.5; }
@@ -106,6 +109,9 @@
 // (in the img folder next to this page). It replaces the grey box.
 // {G} = your pair number, {B} = your beacon number.
 // ---------------------------------------------------------------
+// Block colours match the MakeCode editor drawers
+const BLOCK = { basic:'#1E90FF', input:'#D400D4', music:'#E30FC0', led:'#5C2D91', radio:'#E3008C', loops:'#00A65C', logic:'#00A4A6', variables:'#DC143C', math:'#9C27B0' };
+const chip = (d, label) => '<span class="chip" style="--c:'+BLOCK[d]+'">'+label+'</span>';
 const LEVELS = [
  { n:3, accent:'pink', emoji:'🚨', name:'Stop, Thief!', time:'About 10 min',
    blurb:'Shake one micro:bit and the other one sets off an alarm.',
@@ -120,15 +126,17 @@ const LEVELS = [
 
  { n:4, accent:'orange', emoji:'🎵', name:'Tilt Theremin', time:'About 10 min',
    blurb:'Tilt one micro:bit to play notes on the other.',
-   make:'One micro:bit is the instrument and one is the speaker. Hold A on the instrument and tilt it. The speaker plays a higher or lower note.',
-   same:'Two different programs: one person makes the Instrument, one makes the Speaker',
+   make:'Hold A on one micro:bit and tilt it. The other micro:bit plays a higher or lower note. Press B to stop the sound.',
+   same:'Same program on both micro:bits',
    steps:[
-    {t:'Join your radio group', who:'Instrument', code:['basic: on start','  radio: set group {G}'], img:'l4-s1.png'},
-    {t:'Send the tilt', who:'Instrument', code:['basic: forever','  logic: if button A is pressed then','    radio: send number acceleration (mg) x','  basic: pause 100 ms'], img:'l4-s2.png'},
-    {t:'Join your radio group and set the volume', who:'Speaker', code:['basic: on start','  radio: set group {G}','  music: set volume 80'], img:'l4-s3.png'},
-    {t:'Play the note', who:'Speaker', code:['radio: on radio received receivedNumber','  music: play tone','    math: map receivedNumber','       ~math:from low -1023 high 1023','       ~math:to low 200 high 1000','    ~music:for 100 ms'], img:'l4-s4.png'}
+    {t:'Join your radio group', code:['basic: on start','  radio: set group {G}'], img:'l4-s1.png'},
+    {t:'Send the tilt while A is held', code:['basic: forever','  logic: if [[input:button A is pressed?]] then','    radio: send number [[input:acceleration (mg) x]]','    basic: pause 50 ms'], img:'l4-s2.png',
+      note:'<b>Two drawers:</b> the '+chip('logic','if')+' block is in the <b>Logic</b> drawer. The '+chip('input','button A is pressed?')+' block is in the <b>Input</b> drawer. Snap the Input block into the if. The '+chip('input','acceleration (mg) x')+' block is also from <b>Input</b>.'},
+    {t:'Play the note you receive', code:['radio: on radio received receivedNumber','  music: ring tone (Hz)','    math: map receivedNumber','       ~math:from low -1023 high 1023','       ~math:to low 200 high 2000'], img:'l4-s3.png',
+      note:'Use <b>ring tone (Hz)</b> from the <b>Music</b> drawer. It keeps playing until you tell it to stop. The '+chip('math','map')+' block is in the <b>Math</b> drawer.'},
+    {t:'Stop the sound with B', code:['input: on button B pressed','  music: stop all sounds'], img:'l4-s4.png'}
    ],
-   check:'Hold A on the instrument and tilt it left and right. The speaker’s note goes up and down.'},
+   check:'Hold A on one micro:bit and tilt it left and right. The other micro:bit’s note goes up and down. The sound carries on until you press B on that micro:bit.'},
 
  { n:5, accent:'sky', emoji:'🕵️', name:'Secret Code', time:'About 15 min',
    blurb:'Scramble a number with a secret key so only your partner can read it.',
@@ -151,7 +159,6 @@ LEVELS.forEach(l => { mem.done[l.n] = store.get('done'+l.n) === '1'; });
 
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 // Block colours match the MakeCode editor drawers
-const BLOCK = { basic:'#1E90FF', input:'#D400D4', music:'#E30FC0', led:'#5C2D91', radio:'#E3008C', loops:'#00A65C', logic:'#00A4A6', variables:'#DC143C', math:'#9C27B0' };
 function codeHtml(lines){
   let col = BLOCK.basic;
   return lines.map(line => {
@@ -159,7 +166,7 @@ function codeHtml(lines){
     let rest = line.slice(sp), tag = '';
     const m = rest.match(/^(~?)([a-z]+):\s?(.*)$/);
     if (m && BLOCK[m[2]]) { col = BLOCK[m[2]]; if (!m[1]) tag = '<span class="tb">'+m[2]+'</span>'; rest = m[3]; }
-    let h = esc(rest);
+    let h = esc(rest).replace(/\[\[([a-z]+):(.+?)\]\]/g, (m0, d, t) => '<span class="inl" style="--c:'+(BLOCK[d]||'#555')+'">'+t+'</span>');
     h = h.replace(/\{G\}/g, '<span class="gv" data-g>'+esc(mem.pair||'your pair number')+'</span>')
          .replace(/\{B\}/g, '<span class="gv" data-b>'+esc(mem.beacon||'beacon number')+'</span>');
     return '<span class="ln" style="--c:'+col+';--i:'+Math.floor(sp/2)+'">'+tag+h+'</span>';
@@ -183,6 +190,7 @@ function render(){
         ${l.steps.map((s,i)=>`<div class="step"><div class="sn">${i+1}</div>
           <div class="st">${esc(s.t)}${s.who?`<span class="who">${esc(s.who)}</span>`:''}${s.bonus?`<div class="bonus">BONUS STEP</div>`:''}</div>
           <div class="stepbody"><pre class="code">${codeHtml(s.code)}</pre>
+          ${s.note ? `<div class="stepnote">${s.note}</div>` : ''}
           <img class="shotimg" src="img/${s.img}" alt="" onerror="this.remove()"></div></div>`).join('')}
         <div class="check"><b>It works when…</b><br>${esc(l.check)}</div>
         <button class="btn donebtn${done?' ghost':''}" data-done="${l.n}">${done?'Level complete ✓ (tap to undo)':'I’ve finished this level'}</button>
