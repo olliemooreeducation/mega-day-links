@@ -228,3 +228,21 @@ a.day-btn:hover { transform: translateY(-2px); background: var(--card2); box-sha
 .topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .topbar .backlink { color:var(--muted); font-size:.85rem; font-weight:700; white-space:nowrap; }
 .topbar .backlink:hover { color:var(--white); }
+
+/* ---- Notice strip and block intro ---- */
+.notice {
+  margin: 4px 0 8px;
+  padding: 14px 18px;
+  background: rgba(var(--pink-rgb), 0.10);
+  border: 1px solid rgba(var(--pink-rgb), 0.4);
+  border-radius: 14px;
+  color: var(--white);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.notice strong { color: var(--pink); }
+.block-intro {
+  margin: -4px 0 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}

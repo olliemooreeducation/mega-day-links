@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Year 9 - Arrival desks</title>
+<meta name="description" content="The five arrival desks for MEGA's Year 9 AI-pprentice day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
+.tab{flex:1;min-width:110px;background:var(--card);border:2px solid transparent;border-radius:14px;color:var(--white);padding:12px 10px;font:800 1rem "Nunito Sans",sans-serif;cursor:pointer;text-align:center}
+.tab small{display:block;font:600 .75rem Nunito,sans-serif;color:var(--muted)}
+.tab[aria-selected=true]{border-color:var(--orange);background:var(--card2)}
+.desk{display:none}.desk.on{display:block}
+.panel{background:var(--card);border-radius:18px;padding:22px 24px;margin-bottom:16px}
+.panel h2{font-size:1.6rem;margin-bottom:6px}.panel h3{font-size:1.05rem;color:var(--orange);margin:18px 0 6px}
+.task{font-size:1.25rem;line-height:1.45}
+.need{color:var(--muted);font-weight:700;margin-top:10px}
+.timer{display:flex;align-items:center;gap:16px;margin-top:18px}
+.clock{font:900 2.6rem "Nunito Sans",sans-serif;min-width:3.2ch}
+.btn{background:var(--orange);color:#1b1200;border:0;border-radius:12px;padding:10px 18px;font:800 1rem "Nunito Sans",sans-serif;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--white);border:2px solid var(--muted)}
+ul.tips{margin:6px 0 0;padding-left:20px;line-height:1.6}
+.steps{display:grid;gap:8px;margin-top:10px}
+.step{display:flex;gap:12px;align-items:center;background:var(--card2);border:2px solid transparent;border-radius:12px;padding:10px 14px;font:700 1.05rem Nunito,sans-serif;color:var(--white);cursor:pointer;text-align:left;width:100%}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
+.step.keep{border-color:var(--lightblue)}.step.keep .n{background:var(--lightblue)}
+.step.cut{opacity:.4;text-decoration:line-through}
+.msg{margin-top:10px;color:var(--lightblue);font-weight:800;min-height:1.4em}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
+.flip{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;background:var(--card2);border:2px solid var(--pink);border-radius:14px;padding:16px;color:var(--white);text-align:left;cursor:pointer;font:600 1rem/1.5 Nunito,sans-serif}
+.flip b{display:block;font:800 1.2rem "Nunito Sans",sans-serif;margin-bottom:6px}
+.flip .back{display:none;margin-top:6px;color:var(--muted)}.flip.open .back{display:block}
+.hint{background:var(--card2);border-radius:12px;padding:10px 14px;margin-top:8px;color:var(--muted);display:none}.hint.on{display:block}
+.nav{display:flex;justify-content:space-between;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <img class="logo" src="../assets/mega-logo.png" alt="MEGA — Motivated, Educated Generation with Ambition"><a class="backlink" href="index.html">← Year 9 links</a>
+  </div>
+  <div class="hero">
+    <span class="eyebrow">Arrival activity</span>
+    <h1>Find your archetype</h1>
+    <p>Two minutes at each desk. There are no right answers. After each desk, circle on your passport how much energy it gave you.</p>
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <section class="desk" id="d1">
+    <div class="panel">
+      <h2>Desk 1: Spark</h2>
+      <p class="task">Invent a gadget for someone who keeps losing things. Sketch it and list three features.</p>
+      <p class="need">You need: paper and a pen</p>
+      <h3>Need a nudge?</h3>
+      <ul class="tips"><li>What do people lose most? Keys, phones, PE kit, headphones?</li><li>Does your gadget find things, stop them being lost, or remind you?</li><li>Wild ideas are welcome. You can be sensible later.</li></ul>
+    </div>
+  </section>
+
+  <section class="desk" id="d2">
+    <div class="panel">
+      <h2>Desk 2: Make It</h2>
+      <p class="task">Build the tallest tower you can that stands on its own, using three sheets of paper.</p>
+      <p class="need">You need: three sheets of spare A4 paper. No tape or glue.</p>
+      <h3>The rules</h3>
+      <ul class="tips"><li>Folding and tearing only.</li><li>It must stand by itself for five seconds.</li><li>Measure by comparing with other towers at the desk.</li></ul>
+      <h3>Need a nudge?</h3>
+      <ul class="tips"><li>Rolled tubes are stronger than flat sheets.</li><li>A wide base stops it falling over.</li><li>If it falls, try again. That is how builders work.</li></ul>
+    </div>
+  </section>
+
+  <section class="desk" id="d3">
+    <div class="panel">
+      <h2>Desk 3: Tidy Up</h2>
+      <p class="task">These eight steps for making toast are messy. Cut them down to four clear steps without losing the meaning.</p>
+      <p class="need">Tap a step to keep it. Your taps set the order. Tap again to cut it.</p>
+      <div class="steps" id="steps"></div>
+      <div class="msg" id="stepmsg"></div>
+      <p><button class="btn ghost" id="reset">Start again</button></p>
+    </div>
+  </section>
+
+  <section class="desk" id="d4">
+    <div class="panel">
+      <h2>Desk 4: Spread It</h2>
+      <p class="task">Write one sentence to make a Year 5 pupil want to use your gadget, then one for a grandparent.</p>
+      <p class="need">You need: paper and a pen. Tap a card to find out more about each person.</p>
+      <div class="cards2">
+        <button class="flip" type="button"><b>A Year 5 pupil</b>Aged 9 or 10. Tap to read more.<span class="back">Loves games and silly ideas. Gets bored fast. Wants to know "what does it do?" in one line.</span></button>
+        <button class="flip" type="button"><b>A grandparent</b>Aged 70 or more. Tap to read more.<span class="back">Not always confident with tech. Wants it simple and safe. Worries about scams and tricky settings.</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="desk" id="d5">
+    <div class="panel">
+      <h2>Desk 5: What If</h2>
+      <p class="task">A pretend app, FindMe, shows everyone's location to everyone, all the time. List three things that could go wrong and one fix for each.</p>
+      <p class="need">You need: paper and a pen. Try before you tap the hints.</p>
+      <p><button class="btn ghost" id="hintbtn">Show hints</button></p>
+      <div class="hint" id="hints"><ul class="tips"><li>Who might use it to follow someone?</li><li>What if someone is somewhere they should not tell people about?</li><li>What would you want to switch on or off?</li></ul></div>
+    </div>
+  </section>
+
+  <div class="panel">
+    <div class="timer"><div class="clock" id="clock">2:00</div><button class="btn" id="go">Start 2 minutes</button><button class="btn ghost" id="stop">Reset</button></div>
+  </div>
+</div>
+<script>
+const names=[["1","Spark"],["2","Make It"],["3","Tidy Up"],["4","Spread It"],["5","What If"]];
+const tabs=document.getElementById('tabs');
+names.forEach(([n,t],i)=>{const b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');b.innerHTML='Desk '+n+'<small>'+t+'</small>';b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){document.querySelectorAll('.desk').forEach((d,j)=>d.classList.toggle('on',i===j));[...tabs.children].forEach((b,j)=>b.setAttribute('aria-selected',i===j));stopT();history.replaceState(null,'','#'+(i+1))}
+// toast steps
+const S=["Wait","Take the toast out","Get the bread","Push the lever down","Find the toaster","Wait some more","Put the bread in","Wait for the pop"];
+let picked=[];const box=document.getElementById('steps'),msg=document.getElementById('stepmsg');
+function draw(){box.innerHTML='';S.forEach((s,i)=>{const b=document.createElement('button');const k=picked.indexOf(i);b.className='step'+(k>-1?' keep':(picked.length>=4?' cut':''));b.innerHTML='<span class="n">'+(k>-1?k+1:'')+'</span>'+s;b.onclick=()=>{if(k>-1)picked.splice(k,1);else if(picked.length<4)picked.push(i);draw()};box.appendChild(b)});msg.textContent=picked.length<4?(4-picked.length)+' to choose':'Four steps. Would a friend be able to follow them?'}
+document.getElementById('reset').onclick=()=>{picked=[];draw()};draw();
+document.querySelectorAll('.flip').forEach(f=>f.onclick=()=>f.classList.toggle('open'));
+document.getElementById('hintbtn').onclick=e=>{const on=document.getElementById('hints').classList.toggle('on');e.target.textContent=on?'Hide hints':'Show hints'};
+// timer
+let t=120,iv=null;const clock=document.getElementById('clock'),go=document.getElementById('go');
+function fmt(){clock.textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
+function stopT(){clearInterval(iv);iv=null;t=120;fmt();go.textContent='Start 2 minutes'}
+go.onclick=()=>{if(iv)return;go.textContent='Running...';iv=setInterval(()=>{t--;fmt();if(t<=0){clearInterval(iv);iv=null;go.textContent="Time's up!"}},1000)};
+document.getElementById('stop').onclick=stopT;
+const h=parseInt(location.hash.slice(1));show(h>=1&&h<=5?h-1:0);
+addEventListener('hashchange',()=>{const k=parseInt(location.hash.slice(1));if(k>=1&&k<=5)show(k-1)});
+</script>
+</body>
+</html>

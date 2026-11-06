@@ -49,3 +49,4 @@ y11/                  Year 11 - Qubit by Qubit
   Quirk-E-Teleportation-Guide.pdf
 ```
 
+- y9/arrival.html: interactive desk cards for the Year 9 arrival activity (linked from the Entry and Intro block)
