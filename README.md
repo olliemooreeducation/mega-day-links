@@ -54,6 +54,7 @@ Add a new `.block` to `mega/index.html` with a card for the day's page and a car
 
 - **Saves as you type** in the browser's local storage (keys start `mega9plan:`), so a closed tab, refresh or crash loses nothing. One laptop per team: work does not move between laptops.
 - **Sketch pad** (Session 1): two sketches, saved the same way, downloadable as PNG for slide 5.
+- **Twist wheel** (Session 1, `twist-wheel.js`): 30 twists, one spin per team. The result is saved before the wheel moves, so refreshing cannot re-roll. A respin needs a written reason (20+ characters) and the facilitator password; each respin is logged under the twist (old twist, new twist, reason, time). The password is stored as a hash (`PASS_HASH`), so change it by replacing that value.
 - **Copy buttons** on each box copy the text ready to paste into the Canva slide the SLIDE tag points to.
 - **Progress** bars, ticks and confetti when a box, page or STOP & CHECK is complete. Session 3 has a 2-minute rehearsal timer (6 slides x 20 seconds).
 - **Staff reset:** "Staff: clear this laptop for a new team" at the bottom of each page deletes all three sessions from that laptop (asks twice).

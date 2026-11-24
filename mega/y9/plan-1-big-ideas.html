@@ -79,15 +79,45 @@
       <div class="box-foot"><button type="button" class="copy" data-slide="slides 2 and 3">Copy sentence</button></div>
     </section>
 
-    <div class="p-grid two" style="margin-top:0">
-      <section class="box" data-box>
-        <div class="box-head"><div class="box-ico" aria-hidden="true">🃏</div>
-          <div class="box-title"><h2>Twist card we picked</h2><p>What does your twist card say?</p><span class="slide-tag">&rarr; SLIDE 2</span></div>
-          <div class="box-tick" aria-hidden="true">✓</div></div>
-        <input class="p" type="text" data-key="s1.twist" data-req data-copy="" aria-label="Twist card we picked" placeholder="Our twist card...">
-        <div class="box-foot"><button type="button" class="copy" data-slide="slide 2">Copy</button></div>
-      </section>
+    <section class="box twist-box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">🎡</div>
+        <div class="box-title"><h2>Twist card</h2><p>Spin the wheel to get your twist. Your idea must work with it!</p><span class="slide-tag">&rarr; SLIDE 2</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <input type="hidden" data-key="s1.twist" data-req data-copy="">
+      <div class="tw">
+        <div class="tw-wheel-wrap">
+          <div class="tw-pointer" aria-hidden="true"></div>
+          <svg class="tw-wheel" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+          <button type="button" class="tw-hub" aria-label="Spin the wheel">SPIN</button>
+        </div>
+        <div class="tw-side">
+          <div class="tw-result" aria-live="polite">
+            <div class="tw-empty"><b>One spin only!</b>The wheel picks a twist for your idea. Spin it as a team.</div>
+          </div>
+          <div class="tw-actions">
+            <button type="button" class="btn-next tw-spin">🎡 Spin the wheel</button>
+            <button type="button" class="btn-next ghost tw-respin" hidden>Need a respin? Ask a facilitator</button>
+          </div>
+          <div class="tw-log" hidden></div>
+        </div>
+      </div>
+      <div class="box-foot"><button type="button" class="copy" data-slide="slide 2">Copy twist</button></div>
+    </section>
 
+    <dialog class="tw-dlg" aria-labelledby="tw-dlg-t">
+      <form method="dialog" class="tw-form" novalidate>
+        <h2 id="tw-dlg-t">Ask for a respin</h2>
+        <p>Respins are only for a good reason. Explain why your team needs a new twist, then ask a facilitator to type the password.</p>
+        <label for="tw-why">Why do you need a respin?</label>
+        <textarea id="tw-why" class="p" required minlength="20" placeholder="We need a new twist because..."></textarea>
+        <label for="tw-pass">Facilitator password</label>
+        <input id="tw-pass" class="p" type="password" autocomplete="off" required>
+        <p class="tw-err" role="alert"></p>
+        <div class="tw-dlg-btns"><button type="button" class="btn-next ghost tw-cancel">Cancel</button><button type="submit" class="btn-next">Respin</button></div>
+      </form>
+    </dialog>
+
+    <div class="p-grid two" style="margin-top:0">
       <section class="box" data-box>
         <div class="box-head"><div class="box-ico" aria-hidden="true">🎯</div>
           <div class="box-title"><h2>Target audience</h2><p>Who is it for?</p><span class="slide-tag">&rarr; SLIDE 2</span></div>
@@ -95,15 +125,15 @@
         <textarea class="p" data-key="s1.audience" data-req data-copy="" aria-label="Target audience" placeholder="Our product is for..."></textarea>
         <div class="box-foot"><button type="button" class="copy" data-slide="slide 2">Copy</button></div>
       </section>
-    </div>
 
-    <section class="box" data-box>
+      <section class="box" data-box>
       <div class="box-head"><div class="box-ico" aria-hidden="true">🔥</div>
         <div class="box-title"><h2>Problem being solved</h2><p>What does it do, and why does it matter to your group?</p><span class="slide-tag">&rarr; SLIDE 2</span></div>
         <div class="box-tick" aria-hidden="true">✓</div></div>
       <textarea class="p" data-key="s1.problem" data-req data-copy="" aria-label="Problem being solved" placeholder="The problem is... It matters because..."></textarea>
       <div class="box-foot"><button type="button" class="copy" data-slide="slide 2">Copy</button></div>
     </section>
+    </div>
 
     <section class="box" data-box>
       <div class="box-head"><div class="box-ico" aria-hidden="true">🔍</div>
@@ -166,5 +196,6 @@
   <p class="staff-reset"><button type="button">Staff: clear this laptop for a new team</button></p>
 </div>
 <script src="planner.js"></script>
+<script src="twist-wheel.js"></script>
 </body>
 </html>

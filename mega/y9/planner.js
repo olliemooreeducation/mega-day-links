@@ -243,5 +243,6 @@
     location.reload();
   });
 
+  window.megaPlanner = { confetti: confetti, toast: toast, refresh: refresh };
   refresh();
 })();
