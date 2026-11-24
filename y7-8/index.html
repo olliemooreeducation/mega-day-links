@@ -9,6 +9,81 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<style>
+/* ---- Step-by-step help: sequence strip on the links page ---- */
+.seq-label { margin: 22px 0 10px; font: 800 .8rem "Nunito Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.seq { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; gap: 8px; }
+.seq li { display: flex; }
+.seq-arrow { pointer-events: none; align-items: center; justify-content: center; color: var(--accent, var(--orange)); font: 900 1.7rem "Nunito Sans", sans-serif; }
+.seq-card { flex: 1; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--card); border: 1px solid #243a60; border-radius: 14px; padding: 14px 14px; transition: border-color .15s, background .15s, transform .15s; }
+.seq-card:hover { border-color: var(--accent, var(--orange)); background: var(--card2); transform: translateY(-2px); }
+.seq-card:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.seq-n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 1.05rem "Nunito Sans", sans-serif; background: var(--accent, var(--orange)); color: var(--navy); }
+.seq-name { display: block; font-weight: 800; font-size: 1rem; line-height: 1.2; }
+.seq-note { display: block; font-size: .8rem; color: var(--muted); margin-top: 2px; }
+@media (max-width: 860px) {
+  .seq { grid-template-columns: 1fr; }
+  .seq-arrow { height: 26px; font-size: 0; }
+  .seq-arrow::after { content: "\2193"; font-size: 1.7rem; }
+}
+
+/* ---- Step-by-step popup ---- */
+#guide { border: 0; padding: 0; width: min(800px, 96vw); max-height: 94vh; border-radius: 22px; background: var(--navy); color: #fff;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6); border-top: 6px solid var(--accent, var(--orange)); overflow: auto; }
+#guide::backdrop { background: rgba(5,12,26,.82); }
+.g-top { display: flex; align-items: center; gap: 12px; padding: 18px 22px 8px; }
+.g-title { flex: 1; font: 900 1.6rem "Nunito Sans", sans-serif; }
+.g-close { font: 800 1rem "Nunito Sans", sans-serif; color: #fff; background: transparent; border: 2px solid rgba(255,255,255,.35); border-radius: 12px; padding: 8px 14px; cursor: pointer; }
+.g-close:hover { border-color: #fff; }
+.g-pair { display: flex; align-items: center; gap: 10px; padding: 0 22px 6px; color: var(--muted); font-weight: 700; }
+.g-pair input { width: 4.4ch; font: 800 1.2rem "Nunito Sans", sans-serif; text-align: center; color: #fff; background: var(--card); border: 2px solid var(--orange); border-radius: 10px; padding: 4px 6px; }
+.g-prog { display: flex; align-items: center; gap: 7px; padding: 8px 22px 4px; color: var(--muted); font-weight: 800; font-size: .95rem; }
+.g-dot { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,.18); }
+.g-dot.on { background: var(--accent, var(--orange)); }
+.g-dot.cur { box-shadow: 0 0 0 3px rgba(255,255,255,.55); }
+.g-step { padding: 8px 22px 18px; }
+.g-step h2 { font: 900 1.9rem/1.15 "Nunito Sans", sans-serif; margin: 8px 0 10px; }
+.g-say { font-size: 1.35rem; line-height: 1.5; margin: 0 0 14px; }
+.g-say b { color: var(--accent, var(--orange)); }
+.g-find { display: grid; gap: 8px; margin: 0 0 16px; }
+.g-find-row { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
+.g-find-row .where { color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; }
+.drawer { display: inline-block; color: #fff; background: var(--c); padding: 3px 12px; border-radius: 8px; font-weight: 800; }
+.g-why { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); font-size: 1.05rem; line-height: 1.5; }
+.g-ok { margin-top: 6px; padding: 16px 18px; border-radius: 14px; background: rgba(61,220,151,.1); border: 1px solid rgba(61,220,151,.45); font-size: 1.25rem; line-height: 1.55; }
+.g-ok b.t { color: #3DDC97; display: block; font: 900 1.3rem "Nunito Sans", sans-serif; margin-bottom: 4px; }
+.g-ch { margin-top: 12px; padding: 14px 18px; border-radius: 14px; background: rgba(247,149,50,.12); border: 1px solid rgba(247,149,50,.5); font-size: 1.2rem; line-height: 1.5; }
+.g-ch b.t { color: var(--orange); font: 900 1.1rem "Nunito Sans", sans-serif; letter-spacing: .06em; text-transform: uppercase; display: block; }
+.g-nav { position: sticky; bottom: 0; display: flex; gap: 12px; justify-content: space-between; padding: 14px 22px 18px; background: linear-gradient(to top, var(--navy) 70%, rgba(13,32,59,0)); }
+.g-btn { font: 900 1.25rem "Nunito Sans", sans-serif; border-radius: 14px; padding: 14px 24px; cursor: pointer; border: 0; color: var(--navy); background: var(--accent, var(--orange)); min-width: 9ch; }
+.g-btn.ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.35); }
+.g-btn[disabled] { opacity: .3; cursor: default; }
+.g-btn:focus-visible, .g-close:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+@media (max-width: 560px) { #guide { width: 100vw; max-height: 100vh; border-radius: 0; } .g-step h2 { font-size: 1.6rem; } .g-say { font-size: 1.2rem; } }
+
+/* ---- MakeCode-style blocks (drawn, not screenshots) ---- */
+.mb-ws { background: #EEF1F6; background-image: radial-gradient(#d3d9e4 1px, transparent 1px); background-size: 18px 18px; border-radius: 14px; padding: 18px 16px; display: grid; gap: 16px; justify-items: start; overflow-x: auto; }
+.mb-ws * { box-sizing: border-box; }
+.mb-s, .mb-h { color: #fff; font-weight: 800; font-size: 1.15rem; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.mb-s { background: var(--c); padding: 9px 14px; border-radius: 8px; margin: 3px 0; width: fit-content; max-width: 100%; box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); position: relative; }
+.mb-c { position: relative; width: fit-content; max-width: 100%; }
+.mb-h { background: var(--c); padding: 11px 14px 9px; border-radius: 22px 22px 0 0 / 16px 16px 0 0; }
+.mb-k { border-left: 20px solid var(--c); padding: 4px 10px 4px 0; min-height: 12px; }
+.mb-f { height: 20px; width: 150px; background: var(--c); border-radius: 0 0 8px 8px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+.mb-i { background: #fff; color: #222; padding: 1px 11px; border-radius: 14px; font-weight: 800; min-width: 2ch; text-align: center; }
+.mb-i.mb-g { background: #FFE9A8; border: 2px solid #F79532; }
+.mb-r { background: var(--c); color: #fff; padding: 1px 10px; border-radius: 14px; border: 2px solid rgba(255,255,255,.8); display: inline-flex; flex-wrap: wrap; gap: 4px 7px; align-items: center; }
+.mb-v { background: #DC143C; color: #fff; padding: 1px 10px; border-radius: 14px; border: 2px solid rgba(255,255,255,.8); }
+/* states */
+.st-ghost.mb-s, .st-ghost > .mb-h, .st-ghost > .mb-f { opacity: .3; filter: grayscale(.5); }
+.st-ghost > .mb-k { border-left-color: color-mix(in srgb, var(--c) 30%, transparent); }
+.st-new, .st-check { outline: 5px solid #FFC400; outline-offset: 4px; border-radius: 10px; }
+.st-check { outline: 5px dashed #00B7D4; }
+.st-new::before, .st-check::before { content: "ADD THIS"; position: absolute; top: -17px; right: -6px; z-index: 2; background: #FFC400; color: #111; font: 900 .72rem "Nunito Sans", sans-serif; letter-spacing: .08em; padding: 3px 9px; border-radius: 99px; }
+.st-check::before { content: "CHECK THIS"; background: #00B7D4; color: #fff; }
+.mb-sep { font: 800 .8rem "Nunito Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #6b7a90; width: 100%; border-top: 2px dashed #c3cbd8; padding-top: 10px; margin-top: 4px; }
+</style>
 </head>
 <body>
 <a class="mega-feedback" href="https://cf-events.fillout.com/t/fwrcVxm7rTus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;background:#0D203B;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
@@ -21,7 +96,7 @@
   <div class="hero">
     <span class="eyebrow">Semiconductors · Advanced Connectivity · Engineering Biology · Cyber Security</span>
     <h1>Years 7 &amp; 8 - Frontier Explorers</h1>
-    <p>Every link needed for the day, in running order. Tap a card to open it in a new tab.</p>
+    <p>Every link needed for the day, in running order. Tap a card to open it. Step-by-step help opens on this page; everything else opens in a new tab.</p>
   </div>
 
   <div class="block" style="--accent: var(--lightblue); --accent-rgb: var(--lightblue-rgb);">
@@ -55,15 +130,18 @@
         </div>
         <div class="link-go">↗</div>
       </a>
-      <a class="link-card clickable" href="radio-mini-projects.html" target="_blank" rel="noopener">
-        <div class="link-icon">📡</div>
-        <div class="link-body">
-          <div class="link-name">Radio Challenge</div>
-          <div class="link-note">Levels 3 to 5: code to copy and test</div>
-        </div>
-        <div class="link-go">↗</div>
-      </a>
     </div>
+
+    <div class="seq-label">Step-by-step help: go in order</div>
+    <ol class="seq">
+      <li><button type="button" class="seq-card" data-guide="number"><span class="seq-n">1</span><span class="seq-body"><span class="seq-name">Send a number</span><span class="seq-note">Opens on this page</span></span></button></li>
+      <li class="seq-arrow" aria-hidden="true">&rarr;</li>
+      <li><button type="button" class="seq-card" data-guide="message"><span class="seq-n">2</span><span class="seq-body"><span class="seq-name">Send a message</span><span class="seq-note">Opens on this page</span></span></button></li>
+      <li class="seq-arrow" aria-hidden="true">&rarr;</li>
+      <li><button type="button" class="seq-card" data-guide="hunt"><span class="seq-n">3</span><span class="seq-body"><span class="seq-name">Signal Hunt</span><span class="seq-note">Opens on this page</span></span></button></li>
+      <li class="seq-arrow" aria-hidden="true">&rarr;</li>
+      <li><a class="seq-card" href="radio-mini-projects.html" target="_blank" rel="noopener"><span class="seq-n">4</span><span class="seq-body"><span class="seq-name">Radio Challenge &#8599;</span><span class="seq-note">Levels 3 to 5. Opens in a new tab</span></span></a></li>
+    </ol>
   </div>
 
   <div class="block" style="--accent: var(--purple); --accent-rgb: var(--purple-rgb);">
@@ -122,5 +200,176 @@
   </footer>
 
 </div>
+
+<dialog id="guide" aria-labelledby="g-title" style="--accent: var(--orange)">
+  <div class="g-top"><div class="g-title" id="g-title"></div><button type="button" class="g-close" id="g-close">&#10005; Close</button></div>
+  <div class="g-pair"><label for="g-pair-in">Your pair number</label><input id="g-pair-in" type="number" min="1" max="99" inputmode="numeric" placeholder="?"></div>
+  <div class="g-prog" id="g-prog"></div>
+  <div class="g-step" id="g-step"></div>
+  <div class="g-nav"><button type="button" class="g-btn ghost" id="g-back">&larr; Back</button><button type="button" class="g-btn" id="g-next">Next &rarr;</button></div>
+</dialog>
+<script>
+(function () {
+  // Colours match the MakeCode drawers (same as radio-mini-projects.html)
+  var COL = { basic: '#1E90FF', input: '#D400D4', radio: '#E3008C', led: '#5C2D91', math: '#9C27B0' };
+  var DRAWER = { basic: 'Basic', input: 'Input', radio: 'Radio', led: 'Led', math: 'Math' };
+  var store = { get: function (k) { try { return localStorage.getItem('mega78:' + k); } catch (e) { return null; } },
+                set: function (k, v) { try { localStorage.setItem('mega78:' + k, v); } catch (e) {} } };
+  var pair = store.get('pair') || '';
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+
+  // ---- tiny block language ----
+  var G = { g: 1 }, N = function (n) { return { n: n }; }, Q = function (q) { return { q: q }; };
+  var V = function (v) { return { v: v }; }, R = function (c, p) { return { r: p, c: c }; };
+  var S = function (c, p, s) { return { c: c, p: p, s: s }; };          // statement block
+  var H = function (c, p, k, s) { return { c: c, p: p, k: k, s: s }; };  // hat / C block
+  var onStart = function (k, s) { return H('basic', ['on start'], k, s); };
+  var setGroup = function (s) { return S('radio', ['radio set group', G], s); };
+  var onA = function (k, s) { return H('input', ['on button', N('A'), 'pressed'], k, s); };
+  var onB = function (k, s) { return H('input', ['on button', N('B'), 'pressed'], k, s); };
+  var sendNum = function (n, s) { return S('radio', ['radio send number', N(n)], s); };
+  var sendStr = function (t, s) { return S('radio', ['radio send string', Q(t)], s); };
+  var onNum = function (k, s) { return H('radio', ['on radio received', V('receivedNumber')], k, s); };
+  var onStr = function (k, s) { return H('radio', ['on radio received', V('receivedString')], k, s); };
+  var showNum = function (s) { return S('basic', ['show number', V('receivedNumber')], s); };
+  var showStr = function (s) { return S('basic', ['show string', V('receivedString')], s); };
+  var forever = function (k, s) { return H('basic', ['forever'], k, s); };
+  var pause = function (ms, s) { return S('basic', ['pause (ms)', N(ms)], s); };
+  var bar = function (inner, s) { return S('led', ['plot bar graph of', inner, 'up to', N(100)], s); };
+  var strength = R('radio', ['received packet', 'signal strength']);
+
+  // ---- rendering ----
+  function part(p) {
+    if (typeof p === 'string') return esc(p);
+    if (p.g) return '<span class="mb-i mb-g" data-g>' + esc(pair || 'pair number') + '</span>';
+    if (p.n !== undefined) return '<span class="mb-i">' + esc(p.n) + '</span>';
+    if (p.q !== undefined) return '<span class="mb-i">“' + esc(p.q) + '”</span>';
+    if (p.v) return '<span class="mb-v">' + esc(p.v) + '</span>';
+    if (p.r) return '<span class="mb-r" style="--c:' + COL[p.c] + '">' + p.r.map(function (x) { return '<span>' + part(x) + '</span>'; }).join('') + '</span>';
+    return '';
+  }
+  function blk(b, inh) {
+    var st = b.s || (inh === 'new' ? 'plain' : (inh || 'plain'));
+    var parts = b.p.map(part).join('');
+    if (!b.k) return '<div class="mb-s st-' + st + '" style="--c:' + COL[b.c] + '">' + parts + '</div>';
+    var kidInh = b.s || inh;
+    return '<div class="mb-c st-' + st + '" style="--c:' + COL[b.c] + '"><div class="mb-h">' + parts + '</div><div class="mb-k">' +
+      b.k.map(function (k) { return blk(k, kidInh); }).join('') + '</div><div class="mb-f"></div></div>';
+  }
+  var hot = function (b) { return b.s === 'new' || b.s === 'check' || (b.k || []).some(hot); };
+  var prog = function (list) {
+    var first = list.filter(hot), rest = list.filter(function (b) { return !hot(b); });
+    var h = first.map(function (b) { return blk(b); }).join('');
+    if (first.length && rest.length) h += '<div class="mb-sep">Already in your program</div>';
+    h += rest.map(function (b) { return blk(b); }).join('');
+    return '<div class="mb-ws" aria-label="The blocks to build">' + h + '</div>';
+  };
+  var find = function (c, name) { return { c: c, name: name }; };
+
+  // ---- the three guides ----
+  var base = function () {   // Send a Number program, as all three guides build on it
+    return [onStart([setGroup()], 'ghost'), onA([sendNum(1)], 'ghost'), onNum([showNum()], 'ghost')];
+  };
+  var GUIDES = {
+    number: { title: 'Send a number', steps: [
+      { t: 'Join your private group', say: 'Put <b>radio set group</b> inside <b>on start</b>. Type in your <b>pair number</b>.',
+        find: [find('basic', 'on start'), find('radio', 'radio set group')],
+        blocks: [onStart([setGroup()], 'new')] },
+      { t: 'Send a number', say: 'Press <b>A</b> to send a number. Pick <b>any number</b> you like.',
+        find: [find('input', 'on button A pressed'), find('radio', 'radio send number')],
+        blocks: [onStart([setGroup()], 'ghost'), onA([sendNum(1)], 'new')] },
+      { t: 'Show the number', say: 'When a number arrives, show it. Drag <b>receivedNumber</b> onto the <b>show number</b> block.',
+        find: [find('radio', 'on radio received'), find('basic', 'show number')],
+        blocks: [onStart([setGroup()], 'ghost'), onA([sendNum(1)], 'ghost'), onNum([showNum()], 'new')] }
+    ],
+      ok: 'Download the program to <b>both</b> micro:bits. Press <b>A</b> on one and the other one shows your number.',
+      ch: 'Can you send a <b>secret message</b> instead of a number?',
+      final: function () { return base().map(function (b) { b.s = 'plain'; return b; }); } },
+
+    message: { title: 'Send a message', steps: [
+      { t: 'Check your radio group', say: 'Keep your program from before. Check <b>radio set group</b> is still your <b>pair number</b>.',
+        find: [],
+        blocks: [onStart([setGroup('check')], 'ghost'), onA([sendNum(1)], 'ghost'), onNum([showNum()], 'ghost')] },
+      { t: 'Send a message', say: 'Press <b>B</b> to send a message. Type your own words in the quotes.',
+        find: [find('input', 'on button B pressed'), find('radio', 'radio send string')],
+        blocks: base().concat([onB([sendStr('hello')], 'new')]) },
+      { t: 'Show the message', say: 'When a message arrives, show it. Drag <b>receivedString</b> onto the <b>show string</b> block.',
+        find: [find('radio', 'on radio received (string)'), find('basic', 'show string')],
+        blocks: base().concat([onB([sendStr('hello')], 'ghost'), onStr([showStr()], 'new')]) }
+    ],
+      ok: 'Download the program to <b>both</b> micro:bits. Press <b>B</b> on one and the other one shows your message.',
+      ch: 'Can you send another message when you press <b>A+B</b> together?',
+      final: function () { return base().concat([onB([sendStr('hello')]), onStr([showStr()])]).map(function (b) { b.s = 'plain'; return b; }); } },
+
+    hunt: { title: 'Signal Hunt', steps: [
+      { t: 'Check your radio group', say: 'Keep your program from before. Check <b>radio set group</b> is still your <b>pair number</b>.',
+        find: [],
+        blocks: [onStart([setGroup('check')], 'ghost'), onA([sendNum(1)], 'ghost'), onB([sendStr('hello')], 'ghost'), onNum([showNum()], 'ghost'), onStr([showStr()], 'ghost')] },
+      { t: 'Send a signal again and again', say: 'Put <b>radio send number 0</b> and <b>pause 300</b> inside <b>forever</b>.',
+        find: [find('basic', 'forever'), find('radio', 'radio send number'), find('basic', 'pause (ms)')],
+        blocks: [onStart([setGroup()], 'ghost'), onNum([showNum()], 'ghost'), forever([sendNum(0), pause(300)], 'new')] },
+      { t: 'Show a bar graph', say: 'Inside <b>on radio received receivedNumber</b>, delete <b>show number</b>. Add <b>plot bar graph</b> and set <b>up to</b> to <b>100</b>.',
+        find: [find('led', 'plot bar graph of')],
+        blocks: [onStart([setGroup()], 'ghost'), onNum([bar(N(0), 'new')], 'ghost'), forever([sendNum(0), pause(300)], 'ghost')] },
+      { t: 'Measure the signal', say: 'Make the first slot <b>received packet signal strength</b> + <b>128</b>.',
+        find: [find('math', '0 + 0'), find('radio', 'received packet signal strength')],
+        blocks: [onStart([setGroup()], 'ghost'), onNum([bar(R('math', [strength, '+', N(128)]), 'new')], 'ghost'), forever([sendNum(0), pause(300)], 'ghost')],
+        why: '<b>Why +128?</b> Signal strength is a negative number. Adding 128 makes it positive so the bar can show it.' }
+    ],
+      ok: 'Download to <b>both</b> micro:bits. Use the battery packs and take them away from your laptops. <b>Walk away</b> and the bar gets smaller. <b>Walk towards</b> each other and it grows.',
+      ch: null,
+      final: function () { return [onStart([setGroup()]), onNum([bar(R('math', [strength, '+', N(128)]))]), forever([sendNum(0), pause(300)])]; } }
+  };
+
+  // ---- the popup ----
+  var dlg = document.getElementById('guide'); if (!dlg || !dlg.showModal) return;
+  var el = function (id) { return document.getElementById(id); };
+  var cur = null, idx = 0;
+
+  function render() {
+    var g = GUIDES[cur], total = g.steps.length, last = idx === total, h = '';
+    el('g-title').textContent = g.title;
+    var dots = '';
+    for (var i = 0; i <= total; i++) dots += '<span class="g-dot' + (i <= idx ? ' on' : '') + (i === idx ? ' cur' : '') + '"></span>';
+    el('g-prog').innerHTML = dots + '<span style="margin-left:6px">' + (last ? 'Finished!' : 'Step ' + (idx + 1) + ' of ' + total) + '</span>';
+    if (!last) {
+      var s = g.steps[idx];
+      h += '<h2>' + (idx + 1) + '. ' + esc(s.t) + '</h2><p class="g-say">' + s.say + '</p>';
+      if (s.find.length) h += '<div class="g-find">' + s.find.map(function (f) {
+        return '<div class="g-find-row"><span class="where">Find it in</span><span class="drawer" style="--c:' + COL[f.c] + '">' + DRAWER[f.c] + '</span><span>' + esc(f.name) + '</span></div>'; }).join('') + '</div>';
+      h += prog(s.blocks);
+      if (s.why) h += '<div class="g-why">' + s.why + '</div>';
+    } else {
+      h += '<h2>It works when…</h2><div class="g-ok">' + g.ok + '</div>' + prog(g.final());
+      if (g.ch) h += '<div class="g-ch"><b class="t">Challenge</b>' + g.ch + '</div>';
+    }
+    el('g-step').innerHTML = h;
+    el('g-back').disabled = idx === 0;
+    el('g-next').textContent = last ? 'Done ✓' : 'Next →';
+    dlg.scrollTop = 0;
+  }
+  function open(name) { cur = name; idx = 0; render(); dlg.showModal(); el('g-next').focus(); }
+  function go(d) {
+    var total = GUIDES[cur].steps.length;
+    if (d > 0 && idx === total) { dlg.close(); return; }
+    idx = Math.max(0, Math.min(total, idx + d)); render();
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-guide]'); if (b) { open(b.getAttribute('data-guide')); return; }
+    if (e.target === dlg) dlg.close();   // click on the dark backdrop
+  });
+  el('g-close').onclick = function () { dlg.close(); };
+  el('g-back').onclick = function () { go(-1); };
+  el('g-next').onclick = function () { go(1); };
+  dlg.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') go(1); else if (e.key === 'ArrowLeft') go(-1);
+  });
+  var pin = el('g-pair-in'); pin.value = pair;
+  pin.oninput = function () { pair = pin.value.trim(); store.set('pair', pair);
+    Array.prototype.forEach.call(dlg.querySelectorAll('[data-g]'), function (n) { n.textContent = pair || 'pair number'; }); };
+})();
+</script>
 </body>
 </html>
