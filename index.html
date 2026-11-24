@@ -3,56 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MEGA Day Links</title>
-<meta name="description" content="Quick-access links for every MEGA day.">
+<title>MEGA &amp; TechFirst Links</title>
+<meta name="description" content="Quick-access links for MEGA and TechFirst days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #0B1220;
+    color: #fff;
+    font-family: Roboto, Arial, sans-serif;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  .wrap { width: 100%; max-width: 1100px; margin: 0 auto; padding: 48px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; margin: 0 0 8px; text-align: center; }
+  .sub { margin: 0 0 36px; text-align: center; font-size: 1.2rem; color: #C9D3E3; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .choice {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+    min-height: 340px; padding: 40px 32px; border-radius: 28px; text-decoration: none; color: #fff;
+    border: 3px solid transparent; transition: transform .15s, box-shadow .15s, border-color .15s;
+  }
+  .choice:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+  .choice:focus-visible { outline: 4px solid #fff; outline-offset: 4px; }
+  .choice img { display: block; width: 100%; height: auto; }
+  .mega { background: #0D203B; border-color: #EE3181; }
+  .mega img { max-width: 380px; }
+  .mega:hover { border-color: #F79532; }
+  .tf { background: #4E259E; border-color: #5ED1DD; }
+  .tf img { max-width: 440px; }
+  .tf:hover { border-color: #9EEEF2; }
+  .go { font-weight: 700; font-size: 1.25rem; padding: 12px 26px; border-radius: 999px; }
+  .mega .go { background: #EE3181; color: #fff; }
+  .tf .go { background: #5ED1DD; color: #18191C; }
+  @media (max-width: 760px) {
+    .wrap { padding: 32px 16px; justify-content: flex-start; }
+    .choices { grid-template-columns: 1fr; gap: 20px; }
+    .choice { min-height: 220px; padding: 32px 24px; gap: 22px; }
+  }
+</style>
 </head>
 <body>
-<a class="mega-feedback" href="https://cf-events.fillout.com/t/fwrcVxm7rTus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;background:#0D203B;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
-<div class="wrap">
-
-  <div class="topbar">
-    <img class="logo" src="assets/mega-logo.png" alt="MEGA — Motivated, Educated Generation with Ambition">
-  </div>
-
-  <div class="hero">
-    <span class="eyebrow">All year groups</span>
-    <h1>MEGA Day Links</h1>
-    <p>Pick your day to open its links.</p>
-  </div>
-
-  <div class="day-grid">
-    <a class="day-btn" href="y7-8/index.html" style="--accent: var(--lightblue); --accent-rgb: var(--lightblue-rgb);">
-      <div class="day-year">Y7 &amp; 8</div>
-      <div class="day-text"><div class="day-name">Frontier Explorers</div><div class="day-sub">Semiconductors · Connectivity · Engineering Biology · Cyber Security</div></div>
-      <div class="day-go">↗</div>
+<main class="wrap">
+  <h1>Event links</h1>
+  <p class="sub">Tap the day you are at.</p>
+  <div class="choices">
+    <a class="choice mega" href="mega/index.html" aria-label="MEGA days">
+      <img src="assets/mega-logo.png" alt="MEGA">
+      <span class="go" aria-hidden="true">Open MEGA &rarr;</span>
     </a>
-    <a class="day-btn" href="y9/index.html" style="--accent: var(--purple); --accent-rgb: var(--purple-rgb);">
-      <div class="day-year">Y9</div>
-      <div class="day-text"><div class="day-name">AI-pprentice</div><div class="day-sub">Artificial Intelligence · Cyber Security</div></div>
-      <div class="day-go">↗</div>
-    </a>
-    <a class="day-btn" href="y10/index.html" style="--accent: var(--pink); --accent-rgb: var(--pink-rgb);">
-      <div class="day-year">Y10</div>
-      <div class="day-text"><div class="day-name">Circuit &amp; Signal</div><div class="day-sub">Semiconductors · Advanced Connectivity · Cyber Security</div></div>
-      <div class="day-go">↗</div>
-    </a>
-    <a class="day-btn" href="y11/index.html" style="--accent: var(--orange); --accent-rgb: var(--orange-rgb);">
-      <div class="day-year">Y11</div>
-      <div class="day-text"><div class="day-name">Qubit by Qubit</div><div class="day-sub">Quantum Technologies</div></div>
-      <div class="day-go">↗</div>
+    <a class="choice tf" href="techfirst/index.html" aria-label="TechFirst">
+      <img src="assets/techfirst-logo.svg" alt="TechFirst, funded by UK Government">
+      <span class="go" aria-hidden="true">Open TechFirst &rarr;</span>
     </a>
   </div>
-
-  <footer>
-    <span>MEGA · Day links</span>
-    <span>Bookmark your day’s page on station laptops</span>
-    <a href="staff/base44.html" aria-label="Staff" style="color:inherit;opacity:.25;text-decoration:none;padding:0 6px">&middot;</a>
-  </footer>
-
-</div>
+</main>
 </body>
 </html>

@@ -1,6 +1,17 @@
-# MEGA Day Links
+# MEGA & TechFirst Day Links
 
-A standalone static page per MEGA day — the websites (and eventually local HTML tools) a coach needs open on a shared screen or station laptop, grouped by time slot so nobody's typing URLs out loud. `index.html` is a master page linking to each day's folder. Each year group has its own folder with its own `index.html` (the links page) plus any tools or resources for that day.
+Static links pages for event days, split into two regions:
+
+- **`index.html`** (site root): chooser with two big boxes, MEGA and TechFirst.
+- **`mega/`**: the MEGA site. One folder per year group, each with its own `index.html` links page plus any tools for that day. `mega/index.html` is the MEGA master page.
+- **`techfirst/`**: the TechFirst site. Placeholder ("Under construction") until activities and links are added.
+
+The **Feedback** button (top right of each page) goes to a different form per region:
+
+- MEGA pages: `https://forms.fillout.com/t/1YQ9vJsVrXus`
+- TechFirst pages: `https://forms.fillout.com/t/4dPNqbRsbZus`
+
+**Old addresses still work.** The MEGA pages used to live at the root (`y7-8/`, `y10/` and so on). Each old `.html` path now holds a tiny redirect page that forwards to the same page under `mega/`, so bookmarks, QR codes and slide links keep working. Point new links at `mega/...` directly.
 
 ## Putting it on GitHub Pages
 
@@ -19,34 +30,30 @@ A standalone static page per MEGA day — the websites (and eventually local HTM
 
 ## Editing colours / branding
 
-Everything lives in `assets/style.css` as CSS variables at the top (`--navy`, `--pink`, `--orange`, etc.) — change them once and every page updates. The MEGA logo is `assets/mega-logo.png` (white wordmark, transparent background — built for the dark navy pages here).
+MEGA styles live in `mega/assets/style.css` as CSS variables at the top (`--navy`, `--pink`, `--orange`, etc.) — change them once and every page updates. The MEGA logo is `mega/assets/mega-logo.png` (white wordmark, transparent background — built for the dark navy pages here).
 
 ## Adding a day to the master page
 
-Add a new `.block` to `index.html` with a card for the day's page and a card for each tool page it ships with.
+Add a new `.block` to `mega/index.html` with a card for the day's page and a card for each tool page it ships with.
 
 ## Mystery Gate worksheet
 
-`y10/mystery-gate.html` is the interactive Mystery Gate worksheet (now used on the Y10 day). It is a standalone page, so it can be linked or embedded in an iframe (`<iframe src="mystery-gate.html" style="width:100%;height:1500px;border:0">`); it hides the logo when embedded. Students' answers are saved in their own browser only, and the Print button gives a PDF copy.
+`mega/y10/mystery-gate.html` is the interactive Mystery Gate worksheet (now used on the Y10 day). It is a standalone page, so it can be linked or embedded in an iframe (`<iframe src="mystery-gate.html" style="width:100%;height:1500px;border:0">`); it hides the logo when embedded. Students' answers are saved in their own browser only, and the Print button gives a PDF copy.
 
 ## Folder structure
 
 ```
-index.html            master page - one big button per day
-assets/               shared style.css and logo
-y7-8/                 Year 7 & 8 - Frontier Explorers (links page, Radio Challenge, extensions)
-  index.html          redirects home for now
-  mystery-gate.html   redirect to y10/ (delete once old guide/deck links are updated)
-  radio-mini-projects.html   redirect to y10/ (same)
-y10/                  Year 10 - Circuit & Signal
-  index.html          links page  (y10/index.html)
-  mystery-gate.html
-  radio-mini-projects.html
-y11/                  Year 11 - Qubit by Qubit
-  index.html          links page  (y11/index.html)
-  briefcase.html
-  hackathon-landing.html
-  Quirk-E-Teleportation-Guide.pdf
+index.html              chooser: MEGA or TechFirst
+assets/                 logos for the chooser and TechFirst pages (mega-logo.png, techfirst-logo.svg)
+mega/
+  index.html            MEGA master page - one big button per day
+  assets/               MEGA style.css and logo
+  y7-8/                 Year 7 & 8 - Frontier Explorers (links page, Radio Challenge, extensions, Biotech Lab, videos)
+  y9/                   Year 9 - AI-pprentice (links page, arrival desk cards)
+  y10/                  Year 10 - Circuit & Signal (links page, Mystery Gate, Radio Challenge)
+  y11/                  Year 11 - Qubit by Qubit (links page, briefcase, hackathon landing, Quirk-E guide PDF)
+  staff/                staff-only pages
+techfirst/
+  index.html            TechFirst links page (under construction)
+y7-8/ y9/ y10/ y11/ staff/   redirect pages only: forward old addresses to mega/
 ```
-
-- y9/arrival.html: interactive desk cards for the Year 9 arrival activity (linked from the Entry and Intro block)
