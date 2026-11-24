@@ -7,37 +7,36 @@
 <meta name="description" content="Quick-access links for TechFirst days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../mega/assets/style.css">
 <style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; }
-  body { background: #4E259E; color: #fff; font-family: Roboto, Arial, sans-serif; min-height: 100vh; }
-  a { color: inherit; }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 28px 20px 64px; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 56px; padding-right: 110px; }
-  .logo { height: 44px; width: auto; display: block; }
-  .backlink { font-weight: 700; text-decoration: none; padding: 8px 14px; border-radius: 10px; border: 2px solid rgba(255,255,255,.4); }
-  .backlink:hover { border-color: #fff; }
-  .card { background: #fff; color: #18191C; border-radius: 24px; padding: 48px 32px; text-align: center; border-top: 8px solid #5ED1DD; }
-  .card .icon { font-size: 3.4rem; line-height: 1; }
-  .card h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; color: #4E259E; margin: 16px 0 10px; }
-  .card p { font-size: 1.25rem; line-height: 1.5; margin: 0; color: #18191C; }
-  a:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-  @media (max-width: 560px) { .topbar { padding-right: 0; padding-top: 30px; } .logo { height: 34px; } }
+  .topbar .logo { height: 44px; }
+  .soon { background: #fff; border: 2px solid var(--tf-line); border-radius: 24px; padding: 48px 32px; text-align: center; margin-top: 12px; }
+  .soon .icon { font-size: 3.4rem; line-height: 1; }
+  .soon h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); color: var(--tf-purple); margin: 16px 0 10px; }
+  .soon p { font-size: 1.2rem; line-height: 1.5; margin: 0; }
+  @media (max-width: 560px) { .topbar .logo { height: 32px; } }
 </style>
 </head>
 <body>
-<a class="tf-feedback" href="https://forms.fillout.com/t/4dPNqbRsbZus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#fff;background:#4E259E;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
+<a class="tf-feedback" href="https://forms.fillout.com/t/4dPNqbRsbZus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#4E259E;background:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
 <div class="wrap">
+
   <div class="topbar">
-    <img class="logo" src="../assets/techfirst-logo.svg" alt="TechFirst, funded by UK Government">
-    <a class="backlink" href="../index.html">&larr; MEGA or TechFirst</a>
+    <img class="logo" src="../assets/techfirst-logo.svg" alt="TechFirst, funded by UK Government"><a class="backlink" href="../index.html">&larr; MEGA or TechFirst</a>
   </div>
-  <div class="card">
+
+  <div class="hero">
+    <h1>TechFirst Day Links</h1>
+    <p>Activities and links for TechFirst days.</p>
+  </div>
+
+  <div class="soon">
     <div class="icon" aria-hidden="true">&#128679;</div>
-    <h1>Under construction</h1>
+    <h2>Under construction</h2>
     <p>TechFirst activities and links are coming soon.</p>
   </div>
+
 </div>
 </body>
 </html>

@@ -6,20 +6,20 @@
 <title>Qubit by Qubit — The Hackathon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0D203B;
-    --card: #16294A;
-    --card2: #1C3157;
-    --pink: #EE3181;
-    --orange: #F79532;
-    --lightblue: #1A97CD;
+    --navy: #2B1466;
+    --card: #3A1B7A;
+    --card2: #4E259E;
+    --pink: #B7A6F0;
+    --orange: #9EEEF2;
+    --lightblue: #5ED1DD;
     --white: #FFFFFF;
-    --muted: #9FB0C6;
-    --body: #D9E4EE;
-    --font-body: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    --font-display: 'Nunito Sans', 'Segoe UI', Arial, sans-serif;
+    --muted: #CFC4EE;
+    --body: #E9E4F7;
+    --font-body: Roboto, 'Segoe UI', Arial, sans-serif;
+    --font-display: Roboto, 'Segoe UI', Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -41,7 +41,7 @@
   /* ===== HERO ===== */
   .hero {
     padding: 48px 28px 44px;
-    background: linear-gradient(180deg, #0a1930 0%, var(--navy) 100%);
+    background: linear-gradient(180deg, #22104F 0%, var(--navy) 100%);
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .hero-inner {
@@ -231,15 +231,15 @@
   }
   .protocol-card:hover .pc-cta .arrow { transform: translateX(4px); }
 
-  .pc-signal   { --accent: #1A97CD; }
-  .pc-cipher   { --accent: #EE3181; }
-  .pc-interface{ --accent: #F79532; }
-  .pc-directive{ --accent: #8C7AE6; }
+  .pc-signal   { --accent: #5ED1DD; }
+  .pc-cipher   { --accent: #B7A6F0; }
+  .pc-interface{ --accent: #9EEEF2; }
+  .pc-directive{ --accent: #D9D0F2; }
 
 
   /* ===== CODE BOX ===== */
   .code-box {
-    background: #081426;
+    background: #1A0D3D;
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px;
     overflow: hidden;
@@ -255,7 +255,7 @@
   .code-title .lang { color: var(--accent, var(--orange)); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; }
   .copy-btn {
     background: var(--accent, var(--orange));
-    color: #0D203B;
+    color: #18191C;
     border: 0; border-radius: 999px;
     font: inherit; font-weight: 800; font-size: 13.5px;
     padding: 8px 18px; cursor: pointer;
@@ -278,14 +278,14 @@
   pre.code .ln::before {
     counter-increment: ln; content: counter(ln);
     display: inline-block; width: 2.6em; margin-right: 1.1em; padding-right: 0.2em;
-    text-align: right; color: #5E7391; user-select: none; -webkit-user-select: none;
+    text-align: right; color: #8F80BD; user-select: none; -webkit-user-select: none;
   }
-  .tk-kw  { color: #EE3181; font-weight: 700; }
+  .tk-kw  { color: #D7B8FF; font-weight: 700; }
   .tk-fn  { color: #5AC8F5; }
-  .tk-bi  { color: #1A97CD; }
-  .tk-str { color: #F79532; }
+  .tk-bi  { color: #5ED1DD; }
+  .tk-str { color: #FFC48A; }
   .tk-num { color: #A99BF2; }
-  .tk-com { color: #7A8FAB; font-style: italic; }
+  .tk-com { color: #A79CCB; font-style: italic; }
   .tk-op  { color: #C5D2E3; }
   .tk-var { color: #FFD08A; }
   .code-note { color: var(--muted); font-size: 13px; margin: -8px 0 22px; line-height: 1.5; }
@@ -294,7 +294,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(5,12,24,0.78);
+    background: rgba(16,7,38,0.78);
     backdrop-filter: blur(3px);
     display: none;
     align-items: flex-start;
@@ -526,8 +526,8 @@
   .rule-box {
     display: flex;
     gap: 14px;
-    background: rgba(247,149,50,0.1);
-    border: 1px solid rgba(247,149,50,0.3);
+    background: rgba(158,238,242,0.1);
+    border: 1px solid rgba(158,238,242,0.3);
     border-radius: 12px;
     padding: 16px 18px;
     margin-bottom: 18px;
@@ -537,8 +537,8 @@
   .rule-text strong { color: var(--white); }
 
   .hint-box {
-    background: rgba(26,151,205,0.1);
-    border: 1px solid rgba(26,151,205,0.3);
+    background: rgba(94,209,221,0.1);
+    border: 1px solid rgba(94,209,221,0.3);
     border-radius: 12px;
     padding: 16px 18px;
     margin-bottom: 18px;
@@ -623,7 +623,7 @@
 </style>
 </head>
 <body>
-<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;background:#0D203B;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
+<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#4E259E;background:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
 
 <div class="hero">
   <div class="hero-inner">
@@ -738,7 +738,7 @@
 <script>
 const PROTOCOLS = {
   signal: {
-    accent: "#1A97CD",
+    accent: "#5ED1DD",
     num: "Protocol 01 of 04",
     name: "SIGNAL",
     type: "Physical Computing — JavaScript / BBC micro:bit",
@@ -764,7 +764,7 @@ const PROTOCOLS = {
     `
   },
   cipher: {
-    accent: "#EE3181",
+    accent: "#B7A6F0",
     num: "Protocol 02 of 04",
     name: "CIPHER",
     type: "Cybersecurity &amp; Logic — Multi-layer Decryption",
@@ -787,7 +787,7 @@ const PROTOCOLS = {
     `
   },
   interface: {
-    accent: "#F79532",
+    accent: "#9EEEF2",
     num: "Protocol 03 of 04",
     name: "INTERFACE",
     type: "AI &amp; Vibe Coding — Layered Bug Fix",
@@ -826,7 +826,7 @@ const PROTOCOLS = {
     `
   },
   directive: {
-    accent: "#8C7AE6",
+    accent: "#D9D0F2",
     num: "Protocol 04 of 04",
     name: "DIRECTIVE",
     type: "Ethics &amp; Strategy — Facilitator Assessed",
@@ -992,7 +992,7 @@ function renderProtocol(key) {
   `;
   // re-color accent-dependent inline elements that use CSS var defaults
   content.querySelectorAll('.layer-num').forEach(el => el.style.background = p.accent);
-  content.querySelectorAll('.layer-num').forEach(el => el.style.color = '#0D203B');
+  content.querySelectorAll('.layer-num').forEach(el => el.style.color = '#18191C');
   content.querySelectorAll('.spec-list li::before'); // no-op, CSS var handles via --accent on panel
   content.querySelectorAll('.code-slot').forEach(slot => setupCodeBox(slot, p.accent));
   document.getElementById('closeBtn').addEventListener('click', closeOverlay);

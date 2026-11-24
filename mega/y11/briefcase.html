@@ -17,20 +17,20 @@
 
 
   :root {
-    --purple: #EE3181;
-    --purple-light: #ff5fa3;
-    --purple-dark: #0D203B;
-    --teal: #1a97cd;
-    --teal-light: #22b8f5;
-    --orange: #F79532;
+    --purple: #7147DC;
+    --purple-light: #B7A6F0;
+    --purple-dark: #2B1466;
+    --teal: #5ED1DD;
+    --teal-light: #9EEEF2;
+    --orange: #9EEEF2;
     --white: #ffffff;
-    --off-white: #E7ECF4;
-    --locked: #16294A;
+    --off-white: #E9E4F7;
+    --locked: #3A1B7A;
     --unlocked: #0d3d1a;
-    --digit-bg: #0A1830;
-    --glow-purple: rgba(238, 49, 129, 0.6);
-    --glow-teal: rgba(26, 151, 205, 0.6);
-    --glow-orange: rgba(247, 149, 50, 0.8);
+    --digit-bg: #1A0D3D;
+    --glow-purple: rgba(113, 71, 220, 0.6);
+    --glow-teal: rgba(94, 209, 221, 0.6);
+    --glow-orange: rgba(158, 238, 242, 0.8);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,8 +45,8 @@
     align-items: center;
     justify-content: center;
     background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(26,151,205,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(238,49,129,0.15) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 20%, rgba(94,209,221,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(113,71,220,0.15) 0%, transparent 50%);
   }
 
   /* ── HEADER ─────────────────────────────────────── */
@@ -57,8 +57,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 14px 32px;
-    background: rgba(13, 32, 59, 0.85);
-    border-bottom: 1px solid rgba(26,151,205,0.3);
+    background: rgba(43, 20, 102, 0.85);
+    border-bottom: 1px solid rgba(94,209,221,0.3);
     backdrop-filter: blur(10px);
     z-index: 100;
   }
@@ -160,7 +160,7 @@
 
   .protocol-card {
     background: var(--locked);
-    border: 1px solid rgba(26,151,205,0.2);
+    border: 1px solid rgba(94,209,221,0.2);
     border-radius: 4px;
     padding: 18px 14px;
     display: flex;
@@ -275,8 +275,8 @@
   .spinner-btn {
     width: 80px;
     height: 38px;
-    background: rgba(26,151,205,0.15);
-    border: 1px solid rgba(26,151,205,0.3);
+    background: rgba(94,209,221,0.15);
+    border: 1px solid rgba(94,209,221,0.3);
     color: var(--teal-light);
     font-size: 20px;
     font-weight: 700;
@@ -300,7 +300,7 @@
   }
 
   .spinner-btn:active {
-    background: rgba(26,151,205,0.35);
+    background: rgba(94,209,221,0.35);
     transform: scale(0.97);
   }
 
@@ -308,7 +308,7 @@
     width: 80px;
     height: 100px;
     background: var(--digit-bg);
-    border: 2px solid rgba(26,151,205,0.4);
+    border: 2px solid rgba(94,209,221,0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -323,7 +323,7 @@
     top: 50%;
     transform: translateY(-50%);
     height: 1px;
-    background: rgba(26,151,205,0.3);
+    background: rgba(94,209,221,0.3);
   }
 
   .spinner-digit {
@@ -383,7 +383,7 @@
     position: relative;
     overflow: hidden;
     transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 20px rgba(26,151,205,0.3);
+    box-shadow: 0 4px 20px rgba(94,209,221,0.3);
   }
 
   .unlock-btn::before {
@@ -396,7 +396,7 @@
   }
 
   .unlock-btn:hover::before { opacity: 1; }
-  .unlock-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(26,151,205,0.5); }
+  .unlock-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(94,209,221,0.5); }
   .unlock-btn:active { transform: translateY(0); }
 
   .unlock-btn span { position: relative; z-index: 1; }
@@ -492,7 +492,7 @@
 
   .win-summary-card {
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(26,151,205,0.4);
+    border: 1px solid rgba(94,209,221,0.4);
     border-radius: 4px;
     padding: 18px 12px;
     text-align: center;
@@ -587,7 +587,7 @@
   <div class="header-status">
     <span class="status-dot"></span>
     <span id="statusText">AWAITING UNLOCK</span>
-    <a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap;margin-left:14px">Feedback</a>
+    <a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="font:700 13px/1 Roboto,Arial,sans-serif;color:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap;margin-left:14px">Feedback</a>
   </div>
 </header>
 
@@ -859,7 +859,7 @@
   function startConfetti(canvas) {
     const ctx = canvas.getContext('2d');
     const pieces = [];
-    const colours = ['#1a97cd', '#EE3181', '#F79532', '#ffffff', '#4ade80', '#22b8f5'];
+    const colours = ['#5ED1DD', '#7147DC', '#9EEEF2', '#ffffff', '#4ade80', '#B7A6F0'];
 
     for (let i = 0; i < 180; i++) {
       pieces.push({

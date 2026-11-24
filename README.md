@@ -30,7 +30,15 @@ The **Feedback** button (top right of each page) goes to a different form per re
 
 ## Editing colours / branding
 
-MEGA styles live in `mega/assets/style.css` as CSS variables at the top (`--navy`, `--pink`, `--orange`, etc.) — change them once and every page updates. The MEGA logo is `mega/assets/mega-logo.png` (white wordmark, transparent background — built for the dark navy pages here).
+The whole site uses **TechFirst branding** (guide dated June 2026): Roboto, deep purple `#4E259E`, bright purple `#7147DC`, teal `#0C6382`, cyan `#5ED1DD`, ice `#9EEEF2`, light background `#F5F6F8`, text `#18191C`, secondary text `#64666D`.
+
+- **Shared styles:** `mega/assets/style.css`. Light page for easy reading on screens and projectors, with a purple header band (top bar + hero) and a cyan stripe underneath. The TechFirst links page uses the same stylesheet.
+- **Cyan is never used for text on white** (contrast 1.8:1). Use it for bars, borders and fills, and give text teal or purple instead. Blocks that use `--accent: var(--pink)` (cyan) also set `--accent-ink`.
+- **Activity accents:** `--lightblue` = teal, `--orange` = bright purple, `--purple` = deep purple, `--pink` = cyan. The old names are kept so existing pages did not need restructuring.
+- **Pages with their own styles** (Mystery Gate, both Radio Challenge pages, Radio Extensions, Y9 arrival cards, staff page) use the same light TechFirst colours.
+- **Y11 briefcase and hackathon page** keep a dark, game-style look, recoloured in TechFirst deep purple, cyan and ice.
+- **Biotech Lab** (`mega/y7-8/biotech-lab.html`) still has its original cosmic game style.
+- MEGA pages keep the white MEGA logo (`mega/assets/mega-logo.png`) on the purple band. The TechFirst logo is `assets/techfirst-logo.svg`.
 
 ## Adding a day to the master page
 

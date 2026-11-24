@@ -1,17 +1,37 @@
+/* =====================================================================
+   MEGA day links - TechFirst theme
+   Light page for easy reading on screens and projectors, with a
+   TechFirst purple header band. Brand: TechFirst guide (June 2026).
+   All text colours meet WCAG 2.1 AA on their backgrounds.
+   ===================================================================== */
 :root {
-  --navy: #0D203B;
-  --card: #16294A;
-  --card2: #1C3157;
-  --pink: #EE3181;
-  --orange: #F79532;
-  --lightblue: #1A97CD;
-  --white: #FFFFFF;
-  --muted: #9FB0C6;
-  --pink-rgb: 238,49,129;
-  --orange-rgb: 247,149,50;
-  --lightblue-rgb: 26,151,205;
-  --purple: #8C7AE6;
-  --purple-rgb: 140,122,230;
+  /* TechFirst palette */
+  --tf-purple: #4E259E;      /* main */
+  --tf-purple-2: #7147DC;    /* bright purple */
+  --tf-teal: #0C6382;
+  --tf-cyan: #5ED1DD;        /* fills, bars, borders only: too light for text on white */
+  --tf-ice: #9EEEF2;
+  --tf-bg: #F5F6F8;          /* light background */
+  --tf-line: #E5E5E5;        /* lines */
+  --tf-muted: #64666D;       /* secondary text */
+  --tf-text: #18191C;        /* main text */
+
+  /* Names the pages already use, mapped to the TechFirst theme */
+  --navy: #18191C;           /* dark ink (was the page background) */
+  --card: #FFFFFF;
+  --card2: #F1EDFB;          /* hover / tint */
+  --white: #18191C;          /* main text (was white text on dark) */
+  --muted: #64666D;
+  --pink: #5ED1DD;           /* activity accent 4 (cyan) - pages pair it with --accent-ink */
+  --orange: #7147DC;         /* activity accent 2 (bright purple) */
+  --lightblue: #0C6382;      /* activity accent 1 (teal) */
+  --purple: #4E259E;         /* activity accent 3 (deep purple) */
+  --green: #1F7A4D;
+  --pink-rgb: 94,209,221;
+  --orange-rgb: 113,71,220;
+  --lightblue-rgb: 12,99,130;
+  --purple-rgb: 78,37,158;
+  --green-rgb: 31,122,77;
 }
 
 * { box-sizing: border-box; }
@@ -19,56 +39,63 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--navy);
-  color: var(--white);
-  font-family: "Nunito", -apple-system, "Segoe UI", sans-serif;
+  background: var(--tf-bg);
+  color: var(--tf-text);
+  font-family: Roboto, Arial, sans-serif;
   min-height: 100%;
 }
-
-body {
-  background: radial-gradient(1200px 600px at 10% -10%, #15284a 0%, var(--navy) 55%),
-              radial-gradient(1000px 600px at 110% 10%, #17264a 0%, var(--navy) 55%),
-              var(--navy);
-}
+body { overflow-x: hidden; line-height: 1.45; }
 
 h1, h2, h3, .headfont {
-  font-family: "Nunito Sans", "Nunito", sans-serif;
-  font-weight: 800;
+  font-family: Roboto, Arial, sans-serif;
+  font-weight: 900;
   letter-spacing: -0.01em;
   margin: 0;
 }
 
 a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--tf-purple-2); outline-offset: 3px; }
 
 .wrap {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 28px 20px 64px;
+  padding: 0 20px 64px;
 }
 
+/* ---- Purple header band: the top bar and the hero sit on it, full width ---- */
+.topbar, .hero {
+  background: var(--tf-purple);
+  box-shadow: 0 0 0 100vmax var(--tf-purple);
+  clip-path: inset(0 -100vmax);
+  color: #fff;
+}
+/* last part of the band gets a full-width cyan stripe underneath */
+.hero, .topbar:not(:has(+ .hero)) { position: relative; clip-path: inset(0 -100vmax -6px); }
+.hero::after, .topbar:not(:has(+ .hero))::after {
+  content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: -6px; height: 6px; background: var(--tf-cyan);
+}
 .topbar {
-  margin-bottom: 36px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 26px 0 26px;
+  margin-bottom: 0;
 }
+.logo { height: 34px; width: auto; display: block; }
+.topbar .backlink { color: #fff; font-size: .9rem; font-weight: 700; white-space: nowrap; padding: 7px 12px; border: 2px solid rgba(255,255,255,.45); border-radius: 10px; margin-right: 96px; }
+.topbar .backlink:hover { border-color: #fff; }
+.topbar a:focus-visible, .hero a:focus-visible { outline-color: #fff; }
 
-.logo {
-  height: 34px;
-  width: auto;
-  display: block;
-}
-
-.hero {
-  padding: 8px 0 32px;
-}
+.hero { padding: 6px 0 34px; margin-bottom: 14px; }
+/* when the band has no hero, close it under the top bar */
+.topbar:not(:has(+ .hero)) { margin-bottom: 32px; }
 
 .eyebrow {
   display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--orange);
-  background: rgba(247,149,50,0.12);
-  border: 1px solid rgba(247,149,50,0.35);
+  color: var(--tf-text);
+  background: var(--tf-ice);
   padding: 5px 12px;
   border-radius: 999px;
   margin-bottom: 14px;
@@ -77,21 +104,22 @@ a { color: inherit; text-decoration: none; }
 .hero h1 {
   font-size: clamp(1.9rem, 4.5vw, 2.8rem);
   margin-bottom: 8px;
+  color: #fff;
 }
 
 .hero p {
-  color: var(--muted);
-  font-size: 1.05rem;
-  max-width: 640px;
+  color: #fff;
+  font-size: 1.1rem;
+  max-width: 680px;
   line-height: 1.5;
   margin: 0;
 }
 
-/* ---- Time blocks ---- */
+/* ---- Activity blocks ---- */
 .block {
   margin-top: 34px;
   padding-left: 18px;
-  border-left: 3px solid var(--accent, var(--card2));
+  border-left: 5px solid var(--accent, var(--tf-purple));
 }
 
 .block-head {
@@ -103,17 +131,17 @@ a { color: inherit; text-decoration: none; }
 }
 
 .block-time {
-  font-family: "Nunito Sans", sans-serif;
-  font-weight: 800;
-  color: var(--accent, var(--pink));
+  font-weight: 900;
+  color: var(--accent-ink, var(--accent, var(--tf-purple)));
   font-size: 0.95rem;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .block-title {
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--tf-text);
 }
 
 .link-grid {
@@ -126,17 +154,18 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   gap: 14px;
-  background: var(--card);
-  border: 1px solid #243a60;
+  background: #fff;
+  border: 2px solid var(--tf-line);
   border-radius: 14px;
   padding: 16px 18px;
-  transition: border-color .15s, background .15s, transform .15s;
+  color: var(--tf-text);
+  transition: border-color .15s, background .15s, transform .15s, box-shadow .15s;
 }
 
 .link-card.clickable:hover {
-  border-color: var(--accent, var(--lightblue));
-  background: var(--card2);
+  border-color: var(--accent, var(--tf-purple));
   transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(78,37,158,.12);
 }
 
 .link-icon {
@@ -148,41 +177,41 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   font-size: 1.4rem;
   flex-shrink: 0;
-  background: rgba(var(--accent-rgb, 26,151,205), 0.15);
+  background: rgba(var(--accent-rgb, 78,37,158), 0.14);
 }
 
-.link-card.disabled .link-icon { background: rgba(159,176,198,0.12); }
+.link-card.disabled .link-icon { background: #EEEFF2; }
 
 .link-body { flex-grow: 1; min-width: 0; }
 
 .link-name {
-  font-weight: 800;
-  font-size: 1.02rem;
+  font-weight: 700;
+  font-size: 1.08rem;
   margin-bottom: 2px;
 }
 
 .link-url {
-  font-size: 0.85rem;
-  color: var(--accent, var(--lightblue));
+  font-size: 0.88rem;
+  color: var(--tf-teal);
   word-break: break-all;
 }
 
 .link-note {
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: 0.92rem;
+  color: var(--tf-muted);
 }
 
 .link-go {
   flex-shrink: 0;
   font-size: 1.3rem;
-  color: var(--muted);
+  color: var(--tf-muted);
 }
-.link-card.clickable:hover .link-go { color: var(--accent, var(--orange)); }
+.link-card.clickable:hover .link-go { color: var(--accent-ink, var(--accent, var(--tf-purple))); }
 
 .pill {
   display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 3px 9px;
@@ -190,59 +219,60 @@ a { color: inherit; text-decoration: none; }
   margin-left: 8px;
   vertical-align: middle;
 }
-.pill.physical { background: rgba(159,176,198,0.15); color: var(--muted); }
-.pill.installed { background: rgba(247,149,50,0.15); color: var(--orange); }
+.pill.physical { background: #EEEFF2; color: var(--tf-muted); }
+.pill.installed { background: #EDE7FB; color: var(--tf-purple); }
 
 footer {
   margin-top: 56px;
   padding-top: 20px;
-  border-top: 1px solid #22314f;
-  color: var(--muted);
-  font-size: 0.82rem;
+  border-top: 1px solid var(--tf-line);
+  color: var(--tf-muted);
+  font-size: 0.85rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-/* ---- Home page: one big button per day ---- */
-.day-grid { display: grid; gap: 18px; margin-top: 8px; }
+/* ---- MEGA home page: one big button per day ---- */
+.day-grid { display: grid; gap: 18px; margin-top: 26px; }
 .day-btn {
   display: flex; align-items: center; gap: 22px;
   padding: 28px 30px; border-radius: 18px;
-  background: var(--card); border: 1px solid rgba(var(--accent-rgb), .45);
-  border-left: 8px solid var(--accent);
-  transition: transform .15s, background .15s, box-shadow .15s;
+  background: #fff; border: 2px solid var(--tf-line);
+  border-left: 10px solid var(--accent);
+  color: var(--tf-text);
+  transition: transform .15s, box-shadow .15s, border-color .15s;
 }
-a.day-btn:hover { transform: translateY(-2px); background: var(--card2); box-shadow: 0 10px 28px rgba(0,0,0,.35); }
-.day-year { font-family: "Nunito Sans", sans-serif; font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.3rem); color: var(--accent); min-width: 5.2ch; line-height: 1; }
+a.day-btn:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 10px 28px rgba(78,37,158,.14); }
+.day-year { font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.3rem); color: var(--accent-ink, var(--accent)); min-width: 5.2ch; line-height: 1; }
 .day-text { flex: 1; }
-.day-name { font-family: "Nunito Sans", sans-serif; font-weight: 800; font-size: clamp(1.25rem, 3vw, 1.7rem); line-height: 1.15; }
-.day-sub { color: var(--muted); font-size: 1rem; margin-top: 6px; }
-.day-go { font-size: 2rem; color: var(--accent); }
+.day-name { font-weight: 900; font-size: clamp(1.25rem, 3vw, 1.7rem); line-height: 1.15; }
+.day-sub { color: var(--tf-muted); font-size: 1rem; margin-top: 6px; }
+.day-go { font-size: 2rem; color: var(--accent-ink, var(--accent)); }
 .day-btn.soon { opacity: .6; border-style: dashed; cursor: default; }
-.day-btn.soon .day-go { font-size: .85rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.day-btn.soon .day-go { font-size: .85rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tf-muted); }
 @media (max-width: 560px) { .day-btn { padding: 22px 18px; gap: 14px; } }
-
-/* top bar: logo left, back link right */
-.topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; }
-.topbar .backlink { color:var(--muted); font-size:.85rem; font-weight:700; white-space:nowrap; }
-.topbar .backlink:hover { color:var(--white); }
 
 /* ---- Notice strip and block intro ---- */
 .notice {
-  margin: 4px 0 8px;
+  margin: 18px 0 8px;
   padding: 14px 18px;
-  background: rgba(var(--pink-rgb), 0.10);
-  border: 1px solid rgba(var(--pink-rgb), 0.4);
+  background: #E9FAFB;
+  border: 2px solid var(--tf-cyan);
   border-radius: 14px;
-  color: var(--white);
-  font-size: 0.98rem;
+  color: var(--tf-text);
+  font-size: 1rem;
   line-height: 1.5;
 }
-.notice strong { color: var(--pink); }
+.notice strong { color: var(--tf-teal); }
 .block-intro {
   margin: -4px 0 14px;
-  color: var(--muted);
-  font-size: 0.92rem;
+  color: var(--tf-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 560px) {
+  .topbar { padding-top: 40px; }
+  .topbar .backlink { margin-right: 0; }
 }

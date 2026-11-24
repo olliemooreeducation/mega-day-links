@@ -7,19 +7,19 @@
 <meta name="description" content="Quick-access links for MEGA's Year 7 &amp; 8 Frontier Explorers day.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 /* ---- Step-by-step help: sequence strip on the links page ---- */
-.seq-label { margin: 22px 0 10px; font: 800 .8rem "Nunito Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.seq-label { margin: 22px 0 10px; font: 800 .8rem Roboto, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .seq { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; gap: 8px; }
 .seq li { display: flex; }
-.seq-arrow { pointer-events: none; align-items: center; justify-content: center; color: var(--accent, var(--orange)); font: 900 1.7rem "Nunito Sans", sans-serif; }
+.seq-arrow { pointer-events: none; align-items: center; justify-content: center; color: var(--accent, var(--orange)); font: 900 1.7rem Roboto, sans-serif; }
 .seq-card { flex: 1; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit; cursor: pointer;
-  background: var(--card); border: 1px solid #243a60; border-radius: 14px; padding: 14px 14px; transition: border-color .15s, background .15s, transform .15s; }
-.seq-card:hover { border-color: var(--accent, var(--orange)); background: var(--card2); transform: translateY(-2px); }
-.seq-card:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
-.seq-n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 1.05rem "Nunito Sans", sans-serif; background: var(--accent, var(--orange)); color: var(--navy); }
+  background: #fff; border: 2px solid var(--tf-line); border-radius: 14px; padding: 14px 14px; transition: border-color .15s, background .15s, transform .15s; }
+.seq-card:hover { border-color: var(--accent, var(--orange)); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(78,37,158,.12); }
+.seq-card:focus-visible { outline: 3px solid var(--tf-purple); outline-offset: 2px; }
+.seq-n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 1.05rem Roboto, sans-serif; background: var(--accent, var(--orange)); color: #fff; }
 .seq-name { display: block; font-weight: 800; font-size: 1rem; line-height: 1.2; }
 .seq-note { display: block; font-size: .8rem; color: var(--muted); margin-top: 2px; }
 @media (max-width: 860px) {
@@ -29,37 +29,37 @@
 }
 
 /* ---- Step-by-step popup ---- */
-#guide { border: 0; padding: 0; width: min(800px, 96vw); max-height: 94vh; border-radius: 22px; background: var(--navy); color: #fff;
+#guide { border: 0; padding: 0; width: min(800px, 96vw); max-height: 94vh; border-radius: 22px; background: #fff; color: var(--tf-text);
   box-shadow: 0 24px 80px rgba(0,0,0,.6); border-top: 6px solid var(--accent, var(--orange)); overflow: auto; }
-#guide::backdrop { background: rgba(5,12,26,.82); }
+#guide::backdrop { background: rgba(24,25,28,.7); }
 .g-top { display: flex; align-items: center; gap: 12px; padding: 18px 22px 8px; }
-.g-title { flex: 1; font: 900 1.6rem "Nunito Sans", sans-serif; }
-.g-close { font: 800 1rem "Nunito Sans", sans-serif; color: #fff; background: transparent; border: 2px solid rgba(255,255,255,.35); border-radius: 12px; padding: 8px 14px; cursor: pointer; }
-.g-close:hover { border-color: #fff; }
+.g-title { flex: 1; font: 900 1.6rem Roboto, sans-serif; }
+.g-close { font: 700 1rem Roboto, sans-serif; color: var(--tf-text); background: transparent; border: 2px solid var(--tf-line); border-radius: 12px; padding: 8px 14px; cursor: pointer; }
+.g-close:hover { border-color: var(--tf-purple); }
 .g-pair { display: flex; align-items: center; gap: 10px; padding: 0 22px 6px; color: var(--muted); font-weight: 700; }
-.g-pair input { width: 4.4ch; font: 800 1.2rem "Nunito Sans", sans-serif; text-align: center; color: #fff; background: var(--card); border: 2px solid var(--orange); border-radius: 10px; padding: 4px 6px; }
+.g-pair input { width: 4.4ch; font: 800 1.2rem Roboto, sans-serif; text-align: center; color: var(--tf-text); background: #fff; border: 2px solid var(--tf-purple-2); border-radius: 10px; padding: 4px 6px; }
 .g-prog { display: flex; align-items: center; gap: 7px; padding: 8px 22px 4px; color: var(--muted); font-weight: 800; font-size: .95rem; }
-.g-dot { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,.18); }
+.g-dot { width: 14px; height: 14px; border-radius: 50%; background: #D9DBE1; }
 .g-dot.on { background: var(--accent, var(--orange)); }
-.g-dot.cur { box-shadow: 0 0 0 3px rgba(255,255,255,.55); }
+.g-dot.cur { box-shadow: 0 0 0 3px #CBB9F5; }
 .g-step { padding: 8px 22px 18px; }
-.g-step h2 { font: 900 1.9rem/1.15 "Nunito Sans", sans-serif; margin: 8px 0 10px; }
+.g-step h2 { font: 900 1.9rem/1.15 Roboto, sans-serif; margin: 8px 0 10px; }
 .g-say { font-size: 1.35rem; line-height: 1.5; margin: 0 0 14px; }
 .g-say b { color: var(--accent, var(--orange)); }
 .g-find { display: grid; gap: 8px; margin: 0 0 16px; }
 .g-find-row { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
 .g-find-row .where { color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; }
 .drawer { display: inline-block; color: #fff; background: var(--c); padding: 3px 12px; border-radius: 8px; font-weight: 800; }
-.g-why { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); font-size: 1.05rem; line-height: 1.5; }
-.g-ok { margin-top: 6px; padding: 16px 18px; border-radius: 14px; background: rgba(61,220,151,.1); border: 1px solid rgba(61,220,151,.45); font-size: 1.25rem; line-height: 1.55; }
-.g-ok b.t { color: #3DDC97; display: block; font: 900 1.3rem "Nunito Sans", sans-serif; margin-bottom: 4px; }
-.g-ch { margin-top: 12px; padding: 14px 18px; border-radius: 14px; background: rgba(247,149,50,.12); border: 1px solid rgba(247,149,50,.5); font-size: 1.2rem; line-height: 1.5; }
-.g-ch b.t { color: var(--orange); font: 900 1.1rem "Nunito Sans", sans-serif; letter-spacing: .06em; text-transform: uppercase; display: block; }
-.g-nav { position: sticky; bottom: 0; display: flex; gap: 12px; justify-content: space-between; padding: 14px 22px 18px; background: linear-gradient(to top, var(--navy) 70%, rgba(13,32,59,0)); }
-.g-btn { font: 900 1.25rem "Nunito Sans", sans-serif; border-radius: 14px; padding: 14px 24px; cursor: pointer; border: 0; color: var(--navy); background: var(--accent, var(--orange)); min-width: 9ch; }
-.g-btn.ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.35); }
+.g-why { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--tf-bg); border: 1px solid var(--tf-line); font-size: 1.05rem; line-height: 1.5; }
+.g-ok { margin-top: 6px; padding: 16px 18px; border-radius: 14px; background: #EAF6EF; border: 2px solid #7CC79E; font-size: 1.25rem; line-height: 1.55; }
+.g-ok b.t { color: #1F7A4D; display: block; font: 900 1.3rem Roboto, sans-serif; margin-bottom: 4px; }
+.g-ch { margin-top: 12px; padding: 14px 18px; border-radius: 14px; background: #F1EDFB; border: 2px solid #B9A5EE; font-size: 1.2rem; line-height: 1.5; }
+.g-ch b.t { color: var(--orange); font: 900 1.1rem Roboto, sans-serif; letter-spacing: .06em; text-transform: uppercase; display: block; }
+.g-nav { position: sticky; bottom: 0; display: flex; gap: 12px; justify-content: space-between; padding: 14px 22px 18px; background: linear-gradient(to top, #fff 70%, rgba(255,255,255,0)); }
+.g-btn { font: 900 1.25rem Roboto, sans-serif; border-radius: 14px; padding: 14px 24px; cursor: pointer; border: 0; color: #fff; background: var(--accent, var(--orange)); min-width: 9ch; }
+.g-btn.ghost { background: transparent; color: var(--tf-text); border: 2px solid var(--tf-line); }
 .g-btn[disabled] { opacity: .3; cursor: default; }
-.g-btn:focus-visible, .g-close:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.g-btn:focus-visible, .g-close:focus-visible { outline: 3px solid var(--tf-purple); outline-offset: 2px; }
 @media (max-width: 560px) { #guide { width: 100vw; max-height: 100vh; border-radius: 0; } .g-step h2 { font-size: 1.6rem; } .g-say { font-size: 1.2rem; } }
 
 /* ---- MakeCode-style blocks (drawn, not screenshots) ---- */
@@ -80,13 +80,13 @@
 .st-ghost > .mb-k { border-left-color: color-mix(in srgb, var(--c) 30%, transparent); }
 .st-new, .st-check { outline: 5px solid #FFC400; outline-offset: 4px; border-radius: 10px; }
 .st-check { outline: 5px dashed #00B7D4; }
-.st-new::before, .st-check::before { content: "ADD THIS"; position: absolute; top: -17px; right: -6px; z-index: 2; background: #FFC400; color: #111; font: 900 .72rem "Nunito Sans", sans-serif; letter-spacing: .08em; padding: 3px 9px; border-radius: 99px; }
+.st-new::before, .st-check::before { content: "ADD THIS"; position: absolute; top: -17px; right: -6px; z-index: 2; background: #FFC400; color: #111; font: 900 .72rem Roboto, sans-serif; letter-spacing: .08em; padding: 3px 9px; border-radius: 99px; }
 .st-check::before { content: "CHECK THIS"; background: #00B7D4; color: #fff; }
-.mb-sep { font: 800 .8rem "Nunito Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #6b7a90; width: 100%; border-top: 2px dashed #c3cbd8; padding-top: 10px; margin-top: 4px; }
+.mb-sep { font: 800 .8rem Roboto, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #6b7a90; width: 100%; border-top: 2px dashed #c3cbd8; padding-top: 10px; margin-top: 4px; }
 </style>
 </head>
 <body>
-<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;background:#0D203B;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
+<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#4E259E;background:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
 <div class="wrap">
 
   <div class="topbar">
@@ -177,7 +177,7 @@
     </div>
   </div>
 
-  <div class="block" style="--accent: var(--pink); --accent-rgb: var(--pink-rgb);">
+  <div class="block" style="--accent: var(--pink); --accent-ink: #0C6382; --accent-rgb: var(--pink-rgb);">
     <div class="block-head">
       <span class="block-time">Activity 4</span>
       <span class="block-title">Cyber Challenge</span>

@@ -7,39 +7,39 @@
 <meta name="description" content="The five arrival desks for MEGA's Year 9 AI-pprentice day.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
-.tab{flex:1;min-width:110px;background:var(--card);border:2px solid transparent;border-radius:14px;color:var(--white);padding:12px 10px;font:800 1rem "Nunito Sans",sans-serif;cursor:pointer;text-align:center}
-.tab small{display:block;font:600 .75rem Nunito,sans-serif;color:var(--muted)}
+.tab{flex:1;min-width:110px;background:#fff;border:2px solid var(--tf-line);border-radius:14px;color:var(--white);padding:12px 10px;font:800 1rem Roboto,sans-serif;cursor:pointer;text-align:center}
+.tab small{display:block;font:600 .75rem Roboto,sans-serif;color:var(--muted)}
 .tab[aria-selected=true]{border-color:var(--orange);background:var(--card2)}
 .desk{display:none}.desk.on{display:block}
-.panel{background:var(--card);border-radius:18px;padding:22px 24px;margin-bottom:16px}
+.panel{background:#fff;border:2px solid var(--tf-line);border-radius:18px;padding:22px 24px;margin-bottom:16px}
 .panel h2{font-size:1.6rem;margin-bottom:6px}.panel h3{font-size:1.05rem;color:var(--orange);margin:18px 0 6px}
 .task{font-size:1.25rem;line-height:1.45}
 .need{color:var(--muted);font-weight:700;margin-top:10px}
 .timer{display:flex;align-items:center;gap:16px;margin-top:18px}
-.clock{font:900 2.6rem "Nunito Sans",sans-serif;min-width:3.2ch}
-.btn{background:var(--orange);color:#1b1200;border:0;border-radius:12px;padding:10px 18px;font:800 1rem "Nunito Sans",sans-serif;cursor:pointer}
+.clock{font:900 2.6rem Roboto,sans-serif;min-width:3.2ch}
+.btn{background:var(--orange);color:#fff;border:0;border-radius:12px;padding:10px 18px;font:800 1rem Roboto,sans-serif;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--white);border:2px solid var(--muted)}
 ul.tips{margin:6px 0 0;padding-left:20px;line-height:1.6}
 .steps{display:grid;gap:8px;margin-top:10px}
-.step{display:flex;gap:12px;align-items:center;background:var(--card2);border:2px solid transparent;border-radius:12px;padding:10px 14px;font:700 1.05rem Nunito,sans-serif;color:var(--white);cursor:pointer;text-align:left;width:100%}
-.step .n{width:30px;height:30px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
+.step{display:flex;gap:12px;align-items:center;background:var(--card2);border:2px solid transparent;border-radius:12px;padding:10px 14px;font:700 1.05rem Roboto,sans-serif;color:var(--white);cursor:pointer;text-align:left;width:100%}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--tf-purple);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
 .step.keep{border-color:var(--lightblue)}.step.keep .n{background:var(--lightblue)}
 .step.cut{opacity:.4;text-decoration:line-through}
 .msg{margin-top:10px;color:var(--lightblue);font-weight:800;min-height:1.4em}
 .cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
-.flip{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;background:var(--card2);border:2px solid var(--pink);border-radius:14px;padding:16px;color:var(--white);text-align:left;cursor:pointer;font:600 1rem/1.5 Nunito,sans-serif}
-.flip b{display:block;font:800 1.2rem "Nunito Sans",sans-serif;margin-bottom:6px}
+.flip{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;background:var(--card2);border:2px solid var(--pink);border-radius:14px;padding:16px;color:var(--white);text-align:left;cursor:pointer;font:600 1rem/1.5 Roboto,sans-serif}
+.flip b{display:block;font:800 1.2rem Roboto,sans-serif;margin-bottom:6px}
 .flip .back{display:none;margin-top:6px;color:var(--muted)}.flip.open .back{display:block}
 .hint{background:var(--card2);border-radius:12px;padding:10px 14px;margin-top:8px;color:var(--muted);display:none}.hint.on{display:block}
 .nav{display:flex;justify-content:space-between;margin-top:6px}
 </style>
 </head>
 <body>
-<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Nunito,Arial,sans-serif;color:#fff;background:#0D203B;border:2px solid #EE3181;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
+<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#4E259E;background:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
 <div class="wrap">
   <div class="topbar">
     <img class="logo" src="../assets/mega-logo.png" alt="MEGA — Motivated, Educated Generation with Ambition"><a class="backlink" href="index.html">← Year 9 links</a>
