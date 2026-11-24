@@ -235,6 +235,26 @@ footer {
   gap: 8px;
 }
 
+/* ---- featured card: the most important link in a block ---- */
+.link-card.feature {
+  grid-column: 1 / -1;
+  background: var(--tf-purple);
+  border-color: var(--tf-purple);
+  border-bottom: 6px solid var(--tf-cyan);
+  color: #fff;
+  padding: 22px 24px;
+  gap: 18px;
+  box-shadow: 0 10px 26px rgba(78,37,158,.22);
+}
+.link-card.feature.clickable:hover { background: var(--tf-purple-2); border-color: var(--tf-purple-2); border-bottom-color: var(--tf-cyan); box-shadow: 0 14px 32px rgba(78,37,158,.3); }
+.link-card.feature .link-icon { width: 64px; height: 64px; font-size: 2rem; border-radius: 16px; background: rgba(255,255,255,.16); }
+.link-card.feature .link-name { font-size: clamp(1.3rem, 3vw, 1.6rem); font-weight: 900; margin: 4px 0; }
+.link-card.feature .link-note { color: #EDE7FB; font-size: 1rem; }
+.link-card.feature .link-go, .link-card.feature.clickable:hover .link-go { color: #fff; font-size: 1.8rem; }
+.feature-tag { display: inline-block; font-size: .78rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: #18191C; background: var(--tf-cyan); padding: 4px 10px; border-radius: 8px; }
+@media (max-width: 560px) { .link-card.feature { padding: 18px; } .link-card.feature .link-icon { display: none; } }
+.link-card.feature:focus-visible { outline: 3px solid #18191C; outline-offset: 3px; }
+
 /* ---- MEGA home page: one big button per day ---- */
 .day-grid { display: grid; gap: 18px; margin-top: 26px; }
 .day-btn {
