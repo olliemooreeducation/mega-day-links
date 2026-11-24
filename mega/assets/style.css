@@ -72,7 +72,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--tf-purple-2); o
 /* last part of the band gets a full-width cyan stripe underneath */
 .hero, .topbar:not(:has(+ .hero)) { position: relative; clip-path: inset(0 -100vmax -6px); }
 .hero::after, .topbar:not(:has(+ .hero))::after {
-  content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: -6px; height: 6px; background: var(--tf-cyan);
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 6px; background: var(--tf-cyan);
+  box-shadow: 0 0 0 100vmax var(--tf-cyan); clip-path: inset(0 -100vmax); /* shadows do not widen the page */
 }
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;

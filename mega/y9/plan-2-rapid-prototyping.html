@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 2: Rapid Prototyping - Team Planning Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="planner.css">
+</head>
+<body data-page="2">
+<a class="mega-feedback" href="https://forms.fillout.com/t/1YQ9vJsVrXus" target="_blank" rel="noopener" style="position:absolute;top:6px;right:10px;z-index:2147483000;font:700 13px/1 Roboto,Arial,sans-serif;color:#4E259E;background:#fff;border:2px solid #5ED1DD;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Feedback</a>
+<div class="wrap">
+
+  <div class="topbar">
+    <img class="logo" src="../assets/mega-logo.png" alt="MEGA"><a class="backlink" href="index.html">&larr; Year 9 links</a>
+  </div>
+  <div class="hero">
+    <span class="eyebrow">Team planning sheet &middot; MEGA Idea</span>
+    <h1>Session 2: Rapid Prototyping</h1>
+    <p>Bring the idea to life and check the risks. Keep following the SLIDE tags.</p>
+  </div>
+
+  <div class="p-team">
+    <div class="f"><label for="t-num">Team number</label><input id="t-num" class="num" type="number" min="1" max="99" inputmode="numeric" data-key="team.num" placeholder="?"></div>
+    <div class="f"><label for="t-name">Team name</label><input id="t-name" class="name" type="text" maxlength="40" data-key="team.name" placeholder="Make one up!"></div>
+    <span class="p-saved" aria-live="polite"></span>
+  </div>
+
+  <nav class="p-tabs" aria-label="Planning sheet sessions">
+    <a class="p-tab" data-n="1" href="plan-1-big-ideas.html"><b>Session 1</b><span>Big Ideas</span><div class="p-mini"><i></i></div></a>
+    <a class="p-tab" data-n="2" href="plan-2-rapid-prototyping.html" aria-current="page"><b>Session 2</b><span>Rapid Prototyping</span><div class="p-mini"><i></i></div></a>
+    <a class="p-tab" data-n="3" href="plan-3-brand-prepare-pitch.html"><b>Session 3</b><span>Brand, Prepare, Pitch</span><div class="p-mini"><i></i></div></a>
+  </nav>
+
+  <div class="p-progress"><div class="row"><div class="p-bar"><i></i></div><span class="p-count"></span></div><div class="p-msg"></div></div>
+
+  <div class="p-grid">
+
+    <section class="box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">⚙️</div>
+        <div class="box-title"><h2>How it works</h2><p>Step by step. What happens, in order? Press Enter for the next step.</p><span class="slide-tag">&rarr; SLIDE 3</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <div data-steps="s2.steps" data-rows="4" data-min="3" data-req data-copy="">
+        <div class="steps"></div>
+        <button type="button" class="add-step">+ Add a step</button>
+      </div>
+      <div class="box-foot"><button type="button" class="copy" data-slide="slide 3">Copy steps</button></div>
+    </section>
+
+    <section class="box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">🧠</div>
+        <div class="box-title"><h2>How your AI thinks</h2><p>Fill all three. This becomes your Napkin AI diagram.</p><span class="slide-tag">&rarr; SLIDE 3</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <div class="flow">
+        <div class="stage s1"><h3>📥 Data in</h3><p>What does it learn from?</p><textarea class="p" data-key="s2.data" data-req data-copy="Data in" aria-label="Data in: what does it learn from?" placeholder="Photos of..., records of..."></textarea></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="stage s2"><h3>🔎 Patterns found</h3><p>What does it spot?</p><textarea class="p" data-key="s2.patterns" data-req data-copy="Patterns found" aria-label="Patterns found: what does it spot?" placeholder="It notices when..."></textarea></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="stage s3"><h3>📤 Output out</h3><p>What does it say or do?</p><textarea class="p" data-key="s2.output" data-req data-copy="Output out" aria-label="Output out: what does it say or do?" placeholder="It tells the user..."></textarea></div>
+      </div>
+      <div class="box-foot"><button type="button" class="copy" data-slide="slide 3">Copy all three</button></div>
+    </section>
+
+    <section class="box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">🛡️</div>
+        <div class="box-title"><h2>Risks</h2><p>3 things that could go wrong, and a safeguard for each. Try to break your own idea!</p><span class="slide-tag">&rarr; SLIDE 4</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <div class="risk"><span class="n">1</span>
+        <div class="r"><label for="r1">⚠️ Risk</label><textarea id="r1" class="p" data-key="s2.risk1" data-req data-copy="Risk 1" placeholder="What could go wrong?"></textarea></div>
+        <div class="s"><label for="g1">✅ Safeguard</label><textarea id="g1" class="p" data-key="s2.safe1" data-req data-copy="Safeguard 1" placeholder="How do we stop it?"></textarea></div></div>
+      <div class="risk"><span class="n">2</span>
+        <div class="r"><label for="r2">⚠️ Risk</label><textarea id="r2" class="p" data-key="s2.risk2" data-req data-copy="Risk 2" placeholder="What could go wrong?"></textarea></div>
+        <div class="s"><label for="g2">✅ Safeguard</label><textarea id="g2" class="p" data-key="s2.safe2" data-req data-copy="Safeguard 2" placeholder="How do we stop it?"></textarea></div></div>
+      <div class="risk"><span class="n">3</span>
+        <div class="r"><label for="r3">⚠️ Risk</label><textarea id="r3" class="p" data-key="s2.risk3" data-req data-copy="Risk 3" placeholder="What could go wrong?"></textarea></div>
+        <div class="s"><label for="g3">✅ Safeguard</label><textarea id="g3" class="p" data-key="s2.safe3" data-req data-copy="Safeguard 3" placeholder="How do we stop it?"></textarea></div></div>
+      <div class="box-foot"><button type="button" class="copy" data-slide="slide 4">Copy risks</button></div>
+    </section>
+
+    <section class="box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">📖</div>
+        <div class="box-title"><h2>Story</h2><p>One named person using your product, step by step. Make the person up: never use a real name.</p><span class="slide-tag">&rarr; SLIDE 5</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <textarea class="p tall" data-key="s2.story" data-req data-copy="" aria-label="Story" placeholder="Meet Jaz, aged 14. Every morning Jaz..."></textarea>
+      <div class="box-foot"><button type="button" class="copy" data-slide="slide 5">Copy story</button></div>
+    </section>
+
+    <section class="box" data-box>
+      <div class="box-head"><div class="box-ico" aria-hidden="true">🎨</div>
+        <div class="box-title"><h2>Visuals: make your product visible</h2><p>Use a <b>mixture</b> of AI prototyping apps. The audience must <b>see</b> your idea in action!</p><span class="slide-tag">&rarr; SLIDE 5</span></div>
+        <div class="box-tick" aria-hidden="true">✓</div></div>
+      <span class="sub-label">Our group has used (tick all that apply)</span>
+      <div class="ticks" data-req="any">
+        <label class="tick"><input type="checkbox" data-key="s2.vis.app"> 📱 An app prototype (Base44)</label>
+        <label class="tick"><input type="checkbox" data-key="s2.vis.image"> 🖼️ A product image or diagram (Midjourney / Napkin AI)</label>
+        <label class="tick"><input type="checkbox" data-key="s2.vis.shots"> 📸 Screenshots saved, ready for the slides</label>
+      </div>
+      <label class="sub-label" for="s2-tools">AI tools we used</label>
+      <input id="s2-tools" class="p" type="text" data-key="s2.tools" data-req data-copy="AI tools we used" placeholder="Base44, Midjourney, ...">
+      <p style="margin:10px 0 0;font-weight:700;color:#B3261E">Remember: no personal data, and check what the AI tells you.</p>
+      <div class="box-foot"><button type="button" class="copy" data-slide="your slides">Copy tools list</button></div>
+    </section>
+
+  </div>
+
+  <div class="p-task"><b class="t">Task: develop and visualise your idea</b>Keep building slides 3, 4 and 5 from the ideas on this sheet. <b>Screenshot or video your prototypes</b> and put them in the slides. No slide should be only text (yawn!): make them interesting but professional.</div>
+
+  <section class="stop">
+    <h2><span class="sign">STOP &amp; CHECK</span> Before lunch</h2>
+    <div class="ticks">
+      <label class="tick"><input type="checkbox" data-key="s2.check.proto"> Prototype saved</label>
+      <label class="tick"><input type="checkbox" data-key="s2.check.risks"> 3 risks + safeguards</label>
+    </div>
+    <div class="yay">✓ Session 2 checked. Enjoy your lunch!</div>
+  </section>
+
+  <div class="next-up">
+    <a class="btn-next ghost" href="plan-1-big-ideas.html">&larr; Session 1</a>
+    <a class="btn-next" href="plan-3-brand-prepare-pitch.html">Session 3: Brand, Prepare, Pitch &rarr;</a>
+  </div>
+
+  <p class="staff-reset"><button type="button">Staff: clear this laptop for a new team</button></p>
+</div>
+<script src="planner.js"></script>
+</body>
+</html>

@@ -48,6 +48,16 @@ Add a new `.block` to `mega/index.html` with a card for the day's page and a car
 
 `mega/y10/mystery-gate.html` is the interactive Mystery Gate worksheet (now used on the Y10 day). It is a standalone page, so it can be linked or embedded in an iframe (`<iframe src="mystery-gate.html" style="width:100%;height:1500px;border:0">`); it hides the logo when embedded. Students' answers are saved in their own browser only, and the Print button gives a PDF copy.
 
+## Y9 digital team planning sheet
+
+`mega/y9/plan-1-big-ideas.html`, `plan-2-rapid-prototyping.html` and `plan-3-brand-prepare-pitch.html` replace the A1 team planning sheet. They share `planner.css` and `planner.js`.
+
+- **Saves as you type** in the browser's local storage (keys start `mega9plan:`), so a closed tab, refresh or crash loses nothing. One laptop per team: work does not move between laptops.
+- **Sketch pad** (Session 1): two sketches, saved the same way, downloadable as PNG for slide 5.
+- **Copy buttons** on each box copy the text ready to paste into the Canva slide the SLIDE tag points to.
+- **Progress** bars, ticks and confetti when a box, page or STOP & CHECK is complete. Session 3 has a 2-minute rehearsal timer (6 slides x 20 seconds).
+- **Staff reset:** "Staff: clear this laptop for a new team" at the bottom of each page deletes all three sessions from that laptop (asks twice).
+
 ## Folder structure
 
 ```
